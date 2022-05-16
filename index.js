@@ -2,14 +2,10 @@ require('dotenv').config()
 const mongoose = require('mongoose');
 const express = require('express');
 
+var usersRouter = require('./src/routes/users.routes');
+
 const port = process.env.PORT || 3000;
-
 const app = express()
-
-// TODO: refactor routing
-app.get('/api/', (req, res) => {
-  res.send('Hello World!')
-})
 
 app.use('/', express.static('public'));
 
@@ -27,6 +23,21 @@ app.locals.db = mongoose.connect(process.env.DB_URL, {useNewUrlParser: true, use
     
     app.listen(port, () => {
         console.log(`Server listening on port ${port}`);
+    });
+
+    app.use('/users', usersRouter);
+    // catch 404 and forward to error handler
+    app.use(function(req, res, next) {
+      res.status(err.status || 404).json({
+        message: "No such route exists"
+      })
+    });
+
+    // error handler
+    app.use(function(err, req, res, next) {
+      res.status(err.status || 500).json({
+        message: "Error Message"
+      })
     });
     
 });
