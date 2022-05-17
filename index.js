@@ -15,7 +15,8 @@ app.use('/', express.static('public'));
 
 app.use(express.json()); //Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
-
+const cors = require('cors')
+app.use(cors())
 /**
  * Configure mongoose
  */
