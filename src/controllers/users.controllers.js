@@ -32,7 +32,7 @@ const userLogin = (req, res, next) => {
                             expiresIn: "1d",
                         }
                     );
-                    console.log(user)
+                    console.log(result,user)
                     return res.status(200).json({
                         message: "Auth successful",
                         userDetails: {

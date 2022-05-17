@@ -1,28 +1,29 @@
-const loginForm = document.getElementById("login-form");
-const loginButton = document.getElementById("login-form-submit");
-const loginErrorMsg = document.getElementById("login-error-msg");
+window.onload = function () {
+  const loginForm = document.getElementById("login-formaggio");
+  loginForm.addEventListener("submit", login);
+}
 
 //login function with api call
-function login() {
+function login(e) {
+  e.preventDefault();
+
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   const data = {
     email: email,
     password: password
   };
-  fetch("/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
+  console.log(data);
+  $.ajax({
+    url: "http://127.0.0.1:3000/users/login",
+    type: "post",
+    dataType: "json",
+    data: data,
+    success: function (result) {
+      console.log(result);
     },
-    body: JSON.stringify(data)
-  })
-    .then(res => res.json())
-    .then(res => {
-      if (res.success) {
-        window.location.href = "/";
-      } else {
-        loginErrorMsg.innerHTML = res.msg;
-      }
-    });
+    error: function (request, status, error) {
+      alert(request.responseText);
+    }
+  });
 }
