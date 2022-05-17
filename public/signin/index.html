@@ -1,42 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Rubik:400,700'><link rel="stylesheet" href="./style.css">
-    <title>Sign in</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Rubik:400,700'>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./script.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <title>Sign in</title>
 </head>
 <body>
-    <div class="login-form">
-        <form>
-          <h1>Sign in</h1>
-          <div class="content">
-            <div class="input-field">
-                <input type="name" placeholder="Name">
-              </div>
-            <div class="input-field">
-              <input type="email" placeholder="Email">
-            </div>
-            <div class="input-field">
-              <input type="password" placeholder="Password">
-            </div>
-            <p>To acces home delivery insert your home address</p>
-            <div class="input-field">
-                <input type="address" placeholder="Address">
-            </div>
-            <div class="input-field">
-                <input type="city" placeholder="City">
-            </div>
-            <div class="input-field">
-                <input type="zip_code" placeholder="Zip code">
-            </div>
-          </div>
-          <div class="action">
-            <button>Register</button>
-            <button>Login in</button>
-          </div>
-        </form>
+  <div class="login-form">
+    <form id="login-formaggio">
+      <h1>Sign in</h1>
+      <div class="content">
+        <div class="input-field">
+          <input id="name" name="name" type="name" placeholder="Name">
+        </div>
+        <div class="input-field">
+          <input id="email" name="email" type="email" placeholder="Email">
+        </div>
+        <div class="input-field">
+          <input id="password" name="password" type="password" placeholder="Password">
+        </div>
+        <p>To acces home delivery insert your home address</p>
+        <div class="input-field">
+          <input id="address" name="address" type="address" placeholder="Address">
+        </div>
+        <div class="input-field">
+          <input id="city" name="city" type="city" placeholder="City">
+        </div>
+        <div class="input-field">
+          <input id="zip_code" name="zip_code" type="zip_code" placeholder="Zip code">
+        </div>
       </div>
-      <script  src="./script.js"></script>
+      <div class="action">
+        <input type="submit" value="Registrati" id="signin-form-submit" class="btn">
+        <input type="submit" value="Login" class="btn">
+      </div>
+    </form>
+  </div>
 </body>
 </html>
