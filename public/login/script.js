@@ -23,8 +23,11 @@ function login(e) {
       createCookie("token", result.token, 1);
       window.location.replace("/dashboard");
     },
-    error: function (request, status, error) {
-      alert(request.responseText);
+    error: function (response, status, error) {
+      if (response.status === 401) {
+        $("#login-error-msg").show();
+      }
+      alert(response.responseText);
     }
   });
 }
