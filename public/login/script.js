@@ -13,14 +13,15 @@ function login(e) {
     email: email,
     password: password
   };
-  console.log(data);
   $.ajax({
-    url: "http://127.0.0.1:3000/users/login",
+    url: "http://localhost:3000/users/login",
     type: "post",
     dataType: "json",
     data: data,
     success: function (result) {
       console.log(result);
+      createCookie("token", result.token, 1);
+      window.location.replace("/dashboard");
     },
     error: function (request, status, error) {
       alert(request.responseText);
