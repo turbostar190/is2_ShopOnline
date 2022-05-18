@@ -7,22 +7,18 @@ window.onload = function () {
   function edit_product(e) {
     e.preventDefault();
     console.log("init edit")
-    const name = document.getElementById("name").value;
-    const description = document.getElementById("description").value;
-    const cost = document.getElementById("cost").value;
-    const img = document.getElementById("img").value;
-
-    const data = {
-      name: name,
-      description: description,
-      cost : cost,
-    };
-    console.log(data);
+    var form = $('#login-formaggio')[0]; 
+    var formData = new FormData(form);
+    const id = getParameter("id");
+    console.log(formData);
     $.ajax({
-      url: "http://localhost:3000/products/",
+      url: "http://localhost:3000/products/"+id,
       type: "put",
-      dataType: "json",
-      data: data,
+      enctype: 'multipart/form-data',
+      data: formData,
+      contentType: false,
+      processData: false,
+      cache : false,
       success: function (result) {
         console.log(result);
       },
