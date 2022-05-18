@@ -1,3 +1,5 @@
+checkToken();
+
 window.onload = function () {
   const loginForm = document.getElementById("login-formaggio");
   loginForm.addEventListener("submit", login);
