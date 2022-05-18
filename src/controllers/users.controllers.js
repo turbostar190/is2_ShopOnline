@@ -70,7 +70,16 @@ const getMe = async (req, res) => {
     }
 };
 
+const checkToken = async (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    res.status(200).json({
+        message: token,
+    });
+}
+
 module.exports = {
     userLogin,
     getMe,
+    checkToken
 };
