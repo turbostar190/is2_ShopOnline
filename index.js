@@ -4,6 +4,7 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
+var productsRouter = require('./src/routes/products.routes');
 const port = process.env.PORT || 3000;
 const app = express()
 
@@ -32,6 +33,7 @@ app.use(express.json()); //Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
 const cors = require('cors')
 app.use(cors())
+
 /**
  * Configure mongoose
  */
@@ -43,6 +45,21 @@ app.locals.db = mongoose.connect(process.env.DB_URL, {useNewUrlParser: true, use
     
     app.listen(port, () => {
         console.log(`Server listening on port ${port}`);
+    });
+
+    app.use('/products', productsRouter);
+    // catch 404 and forward to error handler
+    app.use(function(req, res, next) {
+      res.status(err.status || 404).json({
+        message: "No such route exists"
+      })
+    });
+
+    // error handler
+    app.use(function(err, req, res, next) {
+      res.status(err.status || 500).json({
+        message: err
+      })
     });
     
 });
