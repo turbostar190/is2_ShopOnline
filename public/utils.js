@@ -6,6 +6,18 @@ $.ajaxSetup({
     dataType: 'json',
 });
 
+function checkToken() {
+    $.ajax({
+        url: "http://localhost:3000/users/checkToken",
+        type: "get",
+        async: false,
+        dataType: "json",
+        success: function (result) {
+            window.location.replace("/dashboard");
+        },
+    });
+}
+
 function readCookie(name) {
     let nameEQ = encodeURIComponent(name) + "=";
     let ca = document.cookie.split(';');
