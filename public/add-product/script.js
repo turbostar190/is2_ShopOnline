@@ -6,10 +6,11 @@ window.onload = function () {
   //login function with api call
   function add_product(e) {
     e.preventDefault();
-    console.log("init add");
+
     var form = $('#login-formaggio')[0]; 
     var formData = new FormData(form);
     console.log(formData);
+
     $.ajax({
       url: "http://127.0.0.1:3000/products/",
       type: "post",
@@ -20,6 +21,7 @@ window.onload = function () {
       cache : false,
       success: function (result) {
         console.log(result);
+        alert("Prodotto aggiunto");
       },
       error: function (request, status, error) {
         alert(request.responseText);

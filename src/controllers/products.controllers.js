@@ -1,12 +1,17 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const Product = require("../models/products");
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
 const postProducts = (req, res, next) => {
-    console.log("Init post");
+    if (req.body.cost < 0) {
+        res.status(400).json({
+            message: "Cost must be positive",
+        });
+        fs.unlinkSync(path.resolve('./uploads/' + req.file.filename))
+        return;
+    }
+
     Product.findOne({
             name: req.body.name
         })
@@ -29,19 +34,20 @@ const postProducts = (req, res, next) => {
                 product
                     .save()
                     .then(async (result) => {
-                        await result
+                        result
                             .save()
                             .then((result1) => {
                                 console.log(`Product created ${result}`)
-                                res.status(201).json({
-                                    productDetails: {
-                                        productId: result._id,
-                                        name: result.name,
-                                        description: result.description,
-                                        category: result.category,
-                                        cost : result.cost,
-                                    },
-                                })
+                                res.location("/api/products/" + result._id);
+                                // res.status(201).json({
+                                //     productDetails: {
+                                //         productId: result._id,
+                                //         name: result.name,
+                                //         description: result.description,
+                                //         category: result.category,
+                                //         cost : result.cost,
+                                //     },
+                                // })
                             })
                             .catch((err) => {
                                 console.log(err)
@@ -73,7 +79,8 @@ const postProducts = (req, res, next) => {
 
 
 const getProducts = async (req, res) => {
-    const products = await Product.find();
+    console.log("find");
+    const products = Product.find({});
     if (products) {
         res.status(200).json({
             products,
