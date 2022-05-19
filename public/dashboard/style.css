@@ -2305,14 +2305,6 @@ progress {
   cursor: pointer;
 }
 
-.form-control:focus {
-  color: #212529;
-  background-color: #fff;
-  border-color: #86b7fe;
-  outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
 .form-control::-webkit-date-and-time-value {
   height: 1.5em;
 }
@@ -2550,12 +2542,6 @@ textarea.form-control-lg {
   .form-select {
     transition: none;
   }
-}
-
-.form-select:focus {
-  border-color: #86b7fe;
-  outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
 .form-select[multiple],
