@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 
 <head>
   <meta charset="UTF-8">
@@ -15,19 +15,19 @@
       <h1>Modifica prodotto</h1>
       <div class="content">
         <div class="input-field">
-          <input id="name" name="name" type="text" placeholder="Nome">
+          <input id="name" name="name" type="text" placeholder="Nome *" required>
         </div>
         <div class="input-field">
-          <input id="description" name="description" type="text" placeholder="Descrizione">
+          <input id="description" name="description" type="text" placeholder="Descrizione *" required>
         </div>
         <div class="input-field">
-          <input id="cost" name="cost" type="number" placeholder="Costo">
+          <input id="cost" name="cost" type="number" placeholder="Costo *" min="0" required>
         </div>
         <div class="input-field">
-          <input id="category" name="category" type="text" placeholder="Categoria">
+          <input id="category" name="category" type="text" placeholder="Categoria *" required>
         </div>
         <div class="input-field">
-            <input id="img" name="img" type="file" placeholder="Foto">
+            <input id="img" name="img" type="file" placeholder="Foto *" accept="image/png, image/jpeg" required>
           </div>
       </div>
       <div class="action">
@@ -35,7 +35,8 @@
       </div>
     </form>
   </div>
-  <script src="./script.js"></script>
+
   <script src="/utils.js"></script>
+  <script src="./script.js"></script>
 </body>
 </html>
