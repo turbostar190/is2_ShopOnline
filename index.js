@@ -1,10 +1,25 @@
 require('dotenv').config()
 const mongoose = require('mongoose');
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
 
 const port = process.env.PORT || 3000;
-
 const app = express()
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Hello World',
+      version: '1.0.0',
+    },
+  },
+  apis: ['./src/routes/*.js'], // files containing annotations as above
+};
+// Initialize swagger-jsdoc -> returns validated swagger spec in json format
+const swaggerSpec = swaggerJSDoc(options);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // TODO: refactor routing
 app.get('/api/', (req, res) => {
