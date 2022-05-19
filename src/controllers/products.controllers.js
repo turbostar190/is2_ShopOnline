@@ -6,6 +6,14 @@ const fs = require('fs');
 const path = require('path');
 
 const editProducts = (req, res, next) => {
+    if (req.body.cost < 0) {
+        res.status(400).json({
+            message: "Cost must be positive",
+        });
+        fs.unlinkSync(path.resolve('./uploads/' + req.file.filename))
+        return;
+    }
+
     console.log("Init edit");
     Product.findOne({
             _id: req.params.id
