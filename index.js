@@ -1,10 +1,10 @@
 require('dotenv').config()
 const mongoose = require('mongoose');
 const express = require('express');
+const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
-var productsRouter = require('./src/routes/products.routes');
 const port = process.env.PORT || 3000;
 const app = express()
 
@@ -12,7 +12,7 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Hello World',
+      title: 'IS2 Shop Online',
       version: '1.0.0',
     },
   },
@@ -22,19 +22,8 @@ const options = {
 const swaggerSpec = swaggerJSDoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// TODO: refactor routing
-app.get('/api/', (req, res) => {
-  res.send('Hello World!')
-})
-
-var usersRouter = require('./src/routes/users.routes');
-var productsRouter = require('./src/routes/products.routes');
-
-app.use('/', express.static('public'));
-
 app.use(express.json()); //Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
-const cors = require('cors');
 app.use(cors())
 
 /**
@@ -43,15 +32,22 @@ app.use(cors())
 // mongoose.Promise = global.Promise;
 app.locals.db = mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-
     console.log("Connected to Database");
 
     app.listen(port, () => {
       console.log(`Server listening on port ${port}`);
     });
 
-    app.use('/users', usersRouter);
-    app.use('/products', productsRouter);
+    // router
+    const usersRouter = require('./src/routes/users.routes');
+    const productsRouter = require('./src/routes/products.routes');
+
+    // files
+    app.use('/', express.static('public'));
+
+    // api
+    app.use('/api/v1/users', usersRouter);
+    app.use('/api/v1/products', productsRouter);
 
     // catch 404 and forward to error handler
     app.use(function (req, res, next) {
@@ -60,7 +56,7 @@ app.locals.db = mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, us
       })
     });
 
-    // error handler
+    // catch 500 and forward to error handler
     app.use(function (err, req, res, next) {
       res.status(err.status || 500).json({
         message: err

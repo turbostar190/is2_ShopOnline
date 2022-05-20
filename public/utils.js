@@ -11,7 +11,7 @@ $.ajaxSetup({
 
 function checkToken() {
     $.ajax({
-        url: "/users/checkToken",
+        url: "/api/v1/users/checkToken",
         type: "get",
         async: false,
         dataType: "json",

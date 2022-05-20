@@ -48,7 +48,7 @@ function checkAuth() {
 function getProducts(e) {
     console.log("init");
     $.ajax({
-        url: "/products/",
+        url: "/api/v1/products/",
         type: "get",
         success: function (result) {
             console.log(result);
