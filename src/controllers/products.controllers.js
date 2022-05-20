@@ -139,16 +139,25 @@ const editProducts = (req, res, next) => {
 
 const getProducts = async (req, res) => {
     console.log("find");
-    const products = Product.find({});
-    if (products) {
-        res.status(200).json(
-            products,
-        );
-    } else {
-        res.status(400).json({
-            message: "Bad request",
+    const products = Product
+        .find({})
+        .then(function (products) {
+            if (products) {
+                res.status(200).json(
+                    products,
+                );
+            } else {
+                res.status(400).json({
+                    message: "Bad request",
+                });
+            }
+        })
+        .catch(function (err) {
+            res.status(500).json({
+                err: err
+            });
         });
-    }
+
 };
 
 module.exports = {
