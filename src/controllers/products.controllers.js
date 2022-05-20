@@ -26,7 +26,7 @@ const editProducts = (req, res, next) => {
                     product.category =  req.body.category,
                     product.cost = req.body.cost,
                     product.img = {
-                        data: fs.readFileSync(path.resolve('./uploads/' + req.file.filename)),
+                        data: fs.readFileSync(path.resolve('./uploads/' + req.file.filename)).toString('base64'),
                         contentType: 'image/png'
                 }
                 product
