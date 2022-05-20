@@ -7,36 +7,35 @@
   <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Rubik:400,700'>
   <link rel="stylesheet" href="./style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <title>Sign in</title>
+  <title>Registrazione</title>
 </head>
 <body>
   <div class="login-form">
     <form id="login-formaggio">
-      <h1>Sign in</h1>
+      <h1>Registrazione</h1>
       <div class="content">
         <div class="input-field">
-          <input id="name" name="name" type="name" placeholder="Name">
+          <input id="nome" name="nome" type="text" placeholder="Nome *" required>
         </div>
         <div class="input-field">
-          <input id="email" name="email" type="email" placeholder="Email">
+          <input id="email" name="email" type="email" placeholder="Email *" required>
         </div>
         <div class="input-field">
-          <input id="password" name="password" type="password" placeholder="Password">
+          <input id="password" name="password" type="password" placeholder="Password *" required>
         </div>
-        <p>To acces home delivery insert your home address</p>
+        <p>Per ricevere i prodotti a casa inserisci il tuo indirizzo</p>
         <div class="input-field">
-          <input id="address" name="address" type="address" placeholder="Address">
-        </div>
-        <div class="input-field">
-          <input id="city" name="city" type="city" placeholder="City">
+          <input id="via" name="via" type="text" placeholder="Via">
         </div>
         <div class="input-field">
-          <input id="zip_code" name="zip_code" type="zip_code" placeholder="Zip code">
+          <input id="comune" name="comune" type="text" placeholder="Comune">
+        </div>
+        <div class="input-field">
+          <input id="cap" name="cap" type="text" placeholder="CAP">
         </div>
       </div>
       <div class="action">
         <input type="submit" value="Registrati" id="signin-form-submit" class="btn">
-        <input type="submit" value="Login" class="btn">
       </div>
     </form>
   </div>

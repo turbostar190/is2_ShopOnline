@@ -1,5 +1,4 @@
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 const mongoose = require('mongoose');
 
@@ -20,12 +19,17 @@ const userSignIn = (req, res, next) => {
                             error: err,
                         });
                     } else {
-                        const user = new User({
+                        const user_data = {
                             _id: new mongoose.Types.ObjectId(),
                             email: req.body.email,
                             password: hash,
-                            name: req.body.name,
-                        });
+                            nome: req.body.nome,
+                            indirizzo: null
+                        };
+                        if (req.body.indirizzo != null) {
+                            user_data['indirizzo'] = req.body.indirizzo;
+                        }
+                        const user = new User(user_data);
                         user
                             .save()
                             .then(async (result) => {
@@ -37,7 +41,8 @@ const userSignIn = (req, res, next) => {
                                             userDetails: {
                                                 userId: result._id,
                                                 email: result.email,
-                                                name: result.name,
+                                                nome: result.nome,
+                                                indirizzo: result.indirizzo || {}
                                             },
                                         })
                                     })

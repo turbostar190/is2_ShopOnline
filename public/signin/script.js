@@ -5,28 +5,40 @@ window.onload = function () {
   loginForm.addEventListener("submit", signin);
 }
 
+$("#via, #comune, #cap").keyup(function() {
+  $("#via, #comune, #cap").attr("required", $("#via").val().length != 0 || $("#comune").val().length != 0 || $("#cap").val().length != 0);
+});
+
 //login function with api call
 function signin(e) {
   e.preventDefault();
-  console.log("init signin")
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const name = document.getElementById("name").value;
 
-  //TODO
+  const email = $("#email").val();
+  const password = $("#password").val();
+  const nome = $("#nome").val();
+
   const data = {
     email: email,
     password: password,
-    name : name
+    nome: nome,
+    indirizzo: null
   };
+  if ($("#via").val() !== '') {
+    data['indirizzo'] = {
+      via: $("#via").val(),
+      comune: $("#comune").val(),
+      cap: $("#cap").val()
+    }
+  }
   console.log(data);
   $.ajax({
-    url: "http://127.0.0.1:3000/users/signin",
+    url: "http://localhost:3000/users/signin",
     type: "post",
     dataType: "json",
     data: data,
     success: function (result) {
       console.log(result);
+      alert("Utente registrato");
     },
     error: function (request, status, error) {
       alert(request.responseText);
