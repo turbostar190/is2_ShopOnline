@@ -26,18 +26,19 @@ const userLogin = (req, res, next) => {
                     const token = jwt.sign({
                             userId: user._id,
                             email: user.email,
-                            name: user.name,
+                            nome: user.nome,
+                            admin: user.admin != undefined
                         },
                         process.env.jwtSecret, {
                             expiresIn: "1d",
                         }
                     );
-                    console.log(result,user)
+                    console.log(result, user)
                     return res.status(200).json({
                         message: "Auth successful",
                         userDetails: {
                             userId: user._id,
-                            name: user.name,
+                            nome: user.nome,
                             email: user.email,
                         },
                         token: token,
@@ -70,11 +71,17 @@ const getMe = async (req, res) => {
     }
 };
 
+// Se arriva qui è perché ha passato i controlli e quindi rimanda indietro se stesso
 const checkToken = async (req, res) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
+    console.log(req.user);
     res.status(200).json({
-        message: token,
+        message: {
+            token: token,
+            nome: req.user.nome,
+            admin: req.user.admin
+        },
     });
 }
 
