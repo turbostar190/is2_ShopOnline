@@ -4,6 +4,7 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
+var productsRouter = require('./src/routes/products.routes');
 const port = process.env.PORT || 3000;
 const app = express()
 
@@ -65,5 +66,4 @@ app.locals.db = mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, us
         message: err
       })
     });
-
   });

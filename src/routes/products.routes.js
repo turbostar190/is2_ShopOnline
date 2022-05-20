@@ -12,9 +12,10 @@ var storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + Date.now())
     }
 });
-  
+
 var upload = multer({ storage: storage });
 
 router.post('/', checkAuth, upload.single('img'), productControllers.postProducts);
 router.get('/', productControllers.getProducts);
+router.put('/:id', checkAuth, upload.single('img'), productControllers.editProducts);
 module.exports = router
