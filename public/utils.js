@@ -9,16 +9,35 @@ $.ajaxSetup({
     }
 });
 
-function checkToken() {
+function checkToken(callback, callbackErr) {
+    let user = {
+        isLogged: false,
+        nome: "",
+        admin: false
+    }
     $.ajax({
         url: "/api/v1/users/checkToken",
         type: "get",
         async: false,
         dataType: "json",
         success: function (result) {
-            window.location.replace("/dashboard");
+            console.log(result);
+            user.isLogged = true;
+            user.nome = result.message.nome;
+            user.admin = result.message.admin;
+            if (callback) callback(user);
         },
+        error: function (err) {
+            if (callbackErr) callbackErr();
+        }
     });
+    return user;
+}
+
+function setLoggedButtons(user) {
+    $("#carrello-btn, #logout-btn, #saluti").show();
+    $("#accedi-btn, #registrati-btn").hide();
+    $("#nomeUtente").text(user.nome);
 }
 
 function readCookie(name) {
