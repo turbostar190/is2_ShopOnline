@@ -1,4 +1,6 @@
-checkToken();
+checkToken(function() {
+  window.location.replace("/dashboard")
+});
 
 window.onload = function () {
   const loginForm = document.getElementById("login-formaggio");
