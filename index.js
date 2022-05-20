@@ -4,8 +4,6 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
-var usersRouter = require('./src/routes/users.routes');
-
 const port = process.env.PORT || 3000;
 const app = express()
 
@@ -29,6 +27,7 @@ app.get('/api/', (req, res) => {
 })
 
 var usersRouter = require('./src/routes/users.routes');
+var productsRouter = require('./src/routes/products.routes');
 
 app.use('/', express.static('public'));
 
@@ -51,6 +50,8 @@ app.locals.db = mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, us
     });
 
     app.use('/users', usersRouter);
+    app.use('/products', productsRouter);
+
     // catch 404 and forward to error handler
     app.use(function (req, res, next) {
       res.status(err.status || 404).json({
@@ -61,7 +62,7 @@ app.locals.db = mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, us
     // error handler
     app.use(function (err, req, res, next) {
       res.status(err.status || 500).json({
-        message: "Error Message"
+        message: err
       })
     });
 

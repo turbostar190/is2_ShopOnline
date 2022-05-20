@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Rubik:400,700'>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <title>Aggiungi prodotto</title>
+</head>
+<body>
+  <div class="login-form">
+    <form id="login-formaggio" enctype="multipart/form-data">
+      <h1>Aggiungi prodotto</h1>
+      <div class="content">
+        <div class="input-field">
+          <input id="name" name="name" type="text" placeholder="Nome *" required>
+        </div>
+        <div class="input-field">
+          <input id="description" name="description" type="text" placeholder="Descrizione *" required>
+        </div>
+        <div class="input-field">
+          <input id="cost" name="cost" type="number" placeholder="Costo *" min="0" required>
+        </div>
+        <div class="input-field">
+          <input id="category" name="category" type="text" placeholder="Categoria *" required>
+        </div>
+        <div class="input-field">
+            <input id="img" name="img" type="file" placeholder="Foto *" accept="image/png, image/jpeg" required>
+          </div>
+      </div>
+      <div class="action">
+        <input type="submit" value="Add product" id="add-form-submit" class="btn">
+      </div>
+    </form>
+  </div>
+  <script src="./script.js"></script>
+  <script src="/utils.js"></script>
+</body>
+</html>
