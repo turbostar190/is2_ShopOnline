@@ -4,6 +4,8 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
+var usersRouter = require('./src/routes/users.routes');
+
 const port = process.env.PORT || 3000;
 const app = express()
 
@@ -32,7 +34,7 @@ app.use('/', express.static('public'));
 
 app.use(express.json()); //Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
-const cors = require('cors')
+const cors = require('cors');
 app.use(cors())
 
 /**

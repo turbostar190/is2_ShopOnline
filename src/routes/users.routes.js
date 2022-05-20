@@ -6,5 +6,6 @@ const router = express.Router();
 router.get('/checkToken', checkAuth, userControllers.checkToken);
 router.post('/login', userControllers.userLogin);
 router.get('/me', checkAuth, userControllers.getMe);
+router.post('/signin', userControllers.userSignIn);
 
 module.exports = router
