@@ -38,16 +38,7 @@ const postProducts = (req, res, next) => {
                             .save()
                             .then((result1) => {
                                 console.log(`Product created ${result}`)
-                                res.location("/api/products/" + result._id);
-                                // res.status(201).json({
-                                //     productDetails: {
-                                //         productId: result._id,
-                                //         name: result.name,
-                                //         description: result.description,
-                                //         category: result.category,
-                                //         cost : result.cost,
-                                //     },
-                                // })
+                                res.status(201).location("/api/products/" + result._id).end();
                             })
                             .catch((err) => {
                                 console.log(err)

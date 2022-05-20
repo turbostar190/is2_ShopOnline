@@ -12,7 +12,7 @@ window.onload = function () {
     console.log(formData);
 
     $.ajax({
-      url: "http://127.0.0.1:3000/products/",
+      url: "http://localhost:3000/products/",
       type: "post",
       enctype: 'multipart/form-data',
       data: formData,
@@ -20,7 +20,7 @@ window.onload = function () {
       processData: false,
       cache : false,
       success: function (result) {
-        console.log(result);
+        console.log("Prodotto aggiunto");
         alert("Prodotto aggiunto");
       },
       error: function (request, status, error) {
