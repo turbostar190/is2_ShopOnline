@@ -48,7 +48,7 @@ function checkAuth() {
 function getProducts(e) {
     console.log("init");
     $.ajax({
-        url: "http://127.0.0.1:3000/products/",
+        url: "/products/",
         type: "get",
         success: function (result) {
             console.log(result);

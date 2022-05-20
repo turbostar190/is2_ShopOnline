@@ -32,7 +32,7 @@ function signin(e) {
   }
   console.log(data);
   $.ajax({
-    url: "http://localhost:3000/users/signin",
+    url: "/users/signin",
     type: "post",
     dataType: "json",
     data: data,

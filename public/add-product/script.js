@@ -12,7 +12,7 @@ window.onload = function () {
     console.log(formData);
 
     $.ajax({
-      url: "http://localhost:3000/products/",
+      url: "/products/",
       type: "post",
       enctype: 'multipart/form-data',
       data: formData,

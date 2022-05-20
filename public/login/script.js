@@ -16,7 +16,7 @@ function login(e) {
     password: password
   };
   $.ajax({
-    url: "http://localhost:3000/users/login",
+    url: "/users/login",
     type: "post",
     dataType: "json",
     data: data,

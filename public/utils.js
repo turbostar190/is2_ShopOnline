@@ -4,11 +4,14 @@ $.ajaxSetup({
         "Authorization": "Bearer " + readCookie("token")
     },
     dataType: 'json',
+    beforeSend: function (jqXHR, settings) {
+        settings.url = "http://localhost:3000" + settings.url;
+    }
 });
 
 function checkToken() {
     $.ajax({
-        url: "http://localhost:3000/users/checkToken",
+        url: "/users/checkToken",
         type: "get",
         async: false,
         dataType: "json",

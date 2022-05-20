@@ -17,7 +17,7 @@ if (getParameter('id') == null) {
     console.log(formData);
 
     $.ajax({
-      url: "http://localhost:3000/products/"+id,
+      url: "/products/"+id,
       type: "put",
       enctype: 'multipart/form-data',
       data: formData,
