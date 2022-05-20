@@ -25,7 +25,7 @@ const postProducts = (req, res, next) => {
                     category: req.body.category,
                     cost : req.body.cost,
                     img: {
-                        data: fs.readFileSync(path.resolve('./uploads/' + req.file.filename)),
+                        data: fs.readFileSync(path.resolve('./uploads/' + req.file.filename)).toString('base64'),
                         contentType: 'image/png'
                     }
                 }
@@ -73,9 +73,9 @@ const getProducts = async (req, res) => {
     console.log("find");
     const products = Product.find({});
     if (products) {
-        res.status(200).json({
+        res.status(200).json(
             products,
-        });
+        );
     } else {
         res.status(400).json({
             message: "Bad request",
