@@ -9,11 +9,11 @@ const path = require('path');
 //function to get the cart of the user
 function getCart(req, res, next) {
     console.log("init get");
-    
+
     const userId = req.user.userId;
     Cart.find({
-            userId: userId
-        })
+        userId: userId
+    })
         .populate('productId')
         .exec()
         .then(docs => {
@@ -36,9 +36,10 @@ function getCart(req, res, next) {
 }
 //function to add an element to the cart
 function addElementToCart(req, res, next) {
+
+    const userId = req.user.userId;
+
     console.log("init add");
-    const user = checkToken();
-    const userId = user._id;
     if (!(req.body.productId && userId)) {
         return res.status(400).json({
             message: "Missing parameters"
@@ -77,8 +78,8 @@ function addElementToCart(req, res, next) {
 function deleteElementFromCart(req, res, next) {
     console.log("init delete");
     Cart.findOne({
-            _id: req.params.id
-        })
+        _id: req.params.id
+    })
         .exec()
         .then((element) => {
             if (element == null) {
@@ -87,8 +88,8 @@ function deleteElementFromCart(req, res, next) {
                 });
             }
             Cart.deleteOne({
-                    _id: req.params.id
-                })
+                _id: req.params.id
+            })
                 .exec()
                 .then(result => {
                     res.status(200).json({
