@@ -17,5 +17,6 @@ var upload = multer({ storage: storage });
 
 router.post('/', checkAuth, upload.single('img'), productControllers.postProducts);
 router.get('/', productControllers.getProducts);
+router.get('/:id', productControllers.getProductById);
 router.put('/:id', checkAuth, upload.single('img'), productControllers.editProducts);
 module.exports = router
