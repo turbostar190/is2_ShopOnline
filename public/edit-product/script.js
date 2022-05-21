@@ -8,7 +8,9 @@ window.onload = function () {
     url: "/api/v1/products/" + id,
     type: "get",
     success: function (result) {
-      console.log(result);
+
+      // console.log(result);
+
       $("#name").val(result.name);
       $("#description").val(result.description);
       $("#category").val(result.category);
