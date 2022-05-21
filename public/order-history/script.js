@@ -28,7 +28,7 @@ function getOrders(){
 function getPendingOrders(orders){
     let pendingOrders = [];
     for (let i = 0; i < orders.length; i++) {
-        if (!orders[i].approved) {
+        if (orders[i].accepted==null) {
             pendingOrders.push(orders[i]);
         }
     }
@@ -39,7 +39,7 @@ function getPendingOrders(orders){
 function getCompletedOrders(orders){
     let completedOrders = [];
     for (let i = 0; i < orders.length; i++) {
-        if (orders[i].approved) {
+        if (orders[i].accepted) {
             completedOrders.push(orders[i]);
         }
     }
@@ -84,11 +84,11 @@ function createPendingDom(pending_orders){
 
                 <span class="align-middle mx-4">Conferma ordine: </span>
 
-                <button class="btn btn-danger mx-1" type="submit">
+                <button class="btn btn-danger mx-1" type="submit" onclick="notApproveOrder(\'${order._id}\')">
                     <i class="bi-x-circle"></i>
                 </button>
 
-                <button class="btn btn-success mx-1" type="submit">
+                <button class="btn btn-success mx-1" type="submit" onclick="approveOrder(\'${order._id}\')">
                     <i class="bi-check-circle"></i>
                 </button>
             </div>
@@ -118,8 +118,8 @@ function createCompletedDom(completed_orders){
                     Visualizza Dettaglio
                 </button>
     
-                <span class="align-middle mx-4">YYYY-MM-DD</span>
-                <span class="align-middle mx-4">NOME UTENTE</span>
+                <span class="align-middle mx-4">${timeStampToDate(order.timestamp)}</span>
+                <span class="align-middle mx-4">${order.userName}</span>
     
                 <div class="collapse mt-4" id="ordine-complete-${order._id}">
                     <table class="table table-striped table-bordered">
@@ -167,4 +167,33 @@ function timeStampToDate(timestamp) {
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
     return `${year}-${month}-${day}`;
+}
+
+//approve order 
+function approveOrder(orderId){
+    $.ajax({
+        url: "/api/v1/orders/approve/"+orderId,
+        type: "put",
+        success: function (result) {
+            console.log(result);
+            getOrders();
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }
+    });
+}
+
+function notApproveOrder(orderId){
+    $.ajax({
+        url: "/api/v1/orders/not_approve/"+orderId,
+        type: "put",
+        success: function (result) {
+            console.log(result);
+            getOrders();
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }
+    });
 }
