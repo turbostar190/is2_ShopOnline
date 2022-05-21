@@ -9,6 +9,7 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Storico Ordine</title>
 </head>
 
@@ -24,7 +25,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 </ul>
 
-                <span class="align-middle mx-4">Ciao, UTENTE! </span>
+                <span class="align-middle mx-4">Ciao, <span id="nomeUtente"></span>!</span>
 
                 <form class="d-flex">
                     <button class="btn btn-outline-dark mx-1" type="submit">
@@ -51,59 +52,8 @@
                                         </div>
 
                                         <hr class="my-2">
-
-                                        <div class="row my-3 d-flex justify-content-between align-items-center">
-                                            <div class="col-sm-6">
-
-                                                <button class="btn btn-primary mx-1" type="submit"
-                                                    data-bs-toggle="collapse" data-bs-target="#ordine-1">
-                                                    <i class="bi-eye-fill"></i>
-                                                    Visualizza Dettaglio
-                                                </button>
-
-                                                <span class="align-middle mx-4">YYYY-MM-DD</span>
-                                                <span class="align-middle mx-4">NOME UTENTE</span>
-
-                                                <div class="collapse mt-4" id="ordine-1">
-                                                    <table class="table table-striped table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">PRODOTTO</th>
-                                                                <th scope="col">QUANTITÀ</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>Carote</td>
-                                                                <td>99+</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Carote</td>
-                                                                <td>99+</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Carote</td>
-                                                                <td>99+</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 col-md-4">
-
-                                                <span class="align-middle mx-4">Conferma ordine: </span>
-
-                                                <button class="btn btn-danger mx-1" type="submit">
-                                                    <i class="bi-x-circle"></i>
-                                                </button>
-
-                                                <button class="btn btn-success mx-1" type="submit">
-                                                    <i class="bi-check-circle"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <hr class="my-2">
+                                        
+                                        <div id="lista_pending"></div>
 
                                     </div>
                                     <div class="p-5">
@@ -113,49 +63,9 @@
                                         </div>
 
                                         <hr class="my-2">
-                                        <div class="row my-3 d-flex justify-content-between align-items-center">
-                                            <div class="col-sm-6">
 
-                                                <button class="btn btn-primary mx-1" type="submit"
-                                                    data-bs-toggle="collapse" data-bs-target="#ordine-2">
-                                                    <i class="bi-eye-fill"></i>
-                                                    Visualizza Dettaglio
-                                                </button>
-
-                                                <span class="align-middle mx-4">YYYY-MM-DD</span>
-                                                <span class="align-middle mx-4">NOME UTENTE</span>
-
-                                                <div class="collapse mt-4" id="ordine-2">
-                                                    <table class="table table-striped table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">PRODOTTO</th>
-                                                                <th scope="col">QUANTITÀ</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>Carote</td>
-                                                                <td>99+</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Carote</td>
-                                                                <td>99+</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Carote</td>
-                                                                <td>99+</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 col-md-4">
-                                            </div>
-                                        </div>
-
-                                        <hr class="my-2">
-
+                                        <div id="lista_completed"></div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -167,8 +77,9 @@
     </section>
 
     <!-- Bootstrap core JS-->
+    <script src="../utils.js"></script>
+    <script src="./script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>
