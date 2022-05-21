@@ -4,7 +4,7 @@ window.onload = function () {
     getOrders();
 };
 
-function getOrders(){
+function getOrders() {
     $.ajax({
         url: "/api/v1/orders/",
         type: "get",
@@ -25,10 +25,10 @@ function getOrders(){
 }
 
 //get not approved orders
-function getPendingOrders(orders){
+function getPendingOrders(orders) {
     let pendingOrders = [];
     for (let i = 0; i < orders.length; i++) {
-        if (orders[i].accepted==null) {
+        if (orders[i].accepted == null) {
             pendingOrders.push(orders[i]);
         }
     }
@@ -36,7 +36,7 @@ function getPendingOrders(orders){
 }
 
 //gets completed orders
-function getCompletedOrders(orders){
+function getCompletedOrders(orders) {
     let completedOrders = [];
     for (let i = 0; i < orders.length; i++) {
         if (orders[i].accepted) {
@@ -47,12 +47,12 @@ function getCompletedOrders(orders){
 }
 
 //Creates the DOM for the pending orders
-function createPendingDom(pending_orders){
-    
-    let pendingOrdersDom = "";
+function createPendingDom(pending_orders) {
 
+    let pendingOrdersDom = "";
+    let stato = checkToken();
     pending_orders.forEach(order => {
-        
+
         pendingOrdersDom += `
         <div class="row my-3 d-flex justify-content-between align-items-center">
             <div class="col-sm-6">
@@ -81,7 +81,9 @@ function createPendingDom(pending_orders){
                 </div>
             </div>
             <div class="col-sm-6 col-md-4">
-
+            `
+        if (stato.admin) { 
+        pendingOrdersDom += `
                 <span class="align-middle mx-4">Conferma ordine: </span>
 
                 <button class="btn btn-danger mx-1" type="submit" onclick="notApproveOrder(\'${order._id}\')">
@@ -96,13 +98,14 @@ function createPendingDom(pending_orders){
 
         <hr class="my-2">
         `;
+    }
     });
-    
-    return pendingOrdersDom;
+
+return pendingOrdersDom;
 }
 
 //Creates the DOM for the completed orders
-function createCompletedDom(completed_orders){
+function createCompletedDom(completed_orders) {
     let completedOrdersDom = "";
 
     completed_orders.forEach(order => {
@@ -170,9 +173,9 @@ function timeStampToDate(timestamp) {
 }
 
 //approve order 
-function approveOrder(orderId){
+function approveOrder(orderId) {
     $.ajax({
-        url: "/api/v1/orders/approve/"+orderId,
+        url: "/api/v1/orders/approve/" + orderId,
         type: "put",
         success: function (result) {
             console.log(result);
@@ -184,9 +187,9 @@ function approveOrder(orderId){
     });
 }
 
-function notApproveOrder(orderId){
+function notApproveOrder(orderId) {
     $.ajax({
-        url: "/api/v1/orders/not_approve/"+orderId,
+        url: "/api/v1/orders/not_approve/" + orderId,
         type: "put",
         success: function (result) {
             console.log(result);

@@ -10,34 +10,34 @@ function postOrders(req, res, next) {
     Cart.find({
         userId: req.user.userId
     })
-    .populate('productId')
-    .exec()
+        .populate('productId')
+        .exec()
         .then((cart) => {
             console.log(cart);
             if (cart != null) {
                 let products = [];
                 let set = new Set();
                 cart.forEach(element => {
-                    if(set.has(element.productId._id)){
+                    if (set.has(element.productId._id)) {
                         let index = products.findIndex(p => p.productId == element.productId._id);
                         products[index].quantity += element.quantity;
-                    }else{
+                    } else {
                         set.add(element.productId._id);
                         products.push({
                             productId: element.productId._id,
                             productName: element.productId.name,
                             quantity: element.quantity
                         });
-                    } 
+                    }
                 });
                 _id = new mongoose.Types.ObjectId();
                 let order_data = {
                     _id: _id,
                     products: products,
                     userId: req.user.userId,
-                    userName : req.user.nome,
+                    userName: req.user.nome,
                     timestamp: _id.getTimestamp(),
-                    accepted : null,
+                    accepted: null,
                 }
                 console.log(req.user.nome);
                 const order = new Order(order_data);
@@ -72,15 +72,103 @@ function postOrders(req, res, next) {
         })
 }
 
-function getOrders(req, res, next){
+function getOrders(req, res, next) {
     console.log("init get");
     console.log(req.user);
     let admin = req.user.admin;
-    if(admin){
+    if (admin) {
         Order.find()
+            .exec()
+            .then((orders) => {
+                res.status(200).json(orders);
+            })
+            .catch((err) => {
+                console.log(err)
+                res.status(500).json({
+                    message: err.toString()
+                })
+            });
+    } else {
+        Order.find({
+            userId: req.user.userId
+        })
+            .exec()
+            .then((orders) => {
+                res.status(200).json(orders);
+            })
+            .catch((err) => {
+                console.log(err)
+                res.status(500).json({
+                    message: err.toString()
+                })
+            });
+    }
+
+}
+function approveOrder(req, res, next) {
+    console.log("init approve");
+
+    if (res.user.admin) {
+        Order.findById(req.params.id)
+            .exec()
+            .then((order) => {
+                if (order != null) {
+                    order.accepted = true;
+                    order
+                        .save()
+                        .then((result) => {
+                            res.status(200).json(result);
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            res.status(500).json({
+                                message: err.toString()
+                            })
+                        });
+                } else {
+                    return res.status(404).json({
+                        message: "Order not found",
+                    });
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                res.status(500).json({
+                    message: err.toString()
+                })
+            });
+    }else{
+        return res.status(401).json({
+            message: "Unauthorized",
+        });
+    }
+
+}
+
+function notApproveOrder(req, res, next) {
+    console.log("init approve");
+    if(res.user.admin){
+        Order.findById(req.params.id)
         .exec()
-        .then((orders) => {
-            res.status(200).json(orders);
+        .then((order) => {
+            if (order != null) {
+                order.accepted = false;
+                order
+                    .save()
+                    .then((result) => {
+                        res.status(200).json(result);
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        res.status(500).json({
+                            message: err.toString()
+                        })
+                    });
+            } else {
+                return res.status(404).json({
+                    message: "Order not found",
+                });
+            }
         })
         .catch((err) => {
             console.log(err)
@@ -89,84 +177,11 @@ function getOrders(req, res, next){
             })
         });
     }else{
-        Order.find({
-            userId: req.user.userId
-        })
-        .exec()
-        .then((orders) => {
-            res.status(200).json(orders);
-        })
-        .catch((err) => {
-            console.log(err)
-            res.status(500).json({
-                message: err.toString()
-            })
+        return res.status(401).json({
+            message: "Unauthorized",
         });
     }
-    
-}
-function approveOrder(req, res, next){
-    console.log("init approve");
-    Order.findById(req.params.id)
-    .exec()
-    .then((order) => {
-        if(order != null){
-            order.accepted = true;
-            order
-            .save()
-            .then((result) => {
-                res.status(200).json(result);
-            })
-            .catch((err) => {
-                console.log(err)
-                res.status(500).json({
-                    message: err.toString()
-                })
-            });
-        }else{
-            return res.status(404).json({
-                message: "Order not found",
-            });
-        }
-    })
-    .catch((err) => {
-        console.log(err)
-        res.status(500).json({
-            message: err.toString()
-        })
-    });
-}
 
-function notApproveOrder(req, res, next){
-    console.log("init approve");
-    Order.findById(req.params.id)
-    .exec()
-    .then((order) => {
-        if(order != null){
-            order.accepted = false;
-            order
-            .save()
-            .then((result) => {
-                res.status(200).json(result);
-            })
-            .catch((err) => {
-                console.log(err)
-                res.status(500).json({
-                    message: err.toString()
-                })
-            });
-        }else{
-            return res.status(404).json({
-                message: "Order not found",
-            });
-        }
-    })
-    .catch((err) => {
-        console.log(err)
-        res.status(500).json({
-            message: err.toString()
-        })
-    });
 }
 
 
