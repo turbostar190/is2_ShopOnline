@@ -25,16 +25,21 @@ function postOrders(req, res, next) {
                         set.add(element.productId._id);
                         products.push({
                             productId: element.productId._id,
+                            productName: element.productId.name,
                             quantity: element.quantity
                         });
                     } 
                 });
+                _id = new mongoose.Types.ObjectId();
                 let order_data = {
-                    _id: new mongoose.Types.ObjectId(),
+                    _id: _id,
                     products: products,
                     userId: req.user.userId,
+                    userName : req.user.nome,
+                    timestamp: _id.getTimestamp(),
                     accepted : false,
                 }
+                console.log(req.user.nome);
                 const order = new Order(order_data);
 
                 order
