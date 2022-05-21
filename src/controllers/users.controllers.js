@@ -81,7 +81,8 @@ const checkToken = async (req, res) => {
         message: {
             token: token,
             nome: req.user.nome,
-            admin: req.user.admin
+            admin: req.user.admin,
+            _id : req.user.userId
         },
     });
 }

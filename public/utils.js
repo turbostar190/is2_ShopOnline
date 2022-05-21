@@ -13,7 +13,8 @@ function checkToken(callback, callbackErr) {
     let user = {
         isLogged: false,
         nome: "",
-        admin: false
+        admin: false,
+        _id : "",
     }
     $.ajax({
         url: "/api/v1/users/checkToken",
@@ -25,6 +26,7 @@ function checkToken(callback, callbackErr) {
             user.isLogged = true;
             user.nome = result.message.nome;
             user.admin = result.message.admin;
+            user._id = result.message._id;
             if (callback) callback(user);
         },
         error: function (err) {
@@ -38,6 +40,21 @@ function setLoggedButtons(user) {
     $("#carrello-btn, #logout-btn, #saluti").show();
     $("#accedi-btn, #registrati-btn").hide();
     $("#nomeUtente").text(user.nome);
+    $("#carrello-btn").click(function () {
+        window.location.replace("/cart");
+    });
+    $("#logout-btn").click(function () {
+        logout();
+    });
+}
+
+function setNotLoggedButtons() {
+    $("#accedi-btn").click(function () {
+        window.location.replace("/login");
+    });
+    $("#registrati-btn").click(function () {
+        window.location.replace("/signin");
+    });
 }
 
 function readCookie(name) {
