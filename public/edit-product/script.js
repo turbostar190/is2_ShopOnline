@@ -42,6 +42,7 @@ function edit_product(e) {
     success: function (result) {
       console.log(result);
       alert("Prodotto aggiornato");
+      window.location.replace("/dashboard");
     },
     error: function (request, status, error) {
       alert(request.responseText);
