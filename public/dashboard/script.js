@@ -1,4 +1,4 @@
-checkToken(setLoggedButtons);
+checkToken(setLoggedButtons,setNotLoggedButtons);
 
 window.onload = function () {
     console.log("init");
@@ -47,7 +47,7 @@ function createProductsDOM(products) {
             <!-- Product actions-->
             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent add-carrello-btn" style="display: ${stato.isLogged ? 'initial' : 'none'};">
                 <div class="text-center">
-                    <a class="btn btn-outline-dark mt-auto" href="#">Aggiungi al carrello</a>
+                    <a class="btn btn-outline-dark mt-auto" href="javascript:addElementToCart(\'${product._id}\');">Aggiungi al carrello</a>
                 </div>
             </div>
         </div>
@@ -55,4 +55,27 @@ function createProductsDOM(products) {
         `;
     });
     return productsDOM;
+}
+
+function addElementToCart(productId){
+    const user = checkToken();
+    const userId = user._id;
+    //data
+    let data = {
+        productId: productId,
+        userId: userId,
+        quantity : 1,
+    };
+    console.log(data);
+    $.ajax({
+        url: "/api/v1/cart/",
+        type: "post",
+        data : data,
+        success: function (result) {
+            alert('Prodotto aggiunto al carrello');
+        },
+        error: function (request, status, error) {
+            alert('Errore');
+        }
+    });
 }
