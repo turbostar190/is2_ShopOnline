@@ -48,6 +48,12 @@ function createProductsDOM(products) {
             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent add-carrello-btn" style="display: ${stato.isLogged ? 'initial' : 'none'};">
                 <div class="text-center">
                     <a class="btn btn-outline-dark mt-auto" href="#">Aggiungi al carrello</a>
+                    <a href="/edit-product?id=${product._id}">
+                        <button class="btn btn-outline-dark my-2" type="button" id="modifica-btn"">
+                        <i class=" bi-pencil-square me-1"></i>
+                        Modifica prodotto
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
