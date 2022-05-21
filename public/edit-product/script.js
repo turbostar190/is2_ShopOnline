@@ -1,35 +1,34 @@
 window.onload = function () {
-    const loginForm = document.getElementById("login-formaggio");
-    loginForm.addEventListener("submit", edit_product);
-  }
-  
-if (getParameter('id') == null) {
-  window.location.replace("/admin/dashboard");
+  const loginForm = document.getElementById("login-formaggio");
+  loginForm.addEventListener("submit", edit_product);
 }
 
-  //login function with api call
-  function edit_product(e) {
-    e.preventDefault();
+if (getParameter('id') == null) {
+  window.location.replace("/dashboard");
+}
 
-    var form = $('#login-formaggio')[0]; 
-    var formData = new FormData(form);
-    const id = getParameter("id");
-    console.log(formData);
+function edit_product(e) {
+  e.preventDefault();
 
-    $.ajax({
-      url: "/api/v1/products/"+id,
-      type: "put",
-      enctype: 'multipart/form-data',
-      data: formData,
-      contentType: false,
-      processData: false,
-      cache : false,
-      success: function (result) {
-        console.log(result);
-        alert("Prodotto aggiornato");
-      },
-      error: function (request, status, error) {
-        alert(request.responseText);
-      }
-    });
-  }
+  var form = $('#login-formaggio')[0];
+  var formData = new FormData(form);
+  const id = getParameter("id");
+  console.log(formData);
+
+  $.ajax({
+    url: "/api/v1/products/" + id,
+    type: "put",
+    enctype: 'multipart/form-data',
+    data: formData,
+    contentType: false,
+    processData: false,
+    cache: false,
+    success: function (result) {
+      console.log(result);
+      alert("Prodotto aggiornato");
+    },
+    error: function (request, status, error) {
+      alert(request.responseText);
+    }
+  });
+}
