@@ -160,8 +160,31 @@ const getProducts = async (req, res) => {
 
 };
 
+const getProductById = async (req, res) => {
+    const product = Product
+        .findOne({ _id: req.params.id })
+        .then(function (product) {
+            if (product) {
+                res.status(200).json(
+                    product,
+                );
+            } else {
+                res.status(400).json({
+                    message: "Bad request",
+                });
+            }
+        })
+        .catch(function (err) {
+            res.status(500).json({
+                err: err
+            });
+        });
+
+};
+
 module.exports = {
     postProducts,
     getProducts,
     editProducts,
+    getProductById,
 };

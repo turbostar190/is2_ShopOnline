@@ -1,6 +1,20 @@
 window.onload = function () {
   const loginForm = document.getElementById("login-formaggio");
   loginForm.addEventListener("submit", edit_product);
+
+  const id = getParameter("id");
+
+  $.ajax({
+    url: "/api/v1/products/" + id,
+    type: "get",
+    success: function (result) {
+      console.log(result);
+      $("#name").val(result.name);
+      $("#description").val(result.description);
+      $("#category").val(result.category);
+      $("#cost").val(result.cost);
+    }
+  });
 }
 
 if (getParameter('id') == null) {
