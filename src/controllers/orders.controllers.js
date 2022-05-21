@@ -37,7 +37,7 @@ function postOrders(req, res, next) {
                     userId: req.user.userId,
                     userName : req.user.nome,
                     timestamp: _id.getTimestamp(),
-                    accepted : false,
+                    accepted : null,
                 }
                 console.log(req.user.nome);
                 const order = new Order(order_data);
@@ -137,8 +137,42 @@ function approveOrder(req, res, next){
     });
 }
 
+function notApproveOrder(req, res, next){
+    console.log("init approve");
+    Order.findById(req.params.id)
+    .exec()
+    .then((order) => {
+        if(order != null){
+            order.accepted = false;
+            order
+            .save()
+            .then((result) => {
+                res.status(200).json(result);
+            })
+            .catch((err) => {
+                console.log(err)
+                res.status(500).json({
+                    message: err.toString()
+                })
+            });
+        }else{
+            return res.status(404).json({
+                message: "Order not found",
+            });
+        }
+    })
+    .catch((err) => {
+        console.log(err)
+        res.status(500).json({
+            message: err.toString()
+        })
+    });
+}
+
+
 module.exports = {
     postOrders,
     getOrders,
-    approveOrder
+    approveOrder,
+    notApproveOrder
 }
