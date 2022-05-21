@@ -41,13 +41,14 @@ app.locals.db = mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, us
     // router
     const usersRouter = require('./src/routes/users.routes');
     const productsRouter = require('./src/routes/products.routes');
-
+    const cartRouter = require('./src/routes/cart.routers.js');
     // files
     app.use('/', express.static('public'));
 
     // api
     app.use('/api/v1/users', usersRouter);
     app.use('/api/v1/products', productsRouter);
+    app.use('/api/v1/cart', cartRouter);
 
     // catch 404 and forward to error handler
     app.use(function (req, res, next) {
