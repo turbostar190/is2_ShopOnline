@@ -9,8 +9,10 @@ const path = require('path');
 //function to get the cart of the user
 function getCart(req, res, next) {
     console.log("init get");
+    
+    const userId = req.user.userId;
     Cart.find({
-            userId: req.body.userId
+            userId: userId
         })
         .populate('productId')
         .exec()
@@ -35,7 +37,9 @@ function getCart(req, res, next) {
 //function to add an element to the cart
 function addElementToCart(req, res, next) {
     console.log("init add");
-    if (!(req.body.productId && req.body.userId)) {
+    const user = checkToken();
+    const userId = user._id;
+    if (!(req.body.productId && userId)) {
         return res.status(400).json({
             message: "Missing parameters"
         });
@@ -43,7 +47,7 @@ function addElementToCart(req, res, next) {
     const cart = new Cart({
         _id: mongoose.Types.ObjectId(),
         productId: req.body.productId,
-        userId: req.body.userId,
+        userId: userId,
         quantity: req.body.quantity
     });
     cart.save()
