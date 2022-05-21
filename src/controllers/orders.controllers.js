@@ -15,20 +15,25 @@ function postOrders(req, res, next) {
         .then((cart) => {
             console.log(cart);
             if (cart != null) {
-                
                 let products = [];
-                cart.forEach(element => {   
-                    products.push({
-                        productId: element.productId._id,
-                        quantity: element.quantity
-                    });
-                    console.log(element);
+                let set = new Set();
+                cart.forEach(element => {
+                    if(set.has(element.productId._id)){
+                        let index = products.findIndex(p => p.productId == element.productId._id);
+                        products[index].quantity += element.quantity;
+                    }else{
+                        set.add(element.productId._id);
+                        products.push({
+                            productId: element.productId._id,
+                            quantity: element.quantity
+                        });
+                    } 
                 });
-                console.log(products);
                 let order_data = {
                     _id: new mongoose.Types.ObjectId(),
                     products: products,
-                    userId: req.user.userId
+                    userId: req.user.userId,
+                    accepted : false,
                 }
                 const order = new Order(order_data);
 
