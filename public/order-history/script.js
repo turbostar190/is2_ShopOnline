@@ -19,7 +19,7 @@ function getOrders() {
 
         },
         error: function (request, status, error) {
-            alert(request.responseText);
+            alert(error);
         }
     });
 }
@@ -183,7 +183,7 @@ function approveOrder(orderId) {
             getOrders();
         },
         error: function (request, status, error) {
-            alert(request.responseText);
+            alert(error);
         }
     });
 }
@@ -197,7 +197,7 @@ function notApproveOrder(orderId) {
             getOrders();
         },
         error: function (request, status, error) {
-            alert(request.responseText);
+            alert(error);
         }
     });
 }

@@ -45,7 +45,7 @@ function edit_product(e) {
       window.location.replace("/dashboard");
     },
     error: function (request, status, error) {
-      alert(request.responseText);
+      alert(error);
     }
   });
 }

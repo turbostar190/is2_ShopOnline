@@ -24,7 +24,7 @@ window.onload = function () {
         alert("Prodotto aggiunto");
       },
       error: function (request, status, error) {
-        alert(request.responseText);
+        alert(error);
       }
     });
   }
