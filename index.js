@@ -15,6 +15,21 @@ const options = {
       title: 'IS2 Shop Online',
       version: '1.0.0',
     },
+    servers: [{
+      url: "http://localhost:3000/api/",
+      description: "Development server"
+    }],
+    components: {        
+      securitySchemes: {
+        token: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          name: "token",
+          in: "header"
+        }
+      }
+    }
   },
   apis: ['./src/routes/*.js'], // files containing annotations as above
 };
