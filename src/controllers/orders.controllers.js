@@ -7,6 +7,7 @@ const Cart = require("../models/cart");
 // function to post orders
 function postOrders(req, res, next) {
     console.log("init orders");
+    
     Cart.find({
         userId: req.user.userId
     })
@@ -105,10 +106,11 @@ function getOrders(req, res, next) {
     }
 
 }
+
 function approveOrder(req, res, next) {
     console.log("init approve");
 
-    if (res.user.admin) {
+    if (req.user.admin) {
         Order.findById(req.params.id)
             .exec()
             .then((order) => {
@@ -147,7 +149,8 @@ function approveOrder(req, res, next) {
 
 function notApproveOrder(req, res, next) {
     console.log("init approve");
-    if(res.user.admin){
+
+    if(req.user.admin){
         Order.findById(req.params.id)
         .exec()
         .then((order) => {
