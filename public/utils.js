@@ -41,7 +41,7 @@ function setLoggedButtons(user) {
     $("#accedi-btn, #registrati-btn").hide();
     $("#nomeUtente").text(user.nome);
     $("#carrello-btn").click(function () {
-        window.location.replace("/cart");
+        window.location.href = "/cart";
     });
     $("#logout-btn").click(function () {
         logout();
@@ -50,10 +50,10 @@ function setLoggedButtons(user) {
 
 function setNotLoggedButtons() {
     $("#accedi-btn").click(function () {
-        window.location.replace("/login");
+        window.location.href = "/login";
     });
     $("#registrati-btn").click(function () {
-        window.location.replace("/signin");
+        window.location.href = "/signin";
     });
 }
 
