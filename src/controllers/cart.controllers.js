@@ -124,7 +124,7 @@ function addElementToCart(req, res, next) {
                     })
                     .catch((err) => {
                         console.log(err)
-                        res.status(400).json({
+                        res.status(500).json({
                             message: err.toString()
                         })
                     });
@@ -154,7 +154,7 @@ function updateElementFromCart(req, res, next) {
         .then(function (doc) {
             if (doc == null) {
                 console.log("no cart item to modify", err.toString());
-                res.status(400).json({
+                res.status(404).json({
                     error: "no cart item to modify"
                 });
             } else {
@@ -173,7 +173,7 @@ function updateElementFromCart(req, res, next) {
                     })
                     .catch((err) => {
                         console.log(err)
-                        res.status(400).json({
+                        res.status(500).json({
                             message: err.toString()
                         })
                     });

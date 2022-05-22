@@ -42,7 +42,7 @@ const postProducts = (req, res, next) => {
                             })
                             .catch((err) => {
                                 console.log(err)
-                                res.status(400).json({
+                                res.status(500).json({
                                     message: err.toString()
                                 })
                             });
@@ -54,7 +54,7 @@ const postProducts = (req, res, next) => {
                         })
                     });
             } else {
-                return res.status(401).json({
+                return res.status(403).json({
                     message: "Product already exists",
                 });
             }
@@ -110,7 +110,7 @@ const editProducts = (req, res, next) => {
                             })
                             .catch((err) => {
                                 console.log(err)
-                                res.status(400).json({
+                                res.status(500).json({
                                     message: err.toString()
                                 })
                             });
@@ -122,7 +122,7 @@ const editProducts = (req, res, next) => {
                         })
                     });
             } else {
-                return res.status(401).json({
+                return res.status(404).json({
                     message: "Product don't exist",
                 });
             }
@@ -142,15 +142,9 @@ const getProducts = async (req, res) => {
     const products = Product
         .find({})
         .then(function (products) {
-            if (products) {
-                res.status(200).json(
-                    products,
-                );
-            } else {
-                res.status(400).json({
-                    message: "Bad request",
-                });
-            }
+            res.status(200).json(
+                products,
+            );
         })
         .catch(function (err) {
             res.status(500).json({
@@ -169,8 +163,8 @@ const getProductById = async (req, res) => {
                     product,
                 );
             } else {
-                res.status(400).json({
-                    message: "Bad request",
+                res.status(404).json({
+                    message: "Not found",
                 });
             }
         })

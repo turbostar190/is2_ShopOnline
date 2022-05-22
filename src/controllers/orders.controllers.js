@@ -53,7 +53,7 @@ function postOrders(req, res, next) {
                             })
                             .catch((err) => {
                                 console.log(err)
-                                res.status(400).json({
+                                res.status(500).json({
                                     message: err.toString()
                                 })
                             });
@@ -65,8 +65,8 @@ function postOrders(req, res, next) {
                         })
                     });
             } else {
-                return res.status(500).json({
-                    message: "Cart is empty",
+                return res.status(403).json({
+                    message: "Cart is empty, forbidden",
                 });
             }
         })
