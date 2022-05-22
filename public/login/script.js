@@ -31,7 +31,7 @@ function login(e) {
       if (response.status === 401) {
         $("#login-error-msg").show();
       }
-      alert(response.responseText);
+      alert(error);
     }
   });
 }

@@ -26,7 +26,7 @@ function getIndirizzo() {
             }
         },
         error: function (request, status, error) {
-            alert(request.responseText);
+            alert(error);
         }
     });
 }
@@ -46,7 +46,7 @@ function getCart() {
             $(".prezzo").text("€ " + price);
         },
         error: function (request, status, error) {
-            alert(request.responseText);
+            alert(error);
         }
     });
 }
@@ -118,7 +118,7 @@ function updateCartItem(cartId, productId, quantity, $selector) {
             $(".prezzo").text("€ " + price);
         },
         error: function (request, status, error) {
-            alert(request.responseText);
+            alert(error);
         }
     });
 }
@@ -141,7 +141,7 @@ function deleteCartItem(cartId, $selector) {
             $(".prezzo").text("€ " + price);
         },
         error: function (request, status, error) {
-            alert(request.responseText);
+            alert(error);
         }
     });
 }
@@ -172,7 +172,7 @@ function formSubmit(e) {
         console.log(result);
       },
       error: function (response, status, error) {
-        alert(response.responseText);
+        alert(error);
       }
     });*/
 }

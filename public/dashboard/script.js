@@ -24,7 +24,7 @@ function getProducts(e) {
             $(".lista").html(productsDom);
         },
         error: function (request, status, error) {
-            alert(request.responseText);
+            alert(error);
         }
     });
 }

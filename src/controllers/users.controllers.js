@@ -57,16 +57,21 @@ const userLogin = (req, res, next) => {
         });
 }
 
-const getMe = async (req, res) => {
+const getMe = (req, res) => {
     const userId = req.user.userId;
-    const user = await User.findById(userId);
-    if (user) {
-        res.status(200).json(user);
-    } else {
-        res.status(400).json({
-            message: "Bad request",
+    User.findById(userId).then((user) => {
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(400).json({
+                message: "Bad request",
+            });
+        }
+    }).catch((err) => {
+        res.status(500).json({
+            error: err,
         });
-    }
+    });
 };
 
 // Se arriva qui è perché ha passato i controlli e quindi rimanda indietro se stesso
@@ -91,7 +96,7 @@ const userSignIn = (req, res, next) => {
         .exec()
         .then((user) => {
             if (user.length >= 1) {
-                res.status(409).json({
+                res.status(403).json({
                     message: "Email Exists"
                 })
             } else {
@@ -119,18 +124,11 @@ const userSignIn = (req, res, next) => {
                                     .save()
                                     .then((result1) => {
                                         console.log(`User created ${result}`)
-                                        res.status(201).json({
-                                            userDetails: {
-                                                userId: result._id,
-                                                email: result.email,
-                                                nome: result.nome,
-                                                indirizzo: result.indirizzo || {}
-                                            },
-                                        })
+                                        res.status(201).location("/api/v1/users/me").json({}).end();
                                     })
                                     .catch((err) => {
                                         console.log(err)
-                                        res.status(400).json({
+                                        res.status(500).json({
                                             message: err.toString()
                                         })
                                     });

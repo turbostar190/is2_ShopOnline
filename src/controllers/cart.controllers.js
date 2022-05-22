@@ -102,7 +102,7 @@ function addElementToCart(req, res, next) {
                     .then(result => {
                         // TODO: Per ora non si può ottenere solo uno specifico prodotto dal carrello... 
                         // ritorna quindi location per intero carrello
-                        res.status(201).location("/api/v1/cart/").end();
+                        res.status(201).location("/api/v1/cart/").json({}).end();
                     })
                     .catch(err => {
                         console.log("errore cart save add", err.toString());
@@ -124,7 +124,7 @@ function addElementToCart(req, res, next) {
                     })
                     .catch((err) => {
                         console.log(err)
-                        res.status(400).json({
+                        res.status(500).json({
                             message: err.toString()
                         })
                     });
@@ -154,7 +154,7 @@ function updateElementFromCart(req, res, next) {
         .then(function (doc) {
             if (doc == null) {
                 console.log("no cart item to modify", err.toString());
-                res.status(400).json({
+                res.status(404).json({
                     error: "no cart item to modify"
                 });
             } else {
@@ -173,7 +173,7 @@ function updateElementFromCart(req, res, next) {
                     })
                     .catch((err) => {
                         console.log(err)
-                        res.status(400).json({
+                        res.status(500).json({
                             message: err.toString()
                         })
                     });
