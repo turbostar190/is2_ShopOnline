@@ -1,4 +1,6 @@
-checkToken(setLoggedButtons);
+checkToken(setLoggedButtons, function () {
+    window.location.replace("/dashboard")
+});
 
 window.onload = function () {
     getOrders();
