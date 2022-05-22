@@ -55,32 +55,33 @@ function createPendingDom(pending_orders) {
 
         pendingOrdersDom += `
         <div class="row my-3 d-flex justify-content-between align-items-center">
-            <div class="col-sm-6">
-
-                <button class="btn btn-primary mx-1" type="submit"
-                    data-bs-toggle="collapse" data-bs-target="#ordine-pending-${order._id}">
-                    <i class="bi-eye-fill"></i>
-                    Visualizza Dettaglio
-                </button>
-
-                <span class="align-middle mx-4">${timeStampToDate(order.timestamp)}</span>
-                <span class="align-middle mx-4">${order.userName}</span>
-
-                <div class="collapse mt-4" id="ordine-pending-${order._id}">
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">PRODOTTO</th>
-                                <th scope="col">QUANTITÀ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${generateOrderTable(order.products)}
-                        </tbody>
-                    </table>
-                </div>
+        <div class="col-sm-6">
+            <button class="btn btn-primary mx-1" type="submit"
+                data-bs-toggle="collapse" data-bs-target="#ordine-pending-${order._id}">
+                <i class="bi-eye-fill"></i>
+                Visualizza Dettaglio
+            </button>
+            <span class="align-middle mx-4">${timeStampToDate(order.timestamp)}</span>
+            <span class="align-middle mx-4">${order.userName}</span>
+            <div class="collapse mt-4" id="ordine-pending-${order._id}">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">PRODOTTO</th>
+                            <th scope="col">QUANTITÀ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${generateOrderTable(order.products)}
+                    </tbody>
+                </table>
             </div>
-            <div class="col-sm-6 col-md-4">
+        </div>
+        <div class="col-sm-6 col-md-4">
+        </div>
+    </div>
+
+    <hr class="my-2">
             `
         if (stato.admin) { 
         pendingOrdersDom += `
