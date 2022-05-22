@@ -5,7 +5,7 @@ checkToken(setLoggedButtons, function () {
 window.onload = function () {
     const loginForm = document.getElementById("spedizione-formaggio");
     loginForm.addEventListener("submit", formSubmit);
-
+    document.getElementById("ordina").addEventListener("click", formSubmit);
     getIndirizzo();
     getCart();
     getCartTotalQuantity();
@@ -152,29 +152,18 @@ function deleteCartItem(cartId, $selector) {
  */
 function formSubmit(e) {
     e.preventDefault();
-
-    let data = {
-        spedizioneCasa: $("#consegna-casa").is(":checked"),
-        indirizzo: {
-            via: $("#spedizione-via").val(),
-            comune: $("#spedizione-comune").val(),
-            cap: $("#spedizione-cap").val()
+    console.log("ordina");
+    $.ajax({
+        url: "/api/v1/orders/",
+        type: "post",
+        success: function (result) {
+            alert("Ordine effettuato con successo!");
+            window.location.href = "/order-history";
+        },
+        error: function (response, status, error) {
+            alert(error);
         }
-    }
-    console.log("ordina", data);
-    // TODO: Ordine
-    /*$.ajax({
-      url: "/api/v1/cart/buy",
-      type: "post",
-      dataType: "json",
-      data: data,
-      success: function (result) {
-        console.log(result);
-      },
-      error: function (response, status, error) {
-        alert(error);
-      }
-    });*/
+    });
 }
 
 /**

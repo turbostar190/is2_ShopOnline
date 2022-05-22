@@ -5,6 +5,11 @@ checkToken(function() {
 window.onload = function () {
   const loginForm = document.getElementById("login-formaggio");
   loginForm.addEventListener("submit", login);
+  //add even listener to the sign in button
+  const signInButton = document.getElementById("sign-in");
+  signInButton.addEventListener("click", function () {
+    window.location.href = "/signin";
+  });
 }
 
 //login function with api call
