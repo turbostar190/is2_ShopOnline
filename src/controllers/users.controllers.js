@@ -28,7 +28,7 @@ const userLogin = (req, res, next) => {
                         userId: user._id,
                         email: user.email,
                         nome: user.nome,
-                        admin: user.admin != undefined
+                        admin: user.admin != undefined && user.admin == true,
                     },
                         process.env.jwtSecret, {
                         expiresIn: "1d",
