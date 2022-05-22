@@ -4,6 +4,13 @@ const fs = require('fs');
 const path = require('path');
 
 const postProducts = (req, res, next) => {
+    if (!req.user.admin) {
+        res.status(401).json({
+            message: "Unauthorized"
+        });
+        return;
+    }
+
     if (req.body.cost < 0) {
         res.status(400).json({
             message: "Cost must be positive",
@@ -67,7 +74,15 @@ const postProducts = (req, res, next) => {
             });
         });
 }
+
 const editProducts = (req, res, next) => {
+    if (!req.user.admin) {
+        res.status(401).json({
+            message: "Unauthorized"
+        });
+        return;
+    }
+
     if (req.body.cost < 0) {
         res.status(400).json({
             message: "Cost must be positive",
@@ -76,7 +91,6 @@ const editProducts = (req, res, next) => {
         return;
     }
 
-    console.log("Init edit");
     Product.findOne({
         _id: req.params.id
     })
@@ -135,7 +149,6 @@ const editProducts = (req, res, next) => {
             });
         });
 }
-
 
 const getProducts = async (req, res) => {
     console.log("find");

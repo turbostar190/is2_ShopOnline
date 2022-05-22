@@ -28,7 +28,7 @@ const userLogin = (req, res, next) => {
                         userId: user._id,
                         email: user.email,
                         nome: user.nome,
-                        admin: user.admin != undefined
+                        admin: user.admin != undefined && user.admin == true,
                     },
                         process.env.jwtSecret, {
                         expiresIn: "1d",
@@ -77,7 +77,7 @@ const checkToken = async (req, res) => {
     res.status(200).json({
         message: {
             token: token,
-            nome: req.user.nome,
+            nome: req.user.admin ? "super " + req.user.nome : req.user.nome,
             admin: req.user.admin,
             _id : req.user.userId
         },

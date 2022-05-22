@@ -1,3 +1,10 @@
+function continueIfSuper(user) {
+  if (user == undefined || user.admin == false) {
+    window.location.replace("/dashboard");
+  }
+}
+checkToken(continueIfSuper, continueIfSuper);
+
 window.onload = function () {
   const loginForm = document.getElementById("login-formaggio");
   loginForm.addEventListener("submit", edit_product);
