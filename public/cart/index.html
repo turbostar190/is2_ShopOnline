@@ -17,14 +17,14 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="#!">Shop Online</a>
+            <a class="navbar-brand" href="/dashboard">Shop Online</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 </ul>
-                <span class="align-middle mx-4" id="saluti" style="display: none;">Ciao, <span id="nomeUtente"></span>! </span>
+                <span class="align-middle mx-4" id="saluti" style="display: none;">Ciao, <span id="nomeUtente"></span>!</span>
                 <div class="d-flex funzioni">
                     <button class="btn btn-outline-dark mx-1" type="button" id="logout-btn" style="display: none;">
                         <i class="bi-box-arrow-in-left me-1"></i>
@@ -47,10 +47,10 @@
 
                                         <div class="d-flex justify-content-between align-items-center mb-5">
                                             <h1 class="fw-bold mb-0 text-black">Carrello</h1>
-                                            <h6 class="mb-0 text-muted">XX oggetti</h6>
+                                            <h6 class="mb-0 text-muted"><span id="totNum">0</span> prodotti</h6>
                                         </div>
                                         <div class="cartProdotti">
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -72,38 +72,39 @@
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="consegna"
-                                                    id="consegna-casa" checked>
-                                                <label class="form-check-label" for="consegna-casa  ">
+                                                    id="consegna-casa" checked required>
+                                                <label class="form-check-label" for="consegna-casa">
                                                     Consegna a casa
                                                 </label>
                                             </div>
 
-                                            <label class="form-label mt-4" for="spedizione-indirizzo">Indirizzo</label>
-                                            <input type="text" id="spedizione-indirizzo"
-                                                class="form-control form-control-lg" />
+                                            <label class="form-label mt-4" for="spedizione-via">Via</label>
+                                            <input type="text" id="spedizione-via"
+                                                class="form-control form-control-lg" required readonly />
 
-                                            <label class="form-label mt-2" for="spedizione-indirizzo">Comune</label>
+                                            <label class="form-label mt-2" for="spedizione-comune">Comune</label>
                                             <input type="text" id="spedizione-comune"
-                                                class="form-control form-control-lg" />
+                                                class="form-control form-control-lg" required readonly />
 
-                                            <label class="form-label mt-2" for="spedizione-indirizzo">CAP</label>
+                                            <label class="form-label mt-2" for="spedizione-cap">CAP</label>
                                             <input type="text" id="spedizione-cap"
-                                                class="form-control form-control-lg" />
+                                                class="form-control form-control-lg" required readonly />
+
+                                            <hr class="my-4">
+
+                                            <div class="d-flex justify-content-between mb-5">
+                                                <h5 class="text-uppercase">Totale</h5>
+                                                <h5 class="prezzo"></h5>
+                                            </div>
+
+                                            <div class="mb-2">
+                                                <button class="btn btn-success mx-1" type="submit">
+                                                    <i class="bi-check-circle me-1"></i>
+                                                    Ordina
+                                                </button>
+                                            </div>
+
                                         </form>
-
-                                        <hr class="my-4">
-
-                                        <div class="d-flex justify-content-between mb-5">
-                                            <h5 class="text-uppercase">Prezzo totale</h5>
-                                            <h5 class="prezzo">€ XX.XX</h5>
-                                        </div>
-
-                                        <div class="mb-2">
-                                            <button class="btn btn-success mx-1" type="submit">
-                                                <i class="bi-check-circle me-1"></i>
-                                                Ordina
-                                            </button>
-                                        </div>
 
                                     </div>
                                 </div>
@@ -117,7 +118,7 @@
 
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../utils.js"></script>
+    <script src="/utils.js"></script>
     <script src="script.js"></script>
 </body>
 
