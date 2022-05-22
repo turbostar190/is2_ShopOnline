@@ -77,7 +77,7 @@ const checkToken = async (req, res) => {
     res.status(200).json({
         message: {
             token: token,
-            nome: req.user.nome,
+            nome: req.user.admin ? "super " + req.user.nome : req.user.nome,
             admin: req.user.admin,
             _id : req.user.userId
         },
