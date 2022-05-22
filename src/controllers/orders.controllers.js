@@ -49,7 +49,7 @@ function postOrders(req, res, next) {
                             .save()
                             .then((result1) => {
                                 console.log(`Order created ${result}`)
-                                res.status(201).location("/api/orders/" + result._id).end();
+                                res.status(201).location("/api/orders/" + result._id).json({}).end();
                             })
                             .catch((err) => {
                                 console.log(err)
