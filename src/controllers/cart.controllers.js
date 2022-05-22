@@ -6,7 +6,9 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
-//function to get the cart of the user
+/**
+ * Ottiene il carrello dell'utente
+ */
 function getCart(req, res, next) {
     console.log("init get");
 
@@ -34,51 +36,167 @@ function getCart(req, res, next) {
             });
         });
 }
-//function to add an element to the cart
-function addElementToCart(req, res, next) {
 
-    const userId = req.user.userId;
+/**
+ * Ottiene il numero totale di prodotti nel carrello dell'utente
+ */
+function getCartTotalQuantity(req, res, next) {
+    console.log("total");
 
-    console.log("init add");
-    if (!(req.body.productId && userId)) {
-        return res.status(400).json({
-            message: "Missing parameters"
-        });
-    }
-    const cart = new Cart({
-        _id: mongoose.Types.ObjectId(),
-        productId: req.body.productId,
-        userId: userId,
-        quantity: req.body.quantity
-    });
-    cart.save()
-        .then(result => {
-            res.status(201).json({
-                message: 'Element added to cart',
-                createdCart: {
-                    _id: result._id,
-                    productId: result.productId,
-                    userId: result.userId,
-                    quantity: result.quantity,
-                },
-                request: {
-                    type: 'GET',
-                    url: 'http://localhost:3000/cart/' + result._id
-                }
-            });
+    let userId = mongoose.Types.ObjectId(req.user.userId) // fix always empty array result
+    Cart
+        .aggregate([
+            { $match: { userId: userId } },
+            { $group: { _id: null, quantityTot: { $sum: "$quantity" }, count: { $sum: 1 } } }
+        ])
+        .exec()
+        .then(docs => {
+            console.log(docs);
+            res.status(200).json(
+                docs.length > 0 ? docs[0] : {}
+            );
         })
         .catch(err => {
+            console.log(err);
             res.status(500).json({
                 error: err
             });
         });
 }
 
-//function to delete an element from the cart
+/**
+ * Aggiunge un elemento al carrello dell'utente
+ */
+function addElementToCart(req, res, next) {
+    console.log("init add");
+
+    const userId = req.user.userId;;
+    if (!(req.body.productId && userId)) {
+        return res.status(400).json({
+            message: "Missing parameters"
+        });
+    }
+
+    if (req.body.quantity <= 0) {
+        res.status(400).json({
+            message: "Quantity must be greater than 0",
+        });
+        return;
+    }
+
+    Cart.findOne({
+        userId: userId,
+        productId: req.body.productId
+    })
+        .exec()
+        .then(function (doc) {
+            if (doc == null) {
+                console.log("new")
+                const cart = new Cart({
+                    _id: mongoose.Types.ObjectId(),
+                    productId: req.body.productId,
+                    userId: userId,
+                    quantity: req.body.quantity
+                });
+                cart.save()
+                    .then(result => {
+                        // TODO: Per ora non si può ottenere solo uno specifico prodotto dal carrello... 
+                        // ritorna quindi location per intero carrello
+                        res.status(201).location("/api/v1/cart/").end();
+                    })
+                    .catch(err => {
+                        console.log("errore cart save add", err.toString());
+                        res.status(500).json({
+                            error: "errore cart save add"
+                        });
+                    });
+            } else {
+                // update
+                console.log("update");
+                doc.quantity += 1;
+                doc
+                    .save()
+                    .then((result1) => {
+                        console.log(`Modificata quantità carrello`)
+                        res.status(200).json({
+                            message: 'Quantity changed',
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        res.status(400).json({
+                            message: err.toString()
+                        })
+                    });
+            }
+        });
+}
+
+/**
+ * Modifica la quantità di un elemento del carrello dell'utente
+ */
+function updateElementFromCart(req, res, next) {
+    console.log("update");
+
+    const userId = req.user.userId;;
+    if (!req.body.productId || !req.body.quantity || !req.params.id) {
+        return res.status(400).json({
+            message: "Missing parameters"
+        });
+    }
+
+    Cart.findOne({
+        _id: req.params.id,
+        userId: userId,
+        productId: req.body.productId
+    })
+        .exec()
+        .then(function (doc) {
+            if (doc == null) {
+                console.log("no cart item to modify", err.toString());
+                res.status(400).json({
+                    error: "no cart item to modify"
+                });
+            } else {
+                // update
+                console.log("updating quantity");
+                doc.quantity = req.body.quantity;
+
+                doc
+                    .save()
+                    .then((result1) => {
+                        console.log(`Modificata quantità carrello`)
+                        res.status(200).json({
+                            message: 'Quantity changed',
+                            doc: doc
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        res.status(400).json({
+                            message: err.toString()
+                        })
+                    });
+            }
+        });
+}
+
+/**
+ * Rimuove un elemento dal carrello dell'utente
+ */
 function deleteElementFromCart(req, res, next) {
     console.log("init delete");
+
+    const userId = req.user.userId;;
+    if (!req.params.id) {
+        return res.status(400).json({
+            message: "Missing parameters"
+        });
+    }
+    
     Cart.findOne({
-        _id: req.params.id
+        _id: req.params.id,
+        userId: userId
     })
         .exec()
         .then((element) => {
@@ -110,6 +228,8 @@ function deleteElementFromCart(req, res, next) {
 
 module.exports = {
     getCart,
+    getCartTotalQuantity,
     addElementToCart,
-    deleteElementFromCart
+    updateElementFromCart,
+    deleteElementFromCart,
 }
