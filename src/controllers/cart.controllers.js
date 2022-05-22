@@ -102,7 +102,7 @@ function addElementToCart(req, res, next) {
                     .then(result => {
                         // TODO: Per ora non si può ottenere solo uno specifico prodotto dal carrello... 
                         // ritorna quindi location per intero carrello
-                        res.status(201).location("/api/v1/cart/").end();
+                        res.status(201).location("/api/v1/cart/").json({}).end();
                     })
                     .catch(err => {
                         console.log("errore cart save add", err.toString());
