@@ -41,6 +41,7 @@ function signin(e) {
     success: function (result) {
       console.log(result);
       alert("Utente registrato");
+      window.location.href="/login";
     },
     error: function (request, status, error) {
       alert(request.responseText);
