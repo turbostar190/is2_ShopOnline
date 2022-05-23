@@ -90,6 +90,12 @@ const checkToken = async (req, res) => {
 }
 
 const userSignIn = (req, res, next) => {
+    if (!req.body.password || req.body.password.length < 8) {
+        return res.status(400).json({
+            message: "Password is required longer than 8 characters",
+        });
+    }
+
     User.find({
         email: req.body.email
     })

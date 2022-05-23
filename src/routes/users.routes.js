@@ -35,6 +35,8 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Ritorna l'indirizzo nell'header 'Location' per ottenere le info complete sull'utente appena creato.
+ *       400:
+ *         description: Password mancante o lunga meno di 8 caratteri
  *       403:
  *         description: Email già presente
  *       500:
