@@ -37,11 +37,14 @@ function checkToken(callback, callbackErr) {
 }
 
 function setLoggedButtons(user) {
-    $("#carrello-btn, #logout-btn, #saluti").show();
+    $("#carrello-btn, #logout-btn, #saluti, #order-btn").show();
     $("#accedi-btn, #registrati-btn").hide();
     $("#nomeUtente").text(user.nome);
     $("#carrello-btn").click(function () {
         window.location.href = "/cart";
+    });
+    $("#order-btn").click(function () {
+        window.location.href = "/order-history";
     });
     $("#logout-btn").click(function () {
         logout();
