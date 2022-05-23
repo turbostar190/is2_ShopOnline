@@ -3,7 +3,6 @@ const checkAuth = require('../middleware/checkAuth.middleware');
 const userControllers = require('../controllers/users.controllers');
 const router = express.Router();
 
-// TODO: La defizione del sotto-dictionary indirizzo è errata su swagger
 /**
  * @openapi
  * /v1/users/signin:
@@ -14,7 +13,7 @@ const router = express.Router();
  *     requestBody:
  *       required: true
  *       content:
- *         application/x-www-form-urlencoded:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:

@@ -1,13 +1,13 @@
 const express = require('express');
 const ordersControllers = require('../controllers/orders.controllers.js');
-const checkAuth = require('../middleware/checkAuth.middleware')
+const checkAuth = require('../middleware/checkAuth.middleware');
 const router = express.Router();
 
 /**
 * @openapi
-* /v1/orders/:
+* /v1/orders:
 *   post:
-*     description: Crea un ordinazione associata all'utente
+*     description: Crea un ordine associata all'utente
 *     produces:
 *       - application/json
 *     security:
@@ -26,7 +26,7 @@ router.post('/', checkAuth, ordersControllers.postOrders);
 * @openapi
 * /v1/orders/approve/:id:
 *   put:
-*     description: Approva un ordinazione in attesa
+*     description: Approva un ordine in attesa
 *     produces:
 *       - application/json
 *     security:
@@ -34,7 +34,7 @@ router.post('/', checkAuth, ordersControllers.postOrders);
 *     parameters:
 *       - name: id
 *         in: path
-*         description: Id dell'ordinazione
+*         description: Id dell'ordine
 *         required: true
 *         schema:
 *           type: string
@@ -44,7 +44,7 @@ router.post('/', checkAuth, ordersControllers.postOrders);
 *       401:
 *         description: Non autorizzato.
 *       404:
-*         description: Ordinazione non trovata.
+*         description: Ordine non trovata.
 *       500:
 *         description: Errore interno.
 */
@@ -54,7 +54,7 @@ router.put('/approve/:id', checkAuth, ordersControllers.approveOrder);
 * @openapi
 * /v1/orders/not_approve/:id:
 *   put:
-*     description: Non approva un ordinazione in attesa
+*     description: Non approva un ordine in attesa
 *     produces:
 *       - application/json
 *     security:
@@ -62,7 +62,7 @@ router.put('/approve/:id', checkAuth, ordersControllers.approveOrder);
 *     parameters:
 *       - name: id
 *         in: path
-*         description: Id dell'ordinazione
+*         description: Id dell'ordine
 *         required: true
 *         schema:
 *           type: string
@@ -72,7 +72,7 @@ router.put('/approve/:id', checkAuth, ordersControllers.approveOrder);
 *       401:
 *         description: Non autorizzato.
 *       404:
-*         description: Ordinazione non trovata.
+*         description: Ordine non trovata.
 *       500:
 *         description: Errore interno.
 */
@@ -80,7 +80,7 @@ router.put('/not_approve/:id', checkAuth, ordersControllers.notApproveOrder);
 
 /**
 * @openapi
-* /v1/orders/:
+* /v1/orders:
 *   get:
 *     description: Ritorna le ordinazioni dell'utente, in caso di admin ritorna tutte le ordinazioni
 *     produces:
@@ -94,4 +94,5 @@ router.put('/not_approve/:id', checkAuth, ordersControllers.notApproveOrder);
 *         description: Errore interno.
 */
 router.get('/', checkAuth, ordersControllers.getOrders);
+
 module.exports = router;

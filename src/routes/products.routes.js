@@ -17,45 +17,7 @@ var upload = multer({ storage: storage });
 
 /**
 * @openapi
-* /v1/products/:
-*   post:
-*     description: Aggiunge un prodotto
-*     produces:
-*       - application/json
-*     security:
-*       - token: []
-*     requestBody:
-*       required: true
-*       content:
-*         application/json:
-*           schema:
-*             type: object
-*             properties:
-*               name:
-*                 type: string
-*               description:
-*                 type: string
-*               category:
-*                 type: string
-*               cost:
-*                 type: number
-*               img:
-*                 type: string
-*     responses:
-*       201:
-*         description: Ritorna il percorso della risorsa creata.
-*       400:
-*         description: Parametri mancanti.
-*       401:
-*         description: Non autorizzato.
-*       500:
-*         description: Errore interno.
-*/
-router.post('/', checkAuth, upload.single('img'), productControllers.postProducts);
-
-/**
-* @openapi
-* /v1/products/:
+* /v1/products:
 *   get:
 *     description: Ottiene la lista dei prodotti
 *     produces:
@@ -87,6 +49,44 @@ router.get('/:id', productControllers.getProductById);
 
 /**
 * @openapi
+* /v1/products:
+*   post:
+*     description: Aggiunge un prodotto
+*     produces:
+*       - application/json
+*     security:
+*       - token: []
+*     requestBody:
+*       required: true
+*       content:
+*         application/x-www-form-urlencoded:
+*           schema:
+*             type: object
+*             properties:
+*               name:
+*                 type: string
+*               description:
+*                 type: string
+*               category:
+*                 type: string
+*               cost:
+*                 type: number
+*               img:
+*                 type: string
+*     responses:
+*       201:
+*         description: Ritorna il percorso della risorsa creata.
+*       400:
+*         description: Parametri mancanti.
+*       401:
+*         description: Non autorizzato.
+*       500:
+*         description: Errore interno.
+*/
+router.post('/', checkAuth, upload.single('img'), productControllers.postProducts);
+
+/**
+* @openapi
 * /v1/products/:id:
 *   put:
 *     description: Modifica il prodotto corrispondente all'id passato.
@@ -97,7 +97,7 @@ router.get('/:id', productControllers.getProductById);
 *     requestBody:
 *       required: true
 *       content:
-*         application/json:
+*         application/x-www-form-urlencoded:
 *           schema:
 *             type: object
 *             properties:
@@ -124,4 +124,5 @@ router.get('/:id', productControllers.getProductById);
 *         description: Errore interno.
 */
 router.put('/:id', checkAuth, upload.single('img'), productControllers.editProducts);
+
 module.exports = router
