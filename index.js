@@ -15,12 +15,32 @@ const options = {
       title: 'IS2 Shop Online',
       version: '1.0.0',
     },
+    servers: [{
+      url: "http://localhost:3000/api/",
+      description: "Development server"
+    }],
+    components: {        
+      securitySchemes: {
+        token: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          name: "token",
+          in: "header"
+        }
+      }
+    }
   },
-  apis: ['./src/routes/*.js'], // files containing annotations as above
+  apis: [
+    './src/routes/users.routes.js',
+    './src/routes/products.routes.js',
+    './src/routes/cart.routes.js',
+    './src/routes/orders.routes.js',
+  ], // files containing annotations as above
 };
 // Initialize swagger-jsdoc -> returns validated swagger spec in json format
 const swaggerSpec = swaggerJSDoc(options);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(express.json()); //Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
@@ -41,8 +61,8 @@ app.locals.db = mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, us
     // router
     const usersRouter = require('./src/routes/users.routes');
     const productsRouter = require('./src/routes/products.routes');
+    const cartRouter = require('./src/routes/cart.routes.js');
     const ordersRouter = require('./src/routes/orders.routes');
-    const cartRouter = require('./src/routes/cart.routers.js');
     
     // files
     app.use('/', express.static('public'));
@@ -50,8 +70,8 @@ app.locals.db = mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, us
     // api
     app.use('/api/v1/users', usersRouter);
     app.use('/api/v1/products', productsRouter);
-    app.use('/api/v1/orders', ordersRouter);
     app.use('/api/v1/cart', cartRouter);
+    app.use('/api/v1/orders', ordersRouter);
 
     // catch 404 and forward to error handler
     app.use(function (req, res, next) {
