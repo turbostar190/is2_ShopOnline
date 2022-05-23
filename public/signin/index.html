@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Rubik:400,700'>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <title>Registrazione</title>
+</head>
+<body>
+  <div class="login-form">
+    <form id="login-formaggio">
+      <h1>Registrazione</h1>
+      <div class="content">
+        <div class="input-field">
+          <input id="nome" name="nome" type="text" placeholder="Nome *" required>
+        </div>
+        <div class="input-field">
+          <input id="email" name="email" type="email" placeholder="Email *" required>
+        </div>
+        <div class="input-field">
+          <input id="password" name="password" type="password" placeholder="Password *" required>
+        </div>
+        <p>Per ricevere i prodotti a casa inserisci il tuo indirizzo</p>
+        <div class="input-field">
+          <input id="via" name="via" type="text" placeholder="Via">
+        </div>
+        <div class="input-field">
+          <input id="comune" name="comune" type="text" placeholder="Comune">
+        </div>
+        <div class="input-field">
+          <input id="cap" name="cap" type="number" placeholder="CAP" min="10" max="98100">
+        </div>
+      </div>
+      <div class="action">
+        <input type="submit" value="Registrati" id="signin-form-submit" class="btn">
+      </div>
+    </form>
+  </div>
+  
+  <script src="/utils.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>
