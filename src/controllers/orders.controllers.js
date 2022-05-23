@@ -15,7 +15,7 @@ function postOrders(req, res, next) {
         .exec()
         .then((cart) => {
             console.log(cart);
-            if (cart != null) {
+            if (cart.length > 0) {
                 let products = [];
                 let set = new Set();
                 cart.forEach(element => {
