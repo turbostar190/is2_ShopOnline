@@ -128,6 +128,7 @@ function createCompletedDom(completed_orders) {
                 <span class="align-middle mx-4">${order.userName}</span>
     
                 <div class="collapse mt-4" id="ordine-complete-${order._id}">
+                    <div class="mb-2">${generateAddressString(order.indirizzo)}</div>
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
