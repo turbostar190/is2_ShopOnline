@@ -152,10 +152,21 @@ function deleteCartItem(cartId, $selector) {
  */
 function formSubmit(e) {
     e.preventDefault();
-    console.log("ordina");
+
+    let data = {};
+    if ($("input[name=consegna]:checked").attr('id') === "consegna-casa") {
+        data['indirizzo'] = {
+            via: $("#spedizione-via").val(),
+            comune: $("#spedizione-comune").val(),
+            cap: $("#spedizione-cap").val()
+          }
+    }
+
+    console.log("ordina", data);
     $.ajax({
         url: "/api/v1/orders/",
         type: "post",
+        data: data,
         success: function (result) {
             alert("Ordine effettuato con successo!");
             window.location.href = "/order-history";
