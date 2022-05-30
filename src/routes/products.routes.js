@@ -136,8 +136,8 @@ router.put('/:id', checkAuth, upload.single('img'), productControllers.editProdu
 *     security:
 *       - token: []
 *     responses:
-*       200:
-*         description: Ottiene il prodotto eliminato che corrisponde all'id passato.
+*       204:
+*         description: Conferma la cancellazione senza body.
 *       400:
 *         description: Parametri mancanti.
 *       401:
