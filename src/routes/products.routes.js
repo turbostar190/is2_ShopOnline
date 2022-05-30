@@ -20,6 +20,23 @@ var upload = multer({ storage: storage });
 * /v1/products:
 *   get:
 *     description: Ottiene la lista dei prodotti
+*     parameters:
+*       - in: query
+*         name: sort
+*         schema:
+*           type: string
+*           enum: [name, cost]
+*         description: Specifica in che modo ordinare i prodotti (nome o prezzo) 
+*       - in: query
+*         name: search
+*         schema:
+*           type: string
+*         description: Specifica il nome del prodotti da ricercare. Confronto case insensitive e con uguale inizio di nome.
+*       - in: query
+*         name: category
+*         schema:
+*           type: string
+*         description: Specifica la categoria di prodotti da restituire.
 *     produces:
 *       - application/json
 *     responses:

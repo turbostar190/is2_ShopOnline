@@ -151,9 +151,25 @@ const editProducts = (req, res, next) => {
 }
 
 const getProducts = async (req, res) => {
-    console.log("find");
+    console.log("getProducts");
+    let dict = {}
+    let dictSort = {}
+    console.log(req.query)
+    if(req.query.sort=="name"){
+        dictSort = { 'name': 'asc' }
+    }else if(req.query.sort=="cost"){
+        dictSort = {'cost' : 'asc'}
+    }
+
+    if(req.query.category){
+        dict['category'] = req.query.category
+    }
+    if(req.query.search){
+        dict['name'] = {'$regex' : '^' + req.query.search, '$options' : 'i'}
+    }
+
     const products = Product
-        .find({})
+        .find(dict).sort(dictSort).exec()
         .then(function (products) {
             res.status(200).json(
                 products,
