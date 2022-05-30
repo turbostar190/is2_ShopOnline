@@ -189,9 +189,41 @@ const getProductById = async (req, res) => {
 
 };
 
+const deleteProductById = async (req, res) => {
+    if (!req.user.admin) {
+        res.status(401).json({
+            message: "Unauthorized"
+        });
+        return;
+    }
+
+    Product.deleteOne({
+        _id: req.params.id
+    })
+        .exec()
+        .then((response) => {
+            if (response.deletedCount > 0) {
+                console.log(`Product deleted ${product}`)
+                console.log(product)
+                res.status(204).end()
+            } else {
+                return res.status(404).json({
+                    message: "Product don't exist",
+                });
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({
+                error: err,
+            });
+        });
+};
+
 module.exports = {
     postProducts,
     getProducts,
     editProducts,
     getProductById,
+    deleteProductById
 };

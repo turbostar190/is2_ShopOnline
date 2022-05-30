@@ -125,4 +125,28 @@ router.post('/', checkAuth, upload.single('img'), productControllers.postProduct
 */
 router.put('/:id', checkAuth, upload.single('img'), productControllers.editProducts);
 
+
+/**
+* @openapi
+* /v1/products/:id:
+*   delete:
+*     description: Cancella il prodotto corrispondente all'id passato.
+*     produces:
+*       - application/json
+*     security:
+*       - token: []
+*     responses:
+*       200:
+*         description: Ottiene il prodotto eliminato che corrisponde all'id passato.
+*       400:
+*         description: Parametri mancanti.
+*       401:
+*         description: Non autorizzato.
+*       404:
+*         description: Prodotto non trovato.
+*       500:
+*         description: Errore interno.
+*/
+router.delete('/:id', checkAuth, productControllers.deleteProductById);
+
 module.exports = router
