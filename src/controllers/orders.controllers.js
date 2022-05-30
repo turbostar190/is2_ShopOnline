@@ -31,16 +31,18 @@ function postOrders(req, res, next) {
                         });
                     }
                 });
-                _id = new mongoose.Types.ObjectId();
+                
                 let order_data = {
-                    _id: _id,
+                    _id: new mongoose.Types.ObjectId(),
                     products: products,
                     userId: req.user.userId,
                     userName: req.user.nome,
-                    timestamp: _id.getTimestamp(),
                     accepted: null,
                 }
-                console.log(req.user.nome);
+                if (req.body.indirizzo) {
+                    order_data.indirizzo = req.body.indirizzo;
+                }
+                console.log("order_data", order_data);
                 const order = new Order(order_data);
 
                 order
