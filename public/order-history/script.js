@@ -66,6 +66,7 @@ function createPendingDom(pending_orders) {
             <span class="align-middle mx-8">${timeStampToDate(order.createdAt)}</span>
             <span class="align-middle mx-4">${order.userName}</span>
             <div class="collapse mt-4" id="ordine-pending-${order._id}">
+                <div class="mb-2">${generateAddressString(order.indirizzo)}</div>
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -85,8 +86,8 @@ function createPendingDom(pending_orders) {
 
     <hr class="my-2">
             `
-        if (stato.admin) { 
-        pendingOrdersDom += `
+        if (stato.admin) {
+            pendingOrdersDom += `
                 <span class="align-middle mx-4">Conferma ordine: </span>
 
                 <button class="btn btn-danger mx-1" type="submit" onclick="notApproveOrder(\'${order._id}\')">
@@ -101,10 +102,10 @@ function createPendingDom(pending_orders) {
 
         <hr class="my-2">
         `;
-    }
+        }
     });
 
-return pendingOrdersDom;
+    return pendingOrdersDom;
 }
 
 //Creates the DOM for the completed orders
@@ -164,6 +165,18 @@ function generateOrderTable(products) {
     });
     return orderTable;
 }
+
+// generates address string from address object
+function generateAddressString(address) {
+
+    if (address === undefined) {
+        return `<span class="badge bg-warning text-dark">CONSEGNA IN NEGOZIO</span>`
+    }
+
+    return `<span class="badge bg-info text-dark">INDIRIZZO DI CONSEGNA:</span> ${address.via}, ${address.comune} ${address.cap}`;
+}
+
+
 
 //time stamp to date
 function timeStampToDate(timestamp) {
