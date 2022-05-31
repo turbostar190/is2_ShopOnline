@@ -3,13 +3,13 @@ function getIsSuper(user) {
         $("#add-product").show();
     }
 }
-checkToken(function(user) {
+checkToken(function (user) {
     setLoggedButtons(user);
     getIsSuper(user);
 }, setNotLoggedButtons);
 
 window.onload = function () {
-    console.log("init");  
+    console.log("init");
     getProducts();
 }
 
@@ -56,12 +56,18 @@ function createProductsDOM(products) {
             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent add-carrello-btn" style="display: ${stato.isLogged ? 'initial' : 'none'};">
                 <div class="text-center">
                     <a class="btn btn-outline-dark mt-auto" href="javascript:addElementToCart(\'${product._id}\');">Aggiungi al carrello</a>
-                    ${stato.admin ? `<a href="/edit-product?id=${product._id}">
-                        <button class="btn btn-outline-dark my-2" type="button" id="modifica-btn"">
-                        <i class=" bi-pencil-square me-1"></i>
-                        Modifica prodotto
-                        </button>` : ''}
+                    ${stato.admin ? `
+                    <a href="/edit-product?id=${product._id}">
+                        <button class="btn btn-outline-dark mt-3" type="button" id="modifica-btn"">
+                            <i class=" bi-pencil-square me-1"></i>
+                            Modifica prodotto
+                        </button>
                     </a>
+                    <button class="btn btn-danger my-1" type="button" id="rimuovi-btn"">
+                        <i class="bi bi-trash"></i>
+                        Rimuovi prodotto
+                    </button>
+                    ` : ''}
                 </div>
             </div>
         </div>
@@ -71,20 +77,20 @@ function createProductsDOM(products) {
     return productsDOM;
 }
 
-function addElementToCart(productId){
+function addElementToCart(productId) {
     const user = checkToken();
     const userId = user._id;
     //data
     let data = {
         productId: productId,
         userId: userId,
-        quantity : 1,
+        quantity: 1,
     };
     console.log(data);
     $.ajax({
         url: "/api/v1/cart/",
         type: "post",
-        data : data,
+        data: data,
         success: function (result) {
             alert('Prodotto aggiunto al carrello');
         },
