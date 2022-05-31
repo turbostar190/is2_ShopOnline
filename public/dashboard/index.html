@@ -71,19 +71,17 @@
             <div class="row">
                 <div class="col-12 col-lg-10 offset-lg-1">
                     <div class="input-group">
-                        <input class="form-control" type="text" placeholder="Cerca prodotto..." />
+                        <input class="form-control" type="text" id="cerca-prodotto" placeholder="Cerca prodotto..." />
                         <div class="input-group-append mx-1">
-                            <select class="form-select">
-                                <option selected>Tutte le categorie</option>
-                                <option value="1">Cat 1</option>
-                                <option value="2">Cat 2</option>
-                                <option value="3">Cat 3</option>
+                            <select class="form-select" id="categoria">
+                                <option value="" selected>Tutte le categorie</option>
                             </select>
                         </div>
                         <div class="input-group-append">
-                            <select class="form-select">
-                                <option selected>Ordina per nome</option>
-                                <option value="1">Ordina per prezzo</option>
+                            <select class="form-select" id="sort">
+                                <option value="" selected>Ordina per data inserimento</option>
+                                <option value="name">Ordina per nome</option>
+                                <option value="cost">Ordina per prezzo</option>
                             </select>
                         </div>
                     </div>
