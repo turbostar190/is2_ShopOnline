@@ -17,6 +17,21 @@ var upload = multer({ storage: storage });
 
 /**
 * @openapi
+* /v1/products/categories:
+*   get:
+*     description: Ottiene tutte le categorie presenti
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*         description: Ritorna tutte le categorie presenti
+*       500:
+*         description: Errore interno.
+*/
+router.get('/categories', productControllers.getCategories);
+
+/**
+* @openapi
 * /v1/products:
 *   get:
 *     description: Ottiene la lista dei prodotti

@@ -155,17 +155,17 @@ const getProducts = async (req, res) => {
     let dict = {}
     let dictSort = {}
     console.log(req.query)
-    if(req.query.sort=="name"){
+    if (req.query.sort == "name") {
         dictSort = { 'name': 'asc' }
-    }else if(req.query.sort=="cost"){
-        dictSort = {'cost' : 'asc'}
+    } else if (req.query.sort == "cost") {
+        dictSort = { 'cost': 'asc' }
     }
 
-    if(req.query.category){
+    if (req.query.category) {
         dict['category'] = req.query.category
     }
-    if(req.query.search){
-        dict['name'] = {'$regex' : '^' + req.query.search, '$options' : 'i'}
+    if (req.query.search) {
+        dict['name'] = { '$regex': '^' + req.query.search, '$options': 'i' }
     }
 
     const products = Product
@@ -202,7 +202,29 @@ const getProductById = async (req, res) => {
                 err: err
             });
         });
+};
 
+const getCategories = async (req, res) => {
+    Product
+        .find({})
+        .sort({ category: 'asc' })
+        .exec()
+        .then(function (products) {
+            if (products) {
+                let set = new Set();
+                products.map(product => {
+                    set.add(product.category)
+                })
+                res.status(200).json(
+                    Array.from(set),
+                );
+            }
+        })
+        .catch(function (err) {
+            res.status(500).json({
+                err: err
+            });
+        });
 };
 
 module.exports = {
@@ -210,4 +232,5 @@ module.exports = {
     getProducts,
     editProducts,
     getProductById,
+    getCategories
 };
