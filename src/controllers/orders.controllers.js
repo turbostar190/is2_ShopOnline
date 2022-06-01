@@ -107,6 +107,80 @@ function getOrders(req, res, next) {
 
 }
 
+
+function getPendingOrders(req, res, next) {
+    console.log("init get");
+    console.log(req.user);
+    let admin = req.user.admin;
+    if (admin) {
+        Order.find({
+            accepted:null
+        })
+            .exec()
+            .then((orders) => {
+                res.status(200).json(orders);
+            })
+            .catch((err) => {
+                console.log(err)
+                res.status(500).json({
+                    message: err.toString()
+                })
+            });
+    } else {
+        Order.find({
+            userId: req.user.userId
+        })
+            .exec()
+            .then((orders) => {
+                res.status(200).json(orders);
+            })
+            .catch((err) => {
+                console.log(err)
+                res.status(500).json({
+                    message: err.toString()
+                })
+            });
+    }
+
+}
+
+
+function getCompletedOrders(req, res, next) {
+    console.log("init get");
+    console.log(req.user);
+    let admin = req.user.admin;
+    if (admin) {
+        Order.find({
+            accepted:true
+        })
+            .exec()
+            .then((orders) => {
+                res.status(200).json(orders);
+            })
+            .catch((err) => {
+                console.log(err)
+                res.status(500).json({
+                    message: err.toString()
+                })
+            });
+    } else {
+        Order.find({
+            userId: req.user.userId
+        })
+            .exec()
+            .then((orders) => {
+                res.status(200).json(orders);
+            })
+            .catch((err) => {
+                console.log(err)
+                res.status(500).json({
+                    message: err.toString()
+                })
+            });
+    }
+
+}
+
 function approveOrder(req, res, next) {
     console.log("init approve");
 
@@ -192,5 +266,7 @@ module.exports = {
     postOrders,
     getOrders,
     approveOrder,
-    notApproveOrder
+    notApproveOrder,
+    getPendingOrders,
+    getCompletedOrders
 }
