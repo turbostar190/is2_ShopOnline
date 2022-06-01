@@ -203,8 +203,8 @@ const deleteProductById = async (req, res) => {
         .exec()
         .then((response) => {
             if (response.deletedCount > 0) {
-                console.log(`Product deleted ${product}`)
-                console.log(product)
+                console.log(`Product deleted`)
+                // TODO: Eliminare prodotto dai carrelli
                 res.status(204).end()
             } else {
                 return res.status(404).json({
