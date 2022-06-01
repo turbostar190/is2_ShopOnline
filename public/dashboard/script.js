@@ -36,7 +36,7 @@ function createProductsDOM(products) {
 
         productsDOM += `
         <div class="col mb-5">
-        <div class="card h-100">
+        <div class="card h-100" id="${product._id}">
             <!-- Product image-->
             <img class="card-img-top" src="data:${product.img.contentType};base64,${product.img.data.toString('base64')}" alt="..." />
             <!-- Product details-->
@@ -55,7 +55,7 @@ function createProductsDOM(products) {
             <!-- Product actions-->
             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent add-carrello-btn" style="display: ${stato.isLogged ? 'initial' : 'none'};">
                 <div class="text-center">
-                    <a class="btn btn-outline-dark mt-auto" href="javascript:addElementToCart(\'${product._id}\');">Aggiungi al carrello</a>
+                    <button class="btn btn-outline-dark mt-auto" onclick="javascript:addElementToCart('${product._id}');">Aggiungi al carrello</button>
                     ${stato.admin ? `
                     <a href="/edit-product?id=${product._id}">
                         <button class="btn btn-outline-dark mt-3" type="button" id="modifica-btn"">
@@ -63,7 +63,7 @@ function createProductsDOM(products) {
                             Modifica prodotto
                         </button>
                     </a>
-                    <button class="btn btn-danger my-1" type="button" id="rimuovi-btn"">
+                    <button class="btn btn-danger my-1" type="button" id="rimuovi-btn" onclick="javascript:deleteProduct('${product._id}');">
                         <i class="bi bi-trash"></i>
                         Rimuovi prodotto
                     </button>
@@ -98,4 +98,20 @@ function addElementToCart(productId) {
             alert('Errore');
         }
     });
+}
+
+function deleteProduct(id) {
+    if (confirm("Sei sicuro di voler eliminare il prodotto? Ciò lo cancellerà anche dai carrelli degli utenti!")) {
+        $.ajax({
+            url: "/api/v1/products/" + id,
+            type: "delete",
+            dataType: "text",
+            success: function (result) {
+                $("#" + id).remove();
+            },
+            error: function (request, status, error) {
+                alert('Errore ' + error);
+            }
+        });
+    }
 }
