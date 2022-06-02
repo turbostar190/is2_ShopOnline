@@ -94,19 +94,18 @@ function getCartTotalQuantity() {
 
 /**
  * Modifica la quantità di un prodotto nel carrello
- * @param {string} cartId id del carrello
  * @param {string} productId id del prodotto da modificare
  * @param {number} quantity nuova quantità
  * @param {object} $selector selettore del prodotto per modificarne valore a schermo
  */
-function updateCartItem(cartId, productId, quantity, $selector) {
+function updateCartItem(productId, quantity, $selector) {
     let data = {
         productId: productId,
         quantity: quantity,
     };
     console.log(data);
     $.ajax({
-        url: "/api/v1/cart/" + cartId,
+        url: "/api/v1/cart/",
         method: "patch",
         data: data,
         success: function (result) {
@@ -180,17 +179,16 @@ $("input[name=consegna]").change(function () {
  */
 $(document).on("click", ".num", function () {
     let $this = $(this);
-    let cartId = $this.parent().data("cart");
     let productId = $this.parent().data("prod");
     let $input = $this.siblings("input");
     let quantity = parseInt($input.val());
 
     if ($this.hasClass("decrement")) {
         if (quantity > 1) {
-            updateCartItem(cartId, productId, quantity - 1, $input);
+            updateCartItem(productId, quantity - 1, $input);
         }
     } else if ($this.hasClass("increment")) {
-        updateCartItem(cartId, productId, quantity + 1, $input);
+        updateCartItem(productId, quantity + 1, $input);
     } else if ($this.hasClass("delete")) {
         deleteCartItem(cartId, $this);
     }

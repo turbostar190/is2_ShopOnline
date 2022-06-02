@@ -145,7 +145,7 @@ function updateElementFromCart(req, res, next) {
 
     const userId = req.user.userId;
 
-    if (!req.body.productId || !req.body.quantity || !req.params.id) {
+    if (!req.body.productId || !req.body.quantity) {
         return res.status(400).json({
             message: "Missing parameters"
         });
@@ -157,29 +157,20 @@ function updateElementFromCart(req, res, next) {
         });
     }
     
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-        return res.status(404).json({
-            message: "Invalid CartID"
-        });
-    }
-    
     Cart.findOne({
-        _id: req.params.id,
         userId: userId,
         productId: req.body.productId
     })
         .exec()
         .then(function (doc) {
             if (doc == null) {
-                console.log("no cart item to modify", err.toString());
                 res.status(404).json({
-                    error: "no cart item to modify"
+                    error: "Cart element not found"
                 });
             } else {
                 // update
                 console.log("updating quantity");
                 doc.quantity = req.body.quantity;
-
                 doc
                     .save()
                     .then((result1) => {

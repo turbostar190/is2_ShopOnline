@@ -69,24 +69,17 @@ router.post('/', checkAuth, cartControllers.addElementToCart);
 
 /**
 * @openapi
-* /v1/cart/:id:
+* /v1/cart/:
 *   patch:
 *     description: Aggiorna un elemento presente nel carrello dell'utente
 *     produces:
 *       - application/json
 *     security:
 *       - token: []
-*     parameters:
-*       - name: id
-*         in: path
-*         description: Id dell'elemento del carrello
-*         required: true
-*         schema:
-*           type: string
 *     requestBody:
 *       required: true
 *       content:
-*         application/x-www-form-urlencoded:
+*         application/json:
 *           schema:
 *             type: object
 *             properties:
@@ -104,7 +97,7 @@ router.post('/', checkAuth, cartControllers.addElementToCart);
 *       500:
 *         description: Errore interno.
 */
-router.patch('/:id', checkAuth, cartControllers.updateElementFromCart);
+router.patch('/', checkAuth, cartControllers.updateElementFromCart);
 
 /**
 * @openapi
