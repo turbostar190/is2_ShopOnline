@@ -83,6 +83,11 @@ function addElementToCart(req, res, next) {
         });
         return;
     }
+    if (!req.body.productId.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(404).json({
+            message: "Invalid ProductID."
+        });
+    }
 
     Cart.findOne({
         userId: userId,
@@ -138,13 +143,26 @@ function addElementToCart(req, res, next) {
 function updateElementFromCart(req, res, next) {
     console.log("update");
 
-    const userId = req.user.userId;;
+    const userId = req.user.userId;
+
     if (!req.body.productId || !req.body.quantity || !req.params.id) {
         return res.status(400).json({
             message: "Missing parameters"
         });
     }
-
+    
+    if (!req.body.productId.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(404).json({
+            message: "Invalid ProductID"
+        });
+    }
+    
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(404).json({
+            message: "Invalid CartID"
+        });
+    }
+    
     Cart.findOne({
         _id: req.params.id,
         userId: userId,
@@ -193,7 +211,11 @@ function deleteElementFromCart(req, res, next) {
             message: "Missing parameters"
         });
     }
-    
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(404).json({
+            message: "The id is not valid"
+        });
+    }
     Cart.findOne({
         _id: req.params.id,
         userId: userId
