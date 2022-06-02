@@ -17,7 +17,6 @@ const Product = require('../src/models/products');
 const User = require('../src/models/users');
 
 var TOKEN;
-var CART_ID;
 
 const test_product = new Product({
     _id: new mongoose.Types.ObjectId(),
@@ -68,7 +67,7 @@ afterAll(async () => {
 
 describe('POST /api/v1/cart', () => {
 
-    it('Successfully add product to cart', async () => {
+    it('Add OK', async () => {
 
         const response = await request(app)
             .post('/api/v1/cart')
@@ -82,7 +81,7 @@ describe('POST /api/v1/cart', () => {
 
     });
 
-    it('Successfully edit product quantity in cart', async () => {
+    it('Modify quantity OK', async () => {
         const response = await request(app)
             .post('/api/v1/cart')
             .set('Authorization', `Bearer ${TOKEN}`)
@@ -95,7 +94,7 @@ describe('POST /api/v1/cart', () => {
 
     });
 
-    it('Unsuccessfully add product to cart', async () => {
+    it('Add unknown ID', async () => {
         const response = await request(app)
             .post('/api/v1/cart')
             .set('Authorization', `Bearer ${TOKEN}`)
@@ -107,7 +106,7 @@ describe('POST /api/v1/cart', () => {
         expect(response.statusCode).toBe(404);
 
     });
-    it('Unsuccessfully add product to cart, missing parameters', async () => {
+    it('Missing Parameters', async () => {
         const response = await request(app)
             .post('/api/v1/cart')
             .set('Authorization', `Bearer ${TOKEN}`)
@@ -118,7 +117,7 @@ describe('POST /api/v1/cart', () => {
         expect(response.statusCode).toBe(400);
 
     });
-    it('Unsuccessfully add product to cart, negative quantity', async () => {
+    it('Modify with negative quantity', async () => {
         const response = await request(app)
             .post('/api/v1/cart')
             .set('Authorization', `Bearer ${TOKEN}`)
@@ -134,13 +133,13 @@ describe('POST /api/v1/cart', () => {
 
 describe('GET /api/v1/cart', () => {
 
-    it('Unsuccessfully get cart anonymously', async () => {
+    it('Anonymous OK', async () => {
         const response = await request(app)
             .get('/api/v1/cart')
         expect(response.status).toBe(400);
     });
 
-    it('Successfully get cart as logged user', async () => {
+    it('Logged OK', async () => {
         const response = await request(app)
             .get('/api/v1/cart')
             .set('Authorization', `Bearer ${TOKEN}`)
@@ -149,7 +148,7 @@ describe('GET /api/v1/cart', () => {
 });
 
 describe('GET /api/v1/cart/quantity', () => {
-    it('Successfully get products quantity', async () => {
+    it('OK', async () => {
         const response = await request(app)
             .get('/api/v1/cart/quantity')
             .set('Authorization', `Bearer ${TOKEN}`);
@@ -157,12 +156,12 @@ describe('GET /api/v1/cart/quantity', () => {
     });
 });
 
-// Test PATCH /cart/:id
-describe('PATCH /api/v1/cart/:id', () => {
+// Test PATCH /cart/
+describe('PATCH /api/v1/cart/', () => {
 
-    it('Successfully edit product quantity in cart', async () => {
+    it('OK', async () => {
         const response = await request(app)
-            .patch(`/api/v1/cart/${CART_ID}`)
+            .patch(`/api/v1/cart/`)
             .set('Authorization', `Bearer ${TOKEN}`)
             .send({
                 productId: test_product._id,
@@ -171,31 +170,45 @@ describe('PATCH /api/v1/cart/:id', () => {
         expect(response.status).toBe(200);
     });
 
-    it('Unsuccessfully edit product quantity in cart', async () => {
+    it('Modify unknown ID', async () => {
         const response = await request(app)
-            .patch('/api/v1/cart/zzzzzzzzzzzzzzzzzzzzzzzz')
+            .patch('/api/v1/cart/')
             .set('Authorization', `Bearer ${TOKEN}`)
             .send({
                 quantity: 1,
-                productId: 'zzzzzzzzzzzzzzzz',
+                productId: 'not-working-id',
             });
         expect(response.status).toBe(404);
     });
 });
 
-describe('DELETE /api/v1/cart/:id', () => {
+describe('DELETE /api/v1/cart/', () => {
 
-    it('Successfully delete product', async () => {
+    // delete product without id
+    it('No ID provided', async () => {
         const response = await request(app)
-            .delete(`/api/v1/cart/${CART_ID}`)
+            .delete('/api/v1/cart/')
             .set('Authorization', `Bearer ${TOKEN}`);
+        expect(response.status).toBe(400);
+    });
+
+    it('OK', async () => {
+        const response = await request(app)
+            .delete(`/api/v1/cart/`)
+            .set('Authorization', `Bearer ${TOKEN}`)
+            .send({
+                productId: test_product._id,
+            });
         expect(response.status).toBe(200);
     });
 
-    it('Unsuccessfully delete product', async () => {
+    it('Unknown ID', async () => {
         const response = await request(app)
-            .delete('/api/v1/cart/zzzzzzzzzzzzzzzzzzzzzzzz')
-            .set('Authorization', `Bearer ${TOKEN}`);
+            .delete('/api/v1/cart/')
+            .set('Authorization', `Bearer ${TOKEN}`)
+            .send({
+                productId: 'wrong-product-id',
+            });
         expect(response.status).toBe(404);
     });
 });
