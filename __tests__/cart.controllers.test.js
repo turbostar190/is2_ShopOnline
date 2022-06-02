@@ -15,7 +15,6 @@ const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 const Product = require('../src/models/products');
 const User = require('../src/models/users');
-const { doesNotMatch } = require('assert');
 
 var TOKEN;
 var CART_ID;
