@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
+const { connectDB } = require('./database');
 
 const port = process.env.PORT || 3000;
 const app = express()
@@ -76,17 +77,14 @@ app.use(function (err, req, res, next) {
   })
 });
 
-/**
- * Configure mongoose
- */
-mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
-  if (err)
-    console.error("MongoDB connection error: " + err);
-  else
-    console.log('MongoDB has connected successfully.');
-    app.listen(port, () => {
-      console.log(`Server listening on port ${port}`);
-    });
+try {
+  connectDB()
+} catch (error) {
+  console.log("database error")
+}
+
+var server = app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
 
-module.exports = app;
+module.exports = { app, server };
