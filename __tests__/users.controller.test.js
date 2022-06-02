@@ -10,8 +10,10 @@ sinon.stub(time, 'setTimeout');
 const request = require('supertest');
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const { app, server } = require('../index');
+
 const { connectDB, disconnectDB } = require('../database');
 const mongoose = require('mongoose');
+
 const bcrypt = require("bcrypt");
 const User = require("../src/models/users");
 
@@ -21,16 +23,17 @@ const name_test = "Test User"
 
 beforeAll(() => {
     jest.setTimeout(10000);
+    connectDB();
 
     const user = new User({
         _id: new mongoose.Types.ObjectId(),
-        email: email_test,
-        password: bcrypt.hashSync(pw_test, 10),
-        nome: name_test,
+        email: "test@test.test",
+        password: bcrypt.hashSync("new-password", 10),
+        nome: "Test User",
         indirizzo: null,
 
     });
-    
+
     user.save();
 })
 
