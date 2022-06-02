@@ -80,6 +80,8 @@ router.get('/:id', productControllers.getProductById);
 *         description: Parametri mancanti.
 *       401:
 *         description: Non autorizzato.
+*       403:
+*         description: Prodotto già presente.
 *       500:
 *         description: Errore interno.
 */

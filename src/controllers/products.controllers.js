@@ -41,18 +41,8 @@ const postProducts = (req, res, next) => {
                 product
                     .save()
                     .then(async (result) => {
-                        result
-                            .save()
-                            .then((result1) => {
-                                console.log(`Product created ${result}`)
-                                res.status(201).location("/api/products/" + result._id).json({}).end();
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                                res.status(500).json({
-                                    message: err.toString()
-                                })
-                            });
+                        console.log(`Product created ${result}`)
+                        res.status(201).location("/api/products/" + result._id).json({}).end();
                     })
                     .catch((err) => {
                         console.log(err)
@@ -108,26 +98,16 @@ const editProducts = (req, res, next) => {
                 product
                     .save()
                     .then(async (result) => {
-                        await result
-                            .save()
-                            .then((result1) => {
-                                console.log(`Product edited ${result}`)
-                                res.status(200).json({
-                                    productDetails: {
-                                        productId: result._id,
-                                        name: result.name,
-                                        description: result.description,
-                                        category: result.category,
-                                        cost: result.cost,
-                                    },
-                                })
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                                res.status(500).json({
-                                    message: err.toString()
-                                })
-                            });
+                        console.log(`Product edited ${result}`)
+                        res.status(200).json({
+                            productDetails: {
+                                productId: result._id,
+                                name: result.name,
+                                description: result.description,
+                                category: result.category,
+                                cost: result.cost,
+                            },
+                        })
                     })
                     .catch((err) => {
                         console.log(err)
