@@ -4,9 +4,17 @@ const fs = require('fs');
 const path = require('path');
 
 const postProducts = (req, res, next) => {
+
     if (!req.user.admin) {
         res.status(401).json({
             message: "Unauthorized"
+        });
+        return;
+    }
+
+    if (!req.body.name || !req.body.description || !req.body.category || !req.body.cost || !req.file) {
+        res.status(400).json({
+            message: "Missing product parameters"
         });
         return;
     }
@@ -66,9 +74,17 @@ const postProducts = (req, res, next) => {
 }
 
 const editProducts = (req, res, next) => {
+
     if (!req.user.admin) {
         res.status(401).json({
             message: "Unauthorized"
+        });
+        return;
+    }
+
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(400).json({
+            message: "Invalid ID"
         });
         return;
     }
@@ -148,6 +164,13 @@ const getProducts = async (req, res) => {
 };
 
 const getProductById = async (req, res) => {
+
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(400).json({
+            message: "Invalid ID"
+        });
+    }
+
     const product = Product
         .findOne({ _id: req.params.id })
         .then(function (product) {
@@ -177,14 +200,21 @@ const deleteProductById = async (req, res) => {
         return;
     }
 
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(400).json({
+            message: "Invalid ID"
+        });
+        return;
+    }
+
     Product.deleteOne({
         _id: req.params.id
     })
         .exec()
         .then((response) => {
             if (response.deletedCount > 0) {
-                console.log(`Product deleted ${product}`)
-                console.log(product)
+                console.log(`Product deleted ${req.params.id}`)
+                console.log(req.params.id)
                 res.status(204).end()
             } else {
                 return res.status(404).json({

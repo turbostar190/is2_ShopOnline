@@ -105,7 +105,7 @@ router.patch('/', checkAuth, cartControllers.updateElementFromCart);
 
 /**
 * @openapi
-* /v1/cart/:id:
+* /v1/cart/:
 *   delete:
 *     description: Cancella un elemento presente nel carrello dell'utente
 *     produces:
@@ -129,6 +129,6 @@ router.patch('/', checkAuth, cartControllers.updateElementFromCart);
 *       500:
 *         description: Errore interno.
 */
-router.delete('/:id', checkAuth, cartControllers.deleteElementFromCart);
+router.delete('/', checkAuth, cartControllers.deleteElementFromCart);
 
 module.exports = router
