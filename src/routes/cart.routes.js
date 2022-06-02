@@ -62,6 +62,10 @@ router.get('/quantity', checkAuth, cartControllers.getCartTotalQuantity);
 *         description: Ritorna un messaggio che indica la modifica della quantità
 *       201:
 *         description: Ritorna il percorso della risorsa creata.
+*       400:
+*         description: Parametri mancanti.
+*       404:
+*         description: Prodotto non trovato.
 *       500:
 *         description: Errore interno.
 */
