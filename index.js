@@ -20,7 +20,7 @@ const options = {
       url: "http://localhost:3000/api/",
       description: "Development server"
     }],
-    components: {        
+    components: {
       securitySchemes: {
         token: {
           type: "http",
@@ -77,10 +77,12 @@ app.use(function (err, req, res, next) {
   })
 });
 
-try {
-  connectDB()
-} catch (error) {
-  console.log("database error")
+if (process.env.NODE_ENV !== 'test') {
+  try {
+    connectDB()
+  } catch (error) {
+    console.log("database error")
+  }
 }
 
 var server = app.listen(port, () => {
