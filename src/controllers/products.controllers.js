@@ -169,7 +169,10 @@ const getProducts = async (req, res) => {
     }
 
     const products = Product
-        .find(dict).sort(dictSort).exec()
+        .find(dict)
+        .collation({'locale': 'it'})
+        .sort(dictSort)
+        .exec()
         .then(function (products) {
             res.status(200).json(
                 products,
@@ -184,7 +187,7 @@ const getProducts = async (req, res) => {
 };
 
 const getProductById = async (req, res) => {
-    const product = Product
+    Product
         .findOne({ _id: req.params.id })
         .then(function (product) {
             if (product) {
@@ -207,6 +210,7 @@ const getProductById = async (req, res) => {
 const getCategories = async (req, res) => {
     Product
         .find({})
+        .collation({'locale': 'it'})
         .sort({ category: 'asc' })
         .exec()
         .then(function (products) {
