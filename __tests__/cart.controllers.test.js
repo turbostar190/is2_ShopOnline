@@ -10,7 +10,7 @@ const request = require('supertest');
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const { app, server } = require('../index');
 
-const { connectDB, disconnectDB } = require('../database');
+const { connectDB, disconnectDB } = require('../src/database');
 const { NORMAL_USER, ADMIN_USER, TEST_PRODUCT, TEST_PASSWORD } = require('../src/mock');
 
 var NORMAL_TOKEN;
