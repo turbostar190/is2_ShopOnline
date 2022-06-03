@@ -11,38 +11,8 @@ const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 const { app, server } = require('../index');
 
-const { connectDB, disconnectDB } = require('../database');
-const mongoose = require('mongoose');
-const bcrypt = require("bcrypt");
-const Product = require('../src/models/products');
-const User = require('../src/models/users');
-
-const admin_user = new User({
-    _id: new mongoose.Types.ObjectId(),
-    email: "admin@test.test",
-    password: bcrypt.hashSync("new-password", 10),
-    nome: "Test User",
-    indirizzo: null,
-    admin: true
-});
-
-const normal_user = new User({
-    _id: new mongoose.Types.ObjectId(),
-    email: "normal@test.test",
-    password: bcrypt.hashSync("new-password", 10),
-    nome: "Normal User",
-    indirizzo: null,
-    admin: false
-});
-
-const test_product = new Product({
-    _id: new mongoose.Types.ObjectId(),
-    name: 'Test Product',
-    description: 'Test Description',
-    cost: 10,
-    category: 'Test Category',
-    nome: 'Test User',
-});
+const { connectDB, disconnectDB } = require('../src/database');
+const { ADMIN_USER, NORMAL_USER, TEST_PASSWORD, TEST_PRODUCT } = require('../src/mock');
 
 var ADMIN_TOKEN;
 var NORMAL_TOKEN;
@@ -56,16 +26,16 @@ beforeAll(async () => {
     jest.setTimeout(10000);
     connectDB();
 
-    admin_user.save();
-    normal_user.save();
-    test_product.save();
+    ADMIN_USER.save();
+    NORMAL_USER.save();
+    TEST_PRODUCT.save();
 
     // retrieve token for authentication
     const login = await request(app)
         .post('/api/v1/users/login')
         .send({
-            email: admin_user.email,
-            password: "new-password",
+            email: ADMIN_USER.email,
+            password: TEST_PASSWORD,
         })
 
     ADMIN_TOKEN = login.body.token;
@@ -73,8 +43,8 @@ beforeAll(async () => {
     const normal_login = await request(app)
         .post('/api/v1/users/login')
         .send({
-            email: normal_user.email,
-            password: "new-password",
+            email: NORMAL_USER.email,
+            password: TEST_PASSWORD,
         })
 
     NORMAL_TOKEN = normal_login.body.token;
@@ -88,8 +58,8 @@ afterAll(async () => {
 
 
 describe('POST /products', () => {
+
     it('OK', async () => {
-        //TODO: random name
         const response = await request(app)
             .post('/api/v1/products')
             .set('Content-Type', 'form-data')
@@ -100,10 +70,9 @@ describe('POST /products', () => {
             .field('category', 'product')
             .attach('img', './__tests__/test_image.png')
             .expect(201);
-    }
-    );
+    });
+
     it('Missing Parameters', async () => {
-        //TODO: random name
         const response = await request(app)
             .post('/api/v1/products')
             .set('Content-Type', 'form-data')
@@ -112,24 +81,22 @@ describe('POST /products', () => {
             .field('description', 'product')
             .field('cost', 10)
             .expect(400);
-    }
-    );
+    });
+
     it('Product already exists', async () => {
-        //TODO: assert product should exist
         const response = await request(app)
             .post('/api/v1/products')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .set('Content-Type', 'form-data')
-            .field('name', test_product.name)
-            .field('description', test_product.description)
-            .field('cost', test_product.cost)
-            .field('category', test_product.category)
+            .field('name', TEST_PRODUCT.name)
+            .field('description', TEST_PRODUCT.description)
+            .field('cost', TEST_PRODUCT.cost)
+            .field('category', TEST_PRODUCT.category)
             .attach('img', './__tests__/test_image.png')
             .expect(403);
-    }
-    );
-    it('Invalid quantity parameter', async () => {
+    });
 
+    it('Invalid quantity parameter', async () => {
         const response = await request(app)
             .post('/api/v1/products')
             .set('Content-Type', 'form-data')
@@ -140,32 +107,30 @@ describe('POST /products', () => {
             .field('category', 'product')
             .attach('img', './__tests__/test_image.png')
             .expect(400);
-    }
-    );
+    });
 });
 
 describe('GET /products', () => {
+
     it('Anonymous OK', async () => {
         const response = await request(app)
             .get('/api/v1/products')
             .expect(200);
-    }
-    );
+    });
+
     it('Logged OK', async () => {
         const response = await request(app)
             .get('/api/v1/products')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(200);
-    }
-    );
-}
-);
+    });
+});
 
 describe('GET /products/:id', () => {
 
     it('OK', async () => {
         const response = await request(app)
-            .get(`/api/v1/products/${test_product._id}`)
+            .get(`/api/v1/products/${TEST_PRODUCT._id}`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(200);
     });
@@ -187,22 +152,23 @@ describe('GET /products/:id', () => {
 });
 
 describe('PUT /products/:id', () => {
-    it('OK', async () => {
 
+    it('OK', async () => {
         const response = await request(app)
-            .put(`/api/v1/products/${test_product._id}`)
+            .put(`/api/v1/products/${TEST_PRODUCT._id}`)
             .set('Content-Type', 'form-data')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
-            .field('name', test_product.name)
-            .field('description', test_product.description)
-            .field('cost', test_product.cost)
-            .field('category', test_product.category)
+            .field('name', TEST_PRODUCT.name)
+            .field('description', TEST_PRODUCT.description)
+            .field('cost', TEST_PRODUCT.cost)
+            .field('category', TEST_PRODUCT.category)
             .attach('img', './__tests__/test_image.png')
             .expect(200);
     });
+
     it('Negative cost', async () => {
         const response = await request(app)
-            .put(`/api/v1/products/${test_product._id}`)
+            .put(`/api/v1/products/${TEST_PRODUCT._id}`)
             .set('Content-Type', 'form-data')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .field('name', 'product2')
@@ -211,17 +177,17 @@ describe('PUT /products/:id', () => {
             .field('category', 'product')
             .attach('img', './__tests__/test_image.png')
             .expect(400);
-    }
-    );
+    });
+
     it('Unauthorized', async () => {
         const response = await request(app)
-            .put(`/api/v1/products/${test_product._id}`)
+            .put(`/api/v1/products/${TEST_PRODUCT._id}`)
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .set('Content-Type', 'form-data')
-            .field('name', test_product.name)
-            .field('description', test_product.description)
-            .field('cost', test_product.cost)
-            .field('category', test_product.category)
+            .field('name', TEST_PRODUCT.name)
+            .field('description', TEST_PRODUCT.description)
+            .field('cost', TEST_PRODUCT.cost)
+            .field('category', TEST_PRODUCT.category)
             .attach('img', './__tests__/test_image.png')
             .expect(401);
     });
@@ -254,6 +220,7 @@ describe('PUT /products/:id', () => {
 });
 
 describe('DELETE /products/:id', () => {
+
     it('Invalid ID', async () => {
         const response = await request(app)
             .delete('/api/v1/products/zzzzzzzzzzzzzzzzzzzzzz')
@@ -270,14 +237,14 @@ describe('DELETE /products/:id', () => {
 
     it('Unauthorized', async () => {
         const response = await request(app)
-            .delete(`/api/v1/products/${test_product._id}`)
+            .delete(`/api/v1/products/${TEST_PRODUCT._id}`)
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .expect(401);
     });
 
     it('OK', async () => {
         const response = await request(app)
-            .delete(`/api/v1/products/${test_product._id}`)
+            .delete(`/api/v1/products/${TEST_PRODUCT._id}`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(204);
     });
