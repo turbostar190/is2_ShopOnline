@@ -74,39 +74,13 @@ function postOrders(req, res, next) {
 }
 
 function getOrders(req, res, next) {
-    console.log("init get");
-    console.log(req.user);
-    let admin = req.user.admin;
-    if (admin) {
-        Order.find()
-            .exec()
-            .then((orders) => {
-                res.status(200).json(orders);
-            })
-            .catch((err) => {
-                console.log(err)
-                res.status(500).json({
-                    message: err.toString()
-                })
-            });
-    } else {
-        Order.find({
-            userId: req.user.userId
-        })
-            .exec()
-            .then((orders) => {
-                res.status(200).json(orders);
-            })
-            .catch((err) => {
-                console.log(err)
-                res.status(500).json({
-                    message: err.toString()
-                })
-            });
-    }
-
+    return res.status(300).json({
+        urls: [
+            "/api/v2/orders/getPendingOrders",
+            "/api/v2/orders/getCompletedOrders",
+        ]
+    }).end();
 }
-
 
 function getPendingOrders(req, res, next) {
     console.log("init get");
