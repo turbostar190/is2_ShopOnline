@@ -76,10 +76,9 @@ const postProducts = (req, res, next) => {
 const editProducts = (req, res, next) => {
 
     if (!req.user.admin) {
-        res.status(401).json({
+        return res.status(401).json({
             message: "Unauthorized"
         });
-        return;
     }
 
     if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
@@ -194,17 +193,15 @@ const getProductById = async (req, res) => {
 
 const deleteProductById = async (req, res) => {
     if (!req.user.admin) {
-        res.status(401).json({
+        return res.status(401).json({
             message: "Unauthorized"
         });
-        return;
     }
 
     if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
         return res.status(400).json({
             message: "Invalid ID"
         });
-        return;
     }
 
     Product.deleteOne({
