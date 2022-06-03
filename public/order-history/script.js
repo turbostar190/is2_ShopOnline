@@ -8,17 +8,26 @@ window.onload = function () {
 
 function getOrders() {
     $.ajax({
-        url: "/api/v1/orders/",
+        url: "/api/v1/orders/pending",
         type: "get",
         success: function (result) {
-            console.log(result);
+            console.log("pending", result);
             let pendingOrders = getPendingOrders(result);
-            let completedOrders = getCompletedOrders(result);
             let pendingOrdersDom = createPendingDom(pendingOrders);
-            let completedOrdersDom = createCompletedDom(completedOrders);
             $("#lista_pending").html(pendingOrdersDom);
+        },
+        error: function (request, status, error) {
+            alert(error);
+        }
+    });
+    $.ajax({
+        url: "/api/v1/orders/completed",
+        type: "get",
+        success: function (result) {
+            console.log("completed", result);
+            let completedOrders = getCompletedOrders(result);
+            let completedOrdersDom = createCompletedDom(completedOrders);
             $("#lista_completed").html(completedOrdersDom);
-
         },
         error: function (request, status, error) {
             alert(error);
