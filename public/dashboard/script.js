@@ -58,15 +58,15 @@ function createProductsDOM(products) {
                 </div>
             </div>
             <!-- Product actions-->
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent add-carrello-btn" style="display: ${stato.isLogged ? 'initial' : 'none'};">
+            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                 <div class="text-center">
-                    <a class="btn btn-outline-dark mt-auto my-1" href="javascript:addElementToCart(\'${product._id}\');">
-                        <i class="bi bi-cart-plus"></i>
-                        Aggiungi al carrello
-                    </a>
                     <button class="btn btn-outline-dark mt-auto my-1" type="button" data-bs-toggle="collapse" data-bs-target="#desc-collapse${product._id}">
                         <i class="bi bi-info-circle"></i>
                         Leggi Descrizione
+                    </button>
+                    <button class="btn btn-outline-dark mt-auto my-1 add-carrello-btn" onclick="javascript:addElementToCart(\'${product._id}\');" style="display: ${stato.isLogged ? 'initial' : 'none'};">
+                        <i class="bi bi-cart-plus"></i>
+                        Aggiungi al carrello
                     </button>
                     ${stato.admin ? `<a href="/edit-product?id=${product._id}">
                         <button class="btn btn-outline-dark my-1" type="button" id="modifica-btn"">
