@@ -6,15 +6,13 @@ const Cart = require("../models/cart");
 
 // function to post orders
 function postOrders(req, res, next) {
-    console.log("init orders");
-    
+
     Cart.find({
         userId: req.user.userId
     })
         .populate('productId')
         .exec()
         .then((cart) => {
-            console.log(cart);
             if (cart.length > 0) {
                 let products = [];
                 let set = new Set();
@@ -42,7 +40,6 @@ function postOrders(req, res, next) {
                 if (req.body.indirizzo) {
                     order_data.indirizzo = req.body.indirizzo;
                 }
-                console.log("order_data", order_data);
                 const order = new Order(order_data);
 
                 order
@@ -51,7 +48,6 @@ function postOrders(req, res, next) {
                         result
                             .save()
                             .then((result1) => {
-                                console.log(`Order created ${result}`)
                                 res.status(201).location("/api/orders/" + result._id).json({}).end();
                             })
                             .catch((err) => {
@@ -85,8 +81,6 @@ function getOrders(req, res, next) {
 }
 
 function getPendingOrders(req, res, next) {
-    console.log("init get");
-    console.log(req.user);
     let admin = req.user.admin;
     if (admin) {
         Order.find({
@@ -122,8 +116,6 @@ function getPendingOrders(req, res, next) {
 
 
 function getCompletedOrders(req, res, next) {
-    console.log("init get");
-    console.log(req.user);
     let admin = req.user.admin;
     if (admin) {
         Order.find({
@@ -158,7 +150,6 @@ function getCompletedOrders(req, res, next) {
 }
 
 function approveOrder(req, res, next) {
-    console.log("init approve");
 
     if (req.user.admin) {
         Order.findById(req.params.id)
@@ -198,7 +189,6 @@ function approveOrder(req, res, next) {
 }
 
 function notApproveOrder(req, res, next) {
-    console.log("init approve");
 
     if(req.user.admin){
         Order.findById(req.params.id)

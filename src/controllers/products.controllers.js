@@ -50,7 +50,6 @@ const postProducts = (req, res, next) => {
                 product
                     .save()
                     .then(async (result) => {
-                        console.log(`Product created ${result}`)
                         res.status(201).location("/api/products/" + result._id).json({}).end();
                     })
                     .catch((err) => {
@@ -114,7 +113,6 @@ const editProducts = (req, res, next) => {
                 product
                     .save()
                     .then(async (result) => {
-                        console.log(`Product edited ${result}`)
                         res.status(200).json({
                             productDetails: {
                                 productId: result._id,
@@ -147,10 +145,8 @@ const editProducts = (req, res, next) => {
 }
 
 const getProducts = async (req, res) => {
-    console.log("getProducts");
     let dict = {}
     let dictSort = {}
-    console.log(req.query)
     if (req.query.sort == "name") {
         dictSort = { 'name': 'asc' }
     } else if (req.query.sort == "cost") {
@@ -175,6 +171,7 @@ const getProducts = async (req, res) => {
             );
         })
         .catch(function (err) {
+            console.log(err);
             res.status(500).json({
                 err: err
             });
@@ -204,6 +201,7 @@ const getProductById = async (req, res) => {
             }
         })
         .catch(function (err) {
+            console.log(err);
             res.status(500).json({
                 err: err
             });
@@ -228,6 +226,7 @@ const getCategories = async (req, res) => {
             }
         })
         .catch(function (err) {
+            console.log(err);
             res.status(500).json({
                 err: err
             });
@@ -257,7 +256,6 @@ const deleteProductById = async (req, res) => {
         .then(() => session.endSession())
         .then(() => {
             // idempotente
-            console.log(`Product deleted from products and carts`)
             res.status(204).end()
         })
         .catch((err) => {

@@ -9,13 +9,11 @@ const userLogin = (req, res, next) => {
     })
         .exec()
         .then((user) => {
-            console.log(user)
             if (user == null) {
                 return res.status(401).json({
                     message: "Auth failed: Email not found",
                 });
             }
-            console.log(req.body.password, user.password);
             bcrypt.compare(req.body.password, user.password, (err, result) => {
                 if (err) {
                     console.log(err)
@@ -34,7 +32,6 @@ const userLogin = (req, res, next) => {
                         expiresIn: "1d",
                     }
                     );
-                    console.log(result, user)
                     return res.status(200).json({
                         message: "Auth successful",
                         userDetails: {
@@ -51,6 +48,7 @@ const userLogin = (req, res, next) => {
             });
         })
         .catch((err) => {
+            console.log(err);
             res.status(500).json({
                 error: err,
             });
@@ -68,6 +66,7 @@ const getMe = (req, res) => {
             });
         }
     }).catch((err) => {
+        console.log(err);
         res.status(500).json({
             error: err,
         });
@@ -78,7 +77,6 @@ const getMe = (req, res) => {
 const checkToken = async (req, res) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    console.log(req.user);
     res.status(200).json({
         message: {
             token: token,
@@ -115,6 +113,7 @@ const userSignIn = (req, res, next) => {
             } else {
                 bcrypt.hash(req.body.password, 10, (err, hash) => {
                     if (err) {
+                        console.log(err);
                         return res.status(500).json({
                             error: err,
                         });
@@ -136,7 +135,6 @@ const userSignIn = (req, res, next) => {
                                 await result
                                     .save()
                                     .then((result1) => {
-                                        console.log(`User created ${result}`)
                                         res.status(201).location("/api/v1/users/me").json({}).end();
                                     })
                                     .catch((err) => {

@@ -10,7 +10,6 @@ const path = require('path');
  * Ottiene il carrello dell'utente
  */
 function getCart(req, res, next) {
-    console.log("init get");
 
     const userId = req.user.userId;
     Cart.find({
@@ -31,6 +30,7 @@ function getCart(req, res, next) {
             );
         })
         .catch(err => {
+            console.log(err);
             res.status(500).json({
                 error: err
             });
@@ -41,7 +41,6 @@ function getCart(req, res, next) {
  * Ottiene il numero totale di prodotti nel carrello dell'utente
  */
 function getCartTotalQuantity(req, res, next) {
-    console.log("total");
 
     let userId = mongoose.Types.ObjectId(req.user.userId) // fix always empty array result
     Cart
@@ -51,7 +50,6 @@ function getCartTotalQuantity(req, res, next) {
         ])
         .exec()
         .then(docs => {
-            console.log(docs);
             res.status(200).json(
                 docs.length > 0 ? docs[0] : {}
             );
@@ -68,7 +66,6 @@ function getCartTotalQuantity(req, res, next) {
  * Aggiunge un elemento al carrello dell'utente
  */
 function addElementToCart(req, res, next) {
-    console.log("init add");
 
     const userId = req.user.userId;;
     if (!(req.body.productId && userId)) {
@@ -96,7 +93,6 @@ function addElementToCart(req, res, next) {
         .exec()
         .then(function (doc) {
             if (doc == null) {
-                console.log("new")
                 const cart = new Cart({
                     _id: mongoose.Types.ObjectId(),
                     productId: req.body.productId,
@@ -117,12 +113,10 @@ function addElementToCart(req, res, next) {
                     });
             } else {
                 // update
-                console.log("update");
                 doc.quantity += 1;
                 doc
                     .save()
                     .then((result1) => {
-                        console.log(`Modificata quantità carrello`)
                         res.status(200).json({
                             message: 'Quantity changed',
                         });
@@ -141,7 +135,6 @@ function addElementToCart(req, res, next) {
  * Modifica la quantità di un elemento del carrello dell'utente
  */
 function updateElementFromCart(req, res, next) {
-    console.log("update");
 
     const userId = req.user.userId;
 
@@ -169,12 +162,10 @@ function updateElementFromCart(req, res, next) {
                 });
             } else {
                 // update
-                console.log("updating quantity");
                 doc.quantity = req.body.quantity;
                 doc
                     .save()
                     .then((result1) => {
-                        console.log(`Modificata quantità carrello`)
                         res.status(200).json({
                             message: 'Quantity changed',
                             doc: doc
@@ -194,7 +185,6 @@ function updateElementFromCart(req, res, next) {
  * Rimuove un elemento dal carrello dell'utente
  */
 function deleteElementFromCart(req, res, next) {
-    console.log("init delete");
 
     const userId = req.user.userId;
 
@@ -230,12 +220,14 @@ function deleteElementFromCart(req, res, next) {
                         message: 'Element deleted from cart',
                     });
                 }).catch(err => {
+                    console.log(err);
                     res.status(500).json({
                         error: err
                     });
                 });
         })
         .catch(err => {
+            console.log(err);
             res.status(500).json({
                 error: err
             });
