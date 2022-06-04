@@ -232,7 +232,7 @@ describe('DELETE /products/:id', () => {
         const response = await request(app)
             .delete('/api/v1/products/987654321098765432101234')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
-            .expect(404);
+            .expect(204);
     });
 
     it('Unauthorized', async () => {

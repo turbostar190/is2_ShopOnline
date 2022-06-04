@@ -13,8 +13,8 @@ function getCart(req, res, next) {
 
     const userId = req.user.userId;
     Cart.find({
-        userId: userId
-    })
+            userId: userId
+        })
         .populate('productId')
         .exec()
         .then(docs => {
@@ -44,9 +44,22 @@ function getCartTotalQuantity(req, res, next) {
 
     let userId = mongoose.Types.ObjectId(req.user.userId) // fix always empty array result
     Cart
-        .aggregate([
-            { $match: { userId: userId } },
-            { $group: { _id: null, quantityTot: { $sum: "$quantity" }, count: { $sum: 1 } } }
+        .aggregate([{
+                $match: {
+                    userId: userId
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    quantityTot: {
+                        $sum: "$quantity"
+                    },
+                    count: {
+                        $sum: 1
+                    }
+                }
+            }
         ])
         .exec()
         .then(docs => {
@@ -81,54 +94,72 @@ function addElementToCart(req, res, next) {
         return;
     }
     if (!req.body.productId.match(/^[0-9a-fA-F]{24}$/)) {
-        return res.status(404).json({
+        return res.status(400).json({
             message: "Invalid ProductID."
         });
     }
 
-    Cart.findOne({
-        userId: userId,
-        productId: req.body.productId
-    })
-        .exec()
+    Products.findOne({
+            _id: req.body.productId
+        }).exec()
         .then(function (doc) {
             if (doc == null) {
-                const cart = new Cart({
-                    _id: mongoose.Types.ObjectId(),
-                    productId: req.body.productId,
-                    userId: userId,
-                    quantity: req.body.quantity
+                res.status(404).json({
+                    message: "Product not found"
                 });
-                cart.save()
-                    .then(result => {
-                        // TODO: Per ora non si può ottenere solo uno specifico prodotto dal carrello... 
-                        // ritorna quindi location per intero carrello
-                        res.status(201).location("/api/v1/cart/").json({}).end();
-                    })
-                    .catch(err => {
-                        console.log("errore cart save add", err.toString());
-                        res.status(500).json({
-                            error: "errore cart save add"
-                        });
-                    });
             } else {
-                // update
-                doc.quantity += 1;
-                doc
-                    .save()
-                    .then((result1) => {
-                        res.status(200).json({
-                            message: 'Quantity changed',
-                        });
+                Cart.findOne({
+                        userId: userId,
+                        productId: req.body.productId
                     })
-                    .catch((err) => {
-                        console.log(err)
-                        res.status(500).json({
-                            message: err.toString()
-                        })
+                    .exec()
+                    .then(function (doc) {
+                        if (doc == null) {
+                            const cart = new Cart({
+                                _id: mongoose.Types.ObjectId(),
+                                productId: req.body.productId,
+                                userId: userId,
+                                quantity: req.body.quantity
+                            });
+                            cart.save()
+                                .then(result => {
+                                    // TODO: Per ora non si può ottenere solo uno specifico prodotto dal carrello... 
+                                    // ritorna quindi location per intero carrello
+                                    res.status(201).location("/api/v1/cart/").json({}).end();
+                                })
+                                .catch(err => {
+                                    console.log("errore cart save add", err.toString());
+                                    res.status(500).json({
+                                        error: "errore cart save add"
+                                    });
+                                });
+                        } else {
+                            // update
+                            doc.quantity += 1;
+                            doc
+                                .save()
+                                .then((result1) => {
+                                    res.status(200).json({
+                                        message: 'Quantity changed',
+                                    });
+                                })
+                                .catch((err) => {
+                                    console.log(err)
+                                    res.status(500).json({
+                                        message: err.toString()
+                                    })
+                                });
+                        }
                     });
             }
+        }).catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
         });
+
+
 }
 
 /**
@@ -145,39 +176,55 @@ function updateElementFromCart(req, res, next) {
     }
 
     if (!req.body.productId.match(/^[0-9a-fA-F]{24}$/)) {
-        return res.status(404).json({
+        return res.status(400).json({
             message: "Invalid ProductID"
         });
     }
 
-    Cart.findOne({
-        userId: userId,
-        productId: req.body.productId
-    })
-        .exec()
+    Products.findOne({
+            _id: req.body.productId
+        }).exec()
         .then(function (doc) {
             if (doc == null) {
                 res.status(404).json({
-                    error: "Cart element not found"
+                    message: "Product not found"
                 });
             } else {
-                // update
-                doc.quantity = req.body.quantity;
-                doc
-                    .save()
-                    .then((result1) => {
-                        res.status(200).json({
-                            message: 'Quantity changed',
-                            doc: doc
-                        });
+                Cart.findOne({
+                        userId: userId,
+                        productId: req.body.productId
                     })
-                    .catch((err) => {
-                        console.log(err)
-                        res.status(500).json({
-                            message: err.toString()
-                        })
+                    .exec()
+                    .then(function (doc) {
+                        if (doc == null) {
+                            res.status(404).json({
+                                error: "Cart element not found"
+                            });
+                        } else {
+                            // update
+                            doc.quantity = req.body.quantity;
+                            doc
+                                .save()
+                                .then((result1) => {
+                                    res.status(200).json({
+                                        message: 'Quantity changed',
+                                        doc: doc
+                                    });
+                                })
+                                .catch((err) => {
+                                    console.log(err)
+                                    res.status(500).json({
+                                        message: err.toString()
+                                    })
+                                });
+                        }
                     });
             }
+        }).catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
         });
 }
 
@@ -195,38 +242,54 @@ function deleteElementFromCart(req, res, next) {
     }
 
     if (!req.body.productId.match(/^[0-9a-fA-F]{24}$/)) {
-        return res.status(404).json({
+        return res.status(400).json({
             message: "The id is not valid"
         });
     }
 
-    Cart.findOne({
-        productId: req.body.productId,
-        userId: userId
-    })
-        .exec()
-        .then((element) => {
-            if (element == null) {
-                return res.status(404).json({
-                    message: "Cart element not found"
+    Products.findOne({
+            _id: req.body.productId
+        }).exec()
+        .then(function (doc) {
+            if (doc == null) {
+                res.status(404).json({
+                    message: "Product not found"
                 });
+            } else {
+                Cart.findOne({
+                        productId: req.body.productId,
+                        userId: userId
+                    })
+                    .exec()
+                    .then((element) => {
+                        if (element == null) {
+                            return res.status(404).json({
+                                message: "Cart element not found"
+                            });
+                        }
+                        Cart.deleteOne({
+                                _id: element._id
+                            })
+                            .exec()
+                            .then(result => {
+                                res.status(200).json({
+                                    message: 'Element deleted from cart',
+                                });
+                            }).catch(err => {
+                                console.log(err);
+                                res.status(500).json({
+                                    error: err
+                                });
+                            });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
             }
-            Cart.deleteOne({
-                _id: element._id
-            })
-                .exec()
-                .then(result => {
-                    res.status(200).json({
-                        message: 'Element deleted from cart',
-                    });
-                }).catch(err => {
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
-                    });
-                });
-        })
-        .catch(err => {
+        }).catch(err => {
             console.log(err);
             res.status(500).json({
                 error: err

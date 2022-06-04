@@ -17,6 +17,7 @@ function postOrders(req, res, next) {
                 let products = [];
                 let set = new Set();
                 cart.forEach(element => {
+                    //TODO: fix deleted product id
                     if (set.has(element.productId._id)) {
                         let index = products.findIndex(p => p.productId == element.productId._id);
                         products[index].quantity += element.quantity;
@@ -151,6 +152,12 @@ function getCompletedOrders(req, res, next) {
 
 function approveOrder(req, res, next) {
 
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(400).json({
+            message: "Invalid ProductID."
+        });
+    }
+
     if (req.user.admin) {
         Order.findById(req.params.id)
             .exec()
@@ -189,6 +196,12 @@ function approveOrder(req, res, next) {
 }
 
 function notApproveOrder(req, res, next) {
+
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(400).json({
+            message: "Invalid ProductID."
+        });
+    }
 
     if(req.user.admin){
         Order.findById(req.params.id)
