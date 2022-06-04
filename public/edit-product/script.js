@@ -12,7 +12,7 @@ window.onload = function () {
   const id = getParameter("id");
 
   $.ajax({
-    url: "/api/v1/products/" + id,
+    url: "/api/v2/products/" + id,
     type: "get",
     success: function (result) {
 
@@ -39,7 +39,7 @@ function edit_product(e) {
   console.log(formData);
 
   $.ajax({
-    url: "/api/v1/products/" + id,
+    url: "/api/v2/products/" + id,
     type: "put",
     enctype: 'multipart/form-data',
     data: formData,

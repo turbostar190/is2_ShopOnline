@@ -27,10 +27,10 @@ test('app module should be defined', () => {
     expect(app).toBeDefined();
 });
 
-describe('POST /api/v1/users/signin', () => {
+describe('POST /api/v2/users/signin', () => {
     it('User already registered', async () => {
         expect.assertions(1);
-        const response = await request(app).post('/api/v1/users/signin').send({
+        const response = await request(app).post('/api/v2/users/signin').send({
             email: NORMAL_USER.email,
             password: TEST_PASSWORD,
             nome: NORMAL_USER.nome,
@@ -40,7 +40,7 @@ describe('POST /api/v1/users/signin', () => {
 
     it('Missing Parameters', async () => {
         expect.assertions(1);
-        const response = await request(app).post('/api/v1/users/signin')
+        const response = await request(app).post('/api/v2/users/signin')
             .send({
                 'email': NORMAL_USER.email,
                 'password': TEST_PASSWORD,
@@ -49,16 +49,16 @@ describe('POST /api/v1/users/signin', () => {
     });
 });
 
-describe('POST /api/v1/users/login', () => {
+describe('POST /api/v2/users/login', () => {
     expect.assertions(1);
     it('No Credentials', async () => {
-        const response = await request(app).post('/api/v1/users/login');
+        const response = await request(app).post('/api/v2/users/login');
         expect(response.statusCode).toBe(401);
     });
 
     it('Wrong Password', async () => {
         expect.assertions(1);
-        const response = await request(app).post('/api/v1/users/login').expect('Content-Type', /json/)
+        const response = await request(app).post('/api/v2/users/login').expect('Content-Type', /json/)
             .send({
                 'email': NORMAL_USER.email,
                 'password': `wrong-${TEST_PASSWORD}`,
@@ -68,7 +68,7 @@ describe('POST /api/v1/users/login', () => {
 
     it('OK', async () => {
         expect.assertions(1);
-        const response = await request(app).post('/api/v1/users/login').expect('Content-Type', /json/)
+        const response = await request(app).post('/api/v2/users/login').expect('Content-Type', /json/)
             .send({
                 'email': NORMAL_USER.email,
                 'password': TEST_PASSWORD,

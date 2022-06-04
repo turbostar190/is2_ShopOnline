@@ -132,7 +132,7 @@ const userSignIn = (req, res, next) => {
                         user
                             .save()
                             .then(async (result) => {
-                                res.status(201).location("/api/v1/users/me").json({}).end();
+                                res.status(201).location("/api/v2/users/me").json({}).end();
                             })
                             .catch((err) => {
                                 console.log(err)

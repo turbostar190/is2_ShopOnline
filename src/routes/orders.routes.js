@@ -2,6 +2,7 @@ const express = require('express');
 const ordersControllers = require('../controllers/orders.controllers.js');
 const checkAuth = require('../middleware/checkAuth.middleware');
 const router = express.Router();
+const router_v1 = express.Router();
 
 /**
 * @openapi
@@ -95,7 +96,7 @@ router.put('/not_approve/:id', checkAuth, ordersControllers.notApproveOrder);
 *       500:
 *         description: Errore interno.
 */
-router.get('/', checkAuth, ordersControllers.getOrders);
+router_v1.get('/', checkAuth, ordersControllers.getOrders);
 
 /**
 * @openapi
@@ -131,4 +132,4 @@ router.get('/pending/', checkAuth, ordersControllers.getPendingOrders);
 */
 router.get('/completed/', checkAuth, ordersControllers.getCompletedOrders);
 
-module.exports = router;
+module.exports = { router,router_v1 };

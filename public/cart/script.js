@@ -16,7 +16,7 @@ window.onload = function () {
  */
 function getIndirizzo() {
     $.ajax({
-        url: "/api/v1/users/me",
+        url: "/api/v2/users/me",
         method: "get",
         success: function (result) {
             if (result.indirizzo) {
@@ -36,7 +36,7 @@ function getIndirizzo() {
  */
 function getCart() {
     $.ajax({
-        url: "/api/v1/cart/",
+        url: "/api/v2/cart/",
         method: "get",
         success: function (result) {
             console.log("RESULT", result);
@@ -56,7 +56,7 @@ function getCart() {
  */
 function getCartTotalQuantity() {
     $.ajax({
-        url: "/api/v1/cart/quantity",
+        url: "/api/v2/cart/quantity",
         method: "get",
         success: function (result) {
             console.log("tot", result);
@@ -80,7 +80,7 @@ function getCartTotalQuantity() {
     };
     console.log(data);
     $.ajax({
-        url: "/api/v1/cart/",
+        url: "/api/v2/cart/",
         type: "post",
         data: data,
         success: function (result) {
@@ -105,7 +105,7 @@ function updateCartItem(productId, quantity, $selector) {
     };
     console.log(data);
     $.ajax({
-        url: "/api/v1/cart/",
+        url: "/api/v2/cart/",
         method: "patch",
         data: data,
         success: function (result) {
@@ -129,7 +129,7 @@ function updateCartItem(productId, quantity, $selector) {
  */
 function deleteCartItem(cartId, $selector) {
     $.ajax({
-        url: "/api/v1/cart/" + cartId,
+        url: "/api/v2/cart/" + cartId,
         method: "delete",
         success: function (result) {
             console.log("deleteCart", result);
@@ -163,7 +163,7 @@ function formSubmit(e) {
 
     console.log("ordina", data);
     $.ajax({
-        url: "/api/v1/orders/",
+        url: "/api/v2/orders/",
         type: "post",
         data: data,
         success: function (result) {

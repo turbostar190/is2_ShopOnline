@@ -15,7 +15,7 @@ window.onload = function () {
 
 function getCategories() {
     $.ajax({
-        url: "/api/v1/products/categories/",
+        url: "/api/v2/products/categories/",
         type: "get",
         success: function (result) {
             console.log(result);
@@ -42,7 +42,7 @@ function getProducts(e) {
     }
 
     $.ajax({
-        url: "/api/v1/products/",
+        url: "/api/v2/products/",
         type: "get",
         data: dict,
         success: function (result) {
@@ -130,7 +130,7 @@ function addElementToCart(productId) {
     };
     console.log(data);
     $.ajax({
-        url: "/api/v1/cart/",
+        url: "/api/v2/cart/",
         type: "post",
         data: data,
         success: function (result) {
@@ -145,7 +145,7 @@ function addElementToCart(productId) {
 function deleteProduct(id) {
     if (confirm("Sei sicuro di voler eliminare il prodotto? Ciò lo cancellerà anche dai carrelli degli utenti!")) {
         $.ajax({
-            url: "/api/v1/products/" + id,
+            url: "/api/v2/products/" + id,
             type: "delete",
             dataType: "text",
             success: function (result) {

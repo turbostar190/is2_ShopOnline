@@ -34,7 +34,7 @@ function signin(e) {
   }
   console.log(data);
   $.ajax({
-    url: "/api/v1/users/signin",
+    url: "/api/v2/users/signin",
     type: "post",
     dataType: "json",
     data: data,

@@ -8,7 +8,7 @@ window.onload = function () {
 
 function getOrders() {
     $.ajax({
-        url: "/api/v1/orders/pending",
+        url: "/api/v2/orders/pending",
         type: "get",
         success: function (result) {
             console.log("pending", result);
@@ -21,7 +21,7 @@ function getOrders() {
         }
     });
     $.ajax({
-        url: "/api/v1/orders/completed",
+        url: "/api/v2/orders/completed",
         type: "get",
         success: function (result) {
             console.log("completed", result);
@@ -201,7 +201,7 @@ function timeStampToDate(timestamp) {
 //approve order 
 function approveOrder(orderId) {
     $.ajax({
-        url: "/api/v1/orders/approve/" + orderId,
+        url: "/api/v2/orders/approve/" + orderId,
         type: "put",
         success: function (result) {
             console.log(result);
@@ -215,7 +215,7 @@ function approveOrder(orderId) {
 
 function notApproveOrder(orderId) {
     $.ajax({
-        url: "/api/v1/orders/not_approve/" + orderId,
+        url: "/api/v2/orders/not_approve/" + orderId,
         type: "put",
         success: function (result) {
             console.log(result);

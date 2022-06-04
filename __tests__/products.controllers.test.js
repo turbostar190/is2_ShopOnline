@@ -32,7 +32,7 @@ beforeAll(async () => {
 
     // retrieve token for authentication
     const login = await request(app)
-        .post('/api/v1/users/login')
+        .post('/api/v2/users/login')
         .send({
             email: ADMIN_USER.email,
             password: TEST_PASSWORD,
@@ -41,7 +41,7 @@ beforeAll(async () => {
     ADMIN_TOKEN = login.body.token;
 
     const normal_login = await request(app)
-        .post('/api/v1/users/login')
+        .post('/api/v2/users/login')
         .send({
             email: NORMAL_USER.email,
             password: TEST_PASSWORD,
@@ -61,7 +61,7 @@ describe('POST /products', () => {
 
     it('OK', async () => {
         const response = await request(app)
-            .post('/api/v1/products')
+            .post('/api/v2/products')
             .set('Content-Type', 'form-data')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .field('name', 'product2')
@@ -74,7 +74,7 @@ describe('POST /products', () => {
 
     it('Missing Parameters', async () => {
         const response = await request(app)
-            .post('/api/v1/products')
+            .post('/api/v2/products')
             .set('Content-Type', 'form-data')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .field('name', 'product2')
@@ -85,7 +85,7 @@ describe('POST /products', () => {
 
     it('Product already exists', async () => {
         const response = await request(app)
-            .post('/api/v1/products')
+            .post('/api/v2/products')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .set('Content-Type', 'form-data')
             .field('name', TEST_PRODUCT.name)
@@ -98,7 +98,7 @@ describe('POST /products', () => {
 
     it('Invalid quantity parameter', async () => {
         const response = await request(app)
-            .post('/api/v1/products')
+            .post('/api/v2/products')
             .set('Content-Type', 'form-data')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .field('name', 'product2')
@@ -114,13 +114,13 @@ describe('GET /products', () => {
 
     it('Anonymous OK', async () => {
         const response = await request(app)
-            .get('/api/v1/products')
+            .get('/api/v2/products')
             .expect(200);
     });
 
     it('Logged OK', async () => {
         const response = await request(app)
-            .get('/api/v1/products')
+            .get('/api/v2/products')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(200);
     });
@@ -130,21 +130,21 @@ describe('GET /products/:id', () => {
 
     it('OK', async () => {
         const response = await request(app)
-            .get(`/api/v1/products/${TEST_PRODUCT._id}`)
+            .get(`/api/v2/products/${TEST_PRODUCT._id}`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(200);
     });
 
     it('Invalid ID', async () => {
         const response = await request(app)
-            .get('/api/v1/products/invalid-id')
+            .get('/api/v2/products/invalid-id')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(400);
     });
 
     it('Unknown ID', async () => {
         const response = await request(app)
-            .get('/api/v1/products/987654321098765432101234')
+            .get('/api/v2/products/987654321098765432101234')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(404);
     });
@@ -155,7 +155,7 @@ describe('PUT /products/:id', () => {
 
     it('OK', async () => {
         const response = await request(app)
-            .put(`/api/v1/products/${TEST_PRODUCT._id}`)
+            .put(`/api/v2/products/${TEST_PRODUCT._id}`)
             .set('Content-Type', 'form-data')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .field('name', TEST_PRODUCT.name)
@@ -168,7 +168,7 @@ describe('PUT /products/:id', () => {
 
     it('Negative cost', async () => {
         const response = await request(app)
-            .put(`/api/v1/products/${TEST_PRODUCT._id}`)
+            .put(`/api/v2/products/${TEST_PRODUCT._id}`)
             .set('Content-Type', 'form-data')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .field('name', 'product2')
@@ -181,7 +181,7 @@ describe('PUT /products/:id', () => {
 
     it('Unauthorized', async () => {
         const response = await request(app)
-            .put(`/api/v1/products/${TEST_PRODUCT._id}`)
+            .put(`/api/v2/products/${TEST_PRODUCT._id}`)
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .set('Content-Type', 'form-data')
             .field('name', TEST_PRODUCT.name)
@@ -194,7 +194,7 @@ describe('PUT /products/:id', () => {
 
     it('Invalid ID', async () => {
         const response = await request(app)
-            .put('/api/v1/products/zzzzzzzzzzzzzzzzzzzzzz')
+            .put('/api/v2/products/zzzzzzzzzzzzzzzzzzzzzz')
             .set('Content-Type', 'form-data')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .field('name', 'product2')
@@ -207,7 +207,7 @@ describe('PUT /products/:id', () => {
 
     it('Unknown ID', async () => {
         const response = await request(app)
-            .put('/api/v1/products/987654321098765432101234')
+            .put('/api/v2/products/987654321098765432101234')
             .set('Content-Type', 'form-data')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .field('name', 'product2')
@@ -223,28 +223,28 @@ describe('DELETE /products/:id', () => {
 
     it('Invalid ID', async () => {
         const response = await request(app)
-            .delete('/api/v1/products/zzzzzzzzzzzzzzzzzzzzzz')
+            .delete('/api/v2/products/zzzzzzzzzzzzzzzzzzzzzz')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(400);
     });
 
     it('Unknown ID', async () => {
         const response = await request(app)
-            .delete('/api/v1/products/987654321098765432101234')
+            .delete('/api/v2/products/987654321098765432101234')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(204);
     });
 
     it('Unauthorized', async () => {
         const response = await request(app)
-            .delete(`/api/v1/products/${TEST_PRODUCT._id}`)
+            .delete(`/api/v2/products/${TEST_PRODUCT._id}`)
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .expect(401);
     });
 
     it('OK', async () => {
         const response = await request(app)
-            .delete(`/api/v1/products/${TEST_PRODUCT._id}`)
+            .delete(`/api/v2/products/${TEST_PRODUCT._id}`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(204);
     });

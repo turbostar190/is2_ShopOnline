@@ -59,10 +59,11 @@ const ordersRouter = require('./src/routes/orders.routes');
 app.use('/', express.static('public'));
 
 // api
-app.use('/api/v1/users', usersRouter);
-app.use('/api/v1/products', productsRouter);
-app.use('/api/v1/cart', cartRouter);
-app.use('/api/v1/orders', ordersRouter);
+app.use('/api/v2/users', usersRouter);
+app.use('/api/v2/products', productsRouter);
+app.use('/api/v2/cart', cartRouter);
+app.use('/api/v2/orders', ordersRouter.router);
+app.use('/api/v1/orders', ordersRouter.router_v1);
 
 
 // catch 404 and forward to error handler

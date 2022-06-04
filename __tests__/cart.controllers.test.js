@@ -29,7 +29,7 @@ beforeAll(async () => {
 
     // retrieve token for authentication
     const login = await request(app)
-        .post('/api/v1/users/login')
+        .post('/api/v2/users/login')
         .send({
             email: NORMAL_USER.email,
             password: TEST_PASSWORD,
@@ -44,11 +44,11 @@ afterAll(async () => {
     server.close();
 })
 
-describe('POST /api/v1/cart', () => {
+describe('POST /api/v2/cart', () => {
 
     it('Add OK', async () => {
         const response = await request(app)
-            .post('/api/v1/cart')
+            .post('/api/v2/cart')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 productId: TEST_PRODUCT._id,
@@ -59,7 +59,7 @@ describe('POST /api/v1/cart', () => {
 
     it('Modify quantity OK', async () => {
         const response = await request(app)
-            .post('/api/v1/cart')
+            .post('/api/v2/cart')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 productId: TEST_PRODUCT._id,
@@ -70,7 +70,7 @@ describe('POST /api/v1/cart', () => {
 
     it('Add invalid ID', async () => {
         const response = await request(app)
-            .post('/api/v1/cart')
+            .post('/api/v2/cart')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 productId: 'not-working-id',
@@ -81,7 +81,7 @@ describe('POST /api/v1/cart', () => {
 
     it('Add unknown ID', async () => {
         const response = await request(app)
-            .post('/api/v1/cart')
+            .post('/api/v2/cart')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 productId: '987654321098765432101234',
@@ -92,7 +92,7 @@ describe('POST /api/v1/cart', () => {
 
     it('Missing Parameters', async () => {
         const response = await request(app)
-            .post('/api/v1/cart')
+            .post('/api/v2/cart')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 quantity: 10
@@ -102,7 +102,7 @@ describe('POST /api/v1/cart', () => {
 
     it('Modify with negative quantity', async () => {
         const response = await request(app)
-            .post('/api/v1/cart')
+            .post('/api/v2/cart')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 productId: 'zzzzzzzzzzzzzzz',
@@ -112,37 +112,37 @@ describe('POST /api/v1/cart', () => {
     });
 })
 
-describe('GET /api/v1/cart', () => {
+describe('GET /api/v2/cart', () => {
 
     it('Anonymous OK', async () => {
         const response = await request(app)
-            .get('/api/v1/cart')
+            .get('/api/v2/cart')
         expect(response.status).toBe(400);
     });
 
     it('Logged OK', async () => {
         const response = await request(app)
-            .get('/api/v1/cart')
+            .get('/api/v2/cart')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
         expect(response.status).toBe(200);
     });
 });
 
-describe('GET /api/v1/cart/quantity', () => {
+describe('GET /api/v2/cart/quantity', () => {
     it('OK', async () => {
         const response = await request(app)
-            .get('/api/v1/cart/quantity')
+            .get('/api/v2/cart/quantity')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`);
         expect(response.status).toBe(200);
     });
 });
 
 // Test PATCH /cart/
-describe('PATCH /api/v1/cart/', () => {
+describe('PATCH /api/v2/cart/', () => {
 
     it('OK', async () => {
         const response = await request(app)
-            .patch(`/api/v1/cart/`)
+            .patch(`/api/v2/cart/`)
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 productId: TEST_PRODUCT._id,
@@ -153,7 +153,7 @@ describe('PATCH /api/v1/cart/', () => {
 
     it('Modify invalid ID', async () => {
         const response = await request(app)
-            .patch('/api/v1/cart/')
+            .patch('/api/v2/cart/')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 quantity: 1,
@@ -164,7 +164,7 @@ describe('PATCH /api/v1/cart/', () => {
 
     it('Modify unknown ID', async () => {
         const response = await request(app)
-            .patch('/api/v1/cart/')
+            .patch('/api/v2/cart/')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 quantity: 1,
@@ -174,18 +174,18 @@ describe('PATCH /api/v1/cart/', () => {
     });
 });
 
-describe('DELETE /api/v1/cart/', () => {
+describe('DELETE /api/v2/cart/', () => {
 
     it('No ID provided', async () => {
         const response = await request(app)
-            .delete('/api/v1/cart/')
+            .delete('/api/v2/cart/')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`);
         expect(response.status).toBe(400);
     });
 
     it('OK', async () => {
         const response = await request(app)
-            .delete(`/api/v1/cart/`)
+            .delete(`/api/v2/cart/`)
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 productId: TEST_PRODUCT._id,
@@ -195,7 +195,7 @@ describe('DELETE /api/v1/cart/', () => {
 
     it('Invalid ID', async () => {
         const response = await request(app)
-            .delete('/api/v1/cart/')
+            .delete('/api/v2/cart/')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 productId: 'wrong-product-id',
@@ -205,7 +205,7 @@ describe('DELETE /api/v1/cart/', () => {
     
     it('Unknown ID', async () => {
         const response = await request(app)
-            .delete('/api/v1/cart/')
+            .delete('/api/v2/cart/')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 productId: '987654321098765432101234',

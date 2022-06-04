@@ -19,7 +19,7 @@ window.onload = function () {
     console.log(formData);
 
     $.ajax({
-      url: "/api/v1/products/",
+      url: "/api/v2/products/",
       type: "post",
       enctype: 'multipart/form-data',
       data: formData,

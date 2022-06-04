@@ -33,7 +33,7 @@ beforeAll(async () => {
 
     // retrieve token for authentication
     const login = await request(app)
-        .post('/api/v1/users/login')
+        .post('/api/v2/users/login')
         .send({
             email: ADMIN_USER.email,
             password: TEST_PASSWORD,
@@ -42,7 +42,7 @@ beforeAll(async () => {
     ADMIN_TOKEN = login.body.token;
 
     const normal_login = await request(app)
-        .post('/api/v1/users/login')
+        .post('/api/v2/users/login')
         .send({
             email: NORMAL_USER.email,
             password: TEST_PASSWORD,
@@ -51,7 +51,7 @@ beforeAll(async () => {
     NORMAL_TOKEN = normal_login.body.token;
 
     const normal_login_2 = await request(app)
-        .post('/api/v1/users/login')
+        .post('/api/v2/users/login')
         .send({
             email: NORMAL_USER_2.email,
             password: TEST_PASSWORD,
@@ -90,68 +90,68 @@ describe('GET /api/v1/orders/', () => {
 
 });
 
-describe('POST /api/v1/orders/', () => {
+describe('POST /api/v2/orders/', () => {
 
     it('Empty Cart', async () => {
         const res = await request(app)
-            .post('/api/v1/orders')
+            .post('/api/v2/orders')
             .set('Authorization', `Bearer ${NORMAL_TOKEN_2}`)
         expect(res.status).toBe(403);
     });
 
     it('OK', async () => {
         const res = await request(app)
-            .post('/api/v1/orders')
+            .post('/api/v2/orders')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
         expect(res.status).toBe(201);
     });
 
 });
 
-describe('PUT /api/v1/orders/approve/:id', () => {
+describe('PUT /api/v2/orders/approve/:id', () => {
 
     it('Invalid ID', async () => {
         const res = await request(app)
-            .put(`/api/v1/orders/approve/invalid-id`)
+            .put(`/api/v2/orders/approve/invalid-id`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         expect(res.status).toBe(400);
     });
 
     it('Unknown ID', async () => {
         const res = await request(app)
-            .put(`/api/v1/orders/approve/987654321098765432101234`)
+            .put(`/api/v2/orders/approve/987654321098765432101234`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         expect(res.status).toBe(404);
     });
 
     it('OK', async () => {
         const res = await request(app)
-            .put(`/api/v1/orders/approve/${ORDER_1._id}`)
+            .put(`/api/v2/orders/approve/${ORDER_1._id}`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         expect(res.status).toBe(200);
     });
 
 });
 
-describe('PUT /api/v1/orders/not_approve/:id', () => {
+describe('PUT /api/v2/orders/not_approve/:id', () => {
 
     it('Invalid ID', async () => {
         const res = await request(app)
-            .put(`/api/v1/orders/not_approve/invalid-id`)
+            .put(`/api/v2/orders/not_approve/invalid-id`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         expect(res.status).toBe(400);
     });
 
     it('Unknown ID', async () => {
         const res = await request(app)
-            .put(`/api/v1/orders/not_approve/987654321098765432101234`)
+            .put(`/api/v2/orders/not_approve/987654321098765432101234`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         expect(res.status).toBe(404);
     });
 
     it('OK', async () => {
         const res = await request(app)
-            .put(`/api/v1/orders/approve/${ORDER_2._id}`)
+            .put(`/api/v2/orders/approve/${ORDER_2._id}`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         expect(res.status).toBe(200);
     });
