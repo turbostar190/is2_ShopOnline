@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const port = process.env.PORT || 3000;
 const app = express()
@@ -44,7 +45,8 @@ app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(express.json()); //Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
-app.use(cors())
+app.use(mongoSanitize());
+app.use(cors());
 
 /**
  * Configure mongoose
