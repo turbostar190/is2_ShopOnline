@@ -1,4 +1,5 @@
 const Product = require("../models/products");
+const Cart = require("../models/cart");
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
@@ -200,27 +201,20 @@ const deleteProductById = async (req, res) => {
         return;
     }
 
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-        return res.status(400).json({
-            message: "Invalid ID"
-        });
-        return;
-    }
-
-    Product.deleteOne({
-        _id: req.params.id
-    })
-        .exec()
-        .then((response) => {
-            if (response.deletedCount > 0) {
-                console.log(`Product deleted ${req.params.id}`)
-                console.log(req.params.id)
-                res.status(204).end()
-            } else {
-                return res.status(404).json({
-                    message: "Product don't exist",
-                });
-            }
+    let session = null;
+    return Product.startSession()
+        .then(_session => {
+            session = _session;
+            session.startTransaction();
+        })
+        .then(() => Cart.deleteMany({ productId: req.params.id }).session(session))
+        .then(() => Product.deleteOne({ _id: req.params.id }).session(session))
+        .then(() => session.commitTransaction())
+        .then(() => session.endSession())
+        .then(() => {
+            // idempotente
+            console.log(`Product deleted from products and carts`)
+            res.status(204).end()
         })
         .catch((err) => {
             console.log(err);
