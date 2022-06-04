@@ -76,13 +76,14 @@ const postProducts = (req, res, next) => {
 const editProducts = (req, res, next) => {
 
     if (!req.user.admin) {
-        return res.status(401).json({
+        res.status(401).json({
             message: "Unauthorized"
         });
+        return;
     }
 
     if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-        return res.status(400).json({
+        res.status(400).json({
             message: "Invalid ID"
         });
         return;

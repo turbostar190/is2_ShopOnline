@@ -17,7 +17,7 @@ var upload = multer({ storage: storage });
 
 /**
 * @openapi
-* /v1/products/categories:
+* /v2/products/categories:
 *   get:
 *     description: Ottiene tutte le categorie presenti
 *     produces:
@@ -32,7 +32,7 @@ router.get('/categories', productControllers.getCategories);
 
 /**
 * @openapi
-* /v1/products:
+* /v2/products:
 *   get:
 *     description: Ottiene la lista dei prodotti
 *     parameters:
@@ -42,7 +42,7 @@ router.get('/categories', productControllers.getCategories);
 *           type: string
 *           enum: [name, cost]
 *         description: Specifica in che modo ordinare i prodotti (nome o prezzo) 
-*       - in: query
+*       - in:   
 *         name: search
 *         schema:
 *           type: string
@@ -64,11 +64,18 @@ router.get('/', productControllers.getProducts);
 
 /**
 * @openapi
-* /v1/products/:id:
+* /v2/products/:id:
 *   get:
 *     description: Ottiene prodotto per id
 *     produces:
 *       - application/json
+*     parameters:
+*       - name: id
+*         in: path
+*         description: Id del prodotto
+*         required: true
+*         schema:
+*           type: string
 *     responses:
 *       200:
 *         description: Ottiene il prodotto che corrisponde all'id passato.
@@ -81,7 +88,7 @@ router.get('/:id', productControllers.getProductById);
 
 /**
 * @openapi
-* /v1/products:
+* /v2/products:
 *   post:
 *     description: Aggiunge un prodotto
 *     produces:
@@ -97,14 +104,19 @@ router.get('/:id', productControllers.getProductById);
 *             properties:
 *               name:
 *                 type: string
+*                 required: true
 *               description:
 *                 type: string
+*                 required: true
 *               category:
 *                 type: string
+*                 required: true
 *               cost:
 *                 type: number
+*                 required: true
 *               img:
-*                 type: string
+*                 type: file
+*                 required: true
 *     responses:
 *       201:
 *         description: Ritorna il percorso della risorsa creata.
@@ -121,13 +133,20 @@ router.post('/', checkAuth, upload.single('img'), productControllers.postProduct
 
 /**
 * @openapi
-* /v1/products/:id:
+* /v2/products/:id:
 *   put:
 *     description: Modifica il prodotto corrispondente all'id passato.
 *     produces:
 *       - application/json
 *     security:
 *       - token: []
+*     parameters:
+*       - name: id
+*         in: path
+*         description: Id del prodotto
+*         required: true
+*         schema:
+*           type: string
 *     requestBody:
 *       required: true
 *       content:
@@ -162,13 +181,20 @@ router.put('/:id', checkAuth, upload.single('img'), productControllers.editProdu
 
 /**
 * @openapi
-* /v1/products/:id:
+* /v2/products/:id:
 *   delete:
 *     description: Cancella il prodotto corrispondente all'id passato.
 *     produces:
 *       - application/json
 *     security:
 *       - token: []
+*     parameters:
+*       - name: id
+*         in: path
+*         description: Id del prodotto
+*         required: true
+*         schema:
+*           type: string
 *     responses:
 *       204:
 *         description: Conferma la cancellazione senza body.
