@@ -50,17 +50,28 @@ function createProductsDOM(products) {
                     <div class="row justify-content-center my-2">
                         <span class="badge bg-secondary col-4 m-1">${product.category}</span>
                     </div>
+                    <div class="collapse" id="desc-collapse${product._id}">
+                        <div class="card card-body">
+                            ${product.description}
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- Product actions-->
-            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent add-carrello-btn" style="display: ${stato.isLogged ? 'initial' : 'none'};">
+            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                 <div class="text-center">
-                    <button class="btn btn-outline-dark mt-auto" onclick="javascript:addElementToCart('${product._id}');">Aggiungi al carrello</button>
-                    ${stato.admin ? `
-                    <a href="/edit-product?id=${product._id}">
-                        <button class="btn btn-outline-dark mt-3" type="button" id="modifica-btn"">
-                            <i class=" bi-pencil-square me-1"></i>
-                            Modifica prodotto
+                    <button class="btn btn-outline-dark mt-auto my-1" type="button" data-bs-toggle="collapse" data-bs-target="#desc-collapse${product._id}">
+                        <i class="bi bi-info-circle"></i>
+                        Leggi Descrizione
+                    </button>
+                    <button class="btn btn-outline-dark mt-auto my-1 add-carrello-btn" onclick="javascript:addElementToCart(\'${product._id}\');" style="display: ${stato.isLogged ? 'initial' : 'none'};">
+                        <i class="bi bi-cart-plus"></i>
+                        Aggiungi al carrello
+                    </button>
+                    ${stato.admin ? `<a href="/edit-product?id=${product._id}">
+                        <button class="btn btn-outline-dark my-1" type="button" id="modifica-btn"">
+                        <i class=" bi-pencil-square me-1"></i>
+                        Modifica prodotto
                         </button>
                     </a>
                     <button class="btn btn-danger my-1" type="button" id="rimuovi-btn" onclick="javascript:deleteProduct('${product._id}');">
