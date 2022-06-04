@@ -68,12 +68,23 @@ describe('POST /api/v1/cart', () => {
         expect(response.statusCode).toBe(200);
     });
 
-    it('Add unknown ID', async () => {
+    it('Add invalid ID', async () => {
         const response = await request(app)
             .post('/api/v1/cart')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 productId: 'not-working-id',
+                quantity: 10
+            });
+        expect(response.statusCode).toBe(400);
+    });
+
+    it('Add unknown ID', async () => {
+        const response = await request(app)
+            .post('/api/v1/cart')
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+            .send({
+                productId: '987654321098765432101234',
                 quantity: 10
             });
         expect(response.statusCode).toBe(404);
@@ -140,13 +151,24 @@ describe('PATCH /api/v1/cart/', () => {
         expect(response.status).toBe(200);
     });
 
-    it('Modify unknown ID', async () => {
+    it('Modify invalid ID', async () => {
         const response = await request(app)
             .patch('/api/v1/cart/')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 quantity: 1,
                 productId: 'not-working-id',
+            });
+        expect(response.status).toBe(400);
+    });
+
+    it('Modify unknown ID', async () => {
+        const response = await request(app)
+            .patch('/api/v1/cart/')
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+            .send({
+                quantity: 1,
+                productId: '987654321098765432101234',
             });
         expect(response.status).toBe(404);
     });
@@ -171,12 +193,22 @@ describe('DELETE /api/v1/cart/', () => {
         expect(response.status).toBe(200);
     });
 
-    it('Unknown ID', async () => {
+    it('Invalid ID', async () => {
         const response = await request(app)
             .delete('/api/v1/cart/')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 productId: 'wrong-product-id',
+            });
+        expect(response.status).toBe(400);
+    });
+    
+    it('Unknown ID', async () => {
+        const response = await request(app)
+            .delete('/api/v1/cart/')
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+            .send({
+                productId: '987654321098765432101234',
             });
         expect(response.status).toBe(404);
     });
