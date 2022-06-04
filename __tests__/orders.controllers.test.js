@@ -20,7 +20,7 @@ test('app module should be defined', () => {
 
 beforeAll(async () => {
 
-    jest.setTimeout(10000);
+    jest.setTimeout(15000);
     connectDB();
 
     ADMIN_USER.save();
@@ -78,14 +78,14 @@ describe('GET /api/v1/orders/', () => {
         const res = await request(app)
             .get('/api/v1/orders/')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(300);
     });
 
     it('OK Admin', async () => {
         const res = await request(app)
             .get('/api/v1/orders/')
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(300);
     });
 
 });
