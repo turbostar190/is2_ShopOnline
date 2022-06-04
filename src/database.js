@@ -1,14 +1,14 @@
 require('dotenv').config()
 const mongoose = require('mongoose');
 
-const { MongoMemoryServer } = require('mongodb-memory-server');
+const { MongoMemoryReplSet } = require('mongodb-memory-server');
 let mongod = null;
 
 const connectDB = async () => {
   try {
     let dbUrl = process.env.DB_URL;
     if (process.env.NODE_ENV === 'test') {
-      mongod = await MongoMemoryServer.create();
+      mongod = await MongoMemoryReplSet.create({ replSet: { count: 4 } });
       dbUrl = mongod.getUri();
     }
 
