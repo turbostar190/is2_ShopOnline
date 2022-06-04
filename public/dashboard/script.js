@@ -9,15 +9,42 @@ checkToken(function (user) {
 }, setNotLoggedButtons);
 
 window.onload = function () {
-    console.log("init");
+    getCategories()
     getProducts();
 }
 
+function getCategories() {
+    $.ajax({
+        url: "/api/v1/products/categories/",
+        type: "get",
+        success: function (result) {
+            console.log(result);
+            result.forEach(categoria => {
+                $("#categoria").append(`<option value="${categoria}">${categoria}</option>`);
+            });
+        },
+        error: function (request, status, error) {
+            alert(error);
+        }
+    });
+}
+
 function getProducts(e) {
-    console.log("init");
+    let dict = {};
+    if ($("#cerca-prodotto").val().trim() != "") {
+        dict['search'] = $("#cerca-prodotto").val().trim();
+    }
+    if ($("#categoria").val().trim() != "") {
+        dict['category'] = $("#categoria").val().trim();
+    }
+    if ($("#sort").val().trim() != "") {
+        dict['sort'] = $("#sort").val().trim();
+    }
+
     $.ajax({
         url: "/api/v1/products/",
         type: "get",
+        data: dict,
         success: function (result) {
             console.log(result);
             let productsDom = createProductsDOM(result);
@@ -28,6 +55,10 @@ function getProducts(e) {
         }
     });
 }
+
+$("#cerca-prodotto, #categoria, #sort").on("change keyup", function() {
+    getProducts();
+});
 
 function createProductsDOM(products) {
     let productsDOM = "";

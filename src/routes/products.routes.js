@@ -17,9 +17,41 @@ var upload = multer({ storage: storage });
 
 /**
 * @openapi
+* /v1/products/categories:
+*   get:
+*     description: Ottiene tutte le categorie presenti
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*         description: Ritorna tutte le categorie presenti
+*       500:
+*         description: Errore interno.
+*/
+router.get('/categories', productControllers.getCategories);
+
+/**
+* @openapi
 * /v1/products:
 *   get:
 *     description: Ottiene la lista dei prodotti
+*     parameters:
+*       - in: query
+*         name: sort
+*         schema:
+*           type: string
+*           enum: [name, cost]
+*         description: Specifica in che modo ordinare i prodotti (nome o prezzo) 
+*       - in: query
+*         name: search
+*         schema:
+*           type: string
+*         description: Specifica il nome del prodotti da ricercare. Confronto case insensitive e con uguale inizio di nome.
+*       - in: query
+*         name: category
+*         schema:
+*           type: string
+*         description: Specifica la categoria di prodotti da restituire.
 *     produces:
 *       - application/json
 *     responses:

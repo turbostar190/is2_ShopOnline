@@ -148,9 +148,28 @@ const editProducts = (req, res, next) => {
 }
 
 const getProducts = async (req, res) => {
-    console.log("find");
+    console.log("getProducts");
+    let dict = {}
+    let dictSort = {}
+    console.log(req.query)
+    if (req.query.sort == "name") {
+        dictSort = { 'name': 'asc' }
+    } else if (req.query.sort == "cost") {
+        dictSort = { 'cost': 'asc' }
+    }
+
+    if (req.query.category) {
+        dict['category'] = req.query.category
+    }
+    if (req.query.search) {
+        dict['name'] = { '$regex': '^' + req.query.search, '$options': 'i' }
+    }
+
     const products = Product
-        .find({})
+        .find(dict)
+        .collation({'locale': 'it'})
+        .sort(dictSort)
+        .exec()
         .then(function (products) {
             res.status(200).json(
                 products,
@@ -172,7 +191,7 @@ const getProductById = async (req, res) => {
         });
     }
 
-    const product = Product
+    Product
         .findOne({ _id: req.params.id })
         .then(function (product) {
             if (product) {
@@ -190,7 +209,30 @@ const getProductById = async (req, res) => {
                 err: err
             });
         });
+};
 
+const getCategories = async (req, res) => {
+    Product
+        .find({})
+        .collation({'locale': 'it'})
+        .sort({ category: 'asc' })
+        .exec()
+        .then(function (products) {
+            if (products) {
+                let set = new Set();
+                products.map(product => {
+                    set.add(product.category)
+                })
+                res.status(200).json(
+                    Array.from(set),
+                );
+            }
+        })
+        .catch(function (err) {
+            res.status(500).json({
+                err: err
+            });
+        });
 };
 
 const deleteProductById = async (req, res) => {
@@ -229,5 +271,6 @@ module.exports = {
     getProducts,
     editProducts,
     getProductById,
-    deleteProductById
+    deleteProductById,
+    getCategories
 };
