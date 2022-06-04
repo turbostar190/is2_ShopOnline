@@ -6,7 +6,7 @@ const router_v1 = express.Router();
 
 /**
 * @openapi
-* /v1/orders:
+* /v2/orders:
 *   post:
 *     description: Crea un ordine associata all'utente
 *     produces:
@@ -25,7 +25,7 @@ router.post('/', checkAuth, ordersControllers.postOrders);
 
 /**
 * @openapi
-* /v1/orders/approve/:id:
+* /v2/orders/approve/:id:
 *   put:
 *     description: Approva un ordine in attesa
 *     produces:
@@ -42,6 +42,8 @@ router.post('/', checkAuth, ordersControllers.postOrders);
 *     responses:
 *       200:
 *         description: Ritorna la risorsa aggiornata.
+*       400:
+*         description: Parametri scorretti.
 *       401:
 *         description: Non autorizzato.
 *       404:
@@ -53,7 +55,7 @@ router.put('/approve/:id', checkAuth, ordersControllers.approveOrder);
 
 /**
 * @openapi
-* /v1/orders/not_approve/:id:
+* /v2/orders/not_approve/:id:
 *   put:
 *     description: Non approva un ordine in attesa
 *     produces:
@@ -70,6 +72,8 @@ router.put('/approve/:id', checkAuth, ordersControllers.approveOrder);
 *     responses:
 *       200:
 *         description: Ritorna la risorsa aggiornata.
+*       400:
+*         description: Parametri scorretti.
 *       401:
 *         description: Non autorizzato.
 *       404:
@@ -93,14 +97,12 @@ router.put('/not_approve/:id', checkAuth, ordersControllers.notApproveOrder);
 *     responses:
 *       300:
 *         description: Ritorna la lista dei nuovi url rest da interrogare.
-*       500:
-*         description: Errore interno.
 */
 router_v1.get('/', checkAuth, ordersControllers.getOrders);
 
 /**
 * @openapi
-* /v1/orders/pending/:
+* /v2/orders/pending/:
 *   get:
 *     description: Ritorna le ordinazioni in attesa dell'utente, in caso di admin ritorna tutte le ordinazioni
 *     produces:
@@ -117,7 +119,7 @@ router.get('/pending/', checkAuth, ordersControllers.getPendingOrders);
 
 /**
 * @openapi
-* /v1/orders/completed/:
+* /v2/orders/completed/:
 *   get:
 *     description: Ritorna le ordinazioni completate dell'utente, in caso di admin ritorna tutte le ordinazioni
 *     produces:
@@ -132,4 +134,4 @@ router.get('/pending/', checkAuth, ordersControllers.getPendingOrders);
 */
 router.get('/completed/', checkAuth, ordersControllers.getCompletedOrders);
 
-module.exports = { router,router_v1 };
+module.exports = { router, router_v1 };
