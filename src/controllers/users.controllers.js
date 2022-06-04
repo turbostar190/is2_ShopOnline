@@ -132,17 +132,7 @@ const userSignIn = (req, res, next) => {
                         user
                             .save()
                             .then(async (result) => {
-                                await result
-                                    .save()
-                                    .then((result1) => {
-                                        res.status(201).location("/api/v1/users/me").json({}).end();
-                                    })
-                                    .catch((err) => {
-                                        console.log(err)
-                                        res.status(500).json({
-                                            message: err.toString()
-                                        })
-                                    });
+                                res.status(201).location("/api/v1/users/me").json({}).end();
                             })
                             .catch((err) => {
                                 console.log(err)
