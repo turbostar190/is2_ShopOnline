@@ -78,21 +78,57 @@ router.put('/approve/:id', checkAuth, ordersControllers.approveOrder);
 */
 router.put('/not_approve/:id', checkAuth, ordersControllers.notApproveOrder);
 
+// TODO: Mantenere v1 per questo prossimo api endpoint
 /**
 * @openapi
 * /v1/orders:
 *   get:
+*     deprecated: true
 *     description: Ritorna le ordinazioni dell'utente, in caso di admin ritorna tutte le ordinazioni
 *     produces:
 *       - application/json
 *     security:
 *       - token: []
 *     responses:
-*       200:
-*         description: Ritorna la lista delle ordinazioni.
+*       300:
+*         description: Ritorna la lista dei nuovi url rest da interrogare.
 *       500:
 *         description: Errore interno.
 */
 router.get('/', checkAuth, ordersControllers.getOrders);
+
+/**
+* @openapi
+* /v1/orders/pending/:
+*   get:
+*     description: Ritorna le ordinazioni in attesa dell'utente, in caso di admin ritorna tutte le ordinazioni
+*     produces:
+*       - application/json
+*     security:
+*       - token: []
+*     responses:
+*       200:
+*         description: Ritorna la lista degli ordini in attesa.
+*       500:
+*         description: Errore interno.
+*/
+router.get('/pending/', checkAuth, ordersControllers.getPendingOrders);
+
+/**
+* @openapi
+* /v1/orders/completed/:
+*   get:
+*     description: Ritorna le ordinazioni completate dell'utente, in caso di admin ritorna tutte le ordinazioni
+*     produces:
+*       - application/json
+*     security:
+*       - token: []
+*     responses:
+*       200:
+*         description: Ritorna la lista degli ordini completati.
+*       500:
+*         description: Errore interno.
+*/
+router.get('/completed/', checkAuth, ordersControllers.getCompletedOrders);
 
 module.exports = router;
