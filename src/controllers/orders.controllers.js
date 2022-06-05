@@ -12,57 +12,53 @@ function postOrders(req, res, next) {
     })
         .populate('productId')
         .exec()
-        .then((cart) => {
-            if (cart.length > 0) {
-                let products = [];
-                let set = new Set();
-                cart.forEach(element => {
-                    //TODO: fix deleted product id
-                    if (set.has(element.productId._id)) {
-                        let index = products.findIndex(p => p.productId == element.productId._id);
-                        products[index].quantity += element.quantity;
-                    } else {
-                        set.add(element.productId._id);
-                        products.push({
-                            productId: element.productId._id,
-                            productName: element.productId.name,
-                            quantity: element.quantity
-                        });
-                    }
-                });
-                
-                let order_data = {
-                    _id: new mongoose.Types.ObjectId(),
-                    products: products,
-                    userId: req.user.userId,
-                    userName: req.user.nome,
-                    accepted: null,
-                }
-                if (req.body.indirizzo) {
-                    order_data.indirizzo = req.body.indirizzo;
-                }
-                const order = new Order(order_data);
-
-                order
-                    .save()
-                    .then(async (result) => {
-                        result
-                            .save()
-                            .then((result1) => {
-                                res.status(201).location("/api/orders/" + result._id).json({}).end();
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                                res.status(500).json({
-                                    message: err.toString()
-                                })
-                            });
+        .then((cart_items) => {
+            if (cart_items.length > 0) {
+                let session = null;
+                return Order.startSession()
+                    .then(_session => {
+                        session = _session;
+                        session.startTransaction();
                     })
+                    .then(() => { 
+                        let products = [];
+                        cart_items.forEach(element => {
+                            products.push({
+                                productId: element.productId._id,
+                                productName: element.productId.name,
+                                quantity: element.quantity,
+                                cost: element.productId.cost,
+                                totalCost: element.productId.cost * element.quantity
+                            });
+                        });
+                        
+                        let order_data = {
+                            _id: new mongoose.Types.ObjectId(),
+                            products: products,
+                            userId: req.user.userId,
+                            userName: req.user.nome,
+                            accepted: null,
+                        }
+                        if (req.body.indirizzo) {
+                            order_data.indirizzo = req.body.indirizzo;
+                        }
+
+                        const order = new Order(order_data);
+                        order.save({ session: session });
+                    })
+                    .then(() => Cart.deleteMany({ userId: req.user.userId }).session(session))
+                    .then(() => session.commitTransaction())
+                    .then(() => {
+                        res.status(201).location("/api/v2/orders/pending").json({}).end();
+                    })
+                    .then(() => session.endSession())
                     .catch((err) => {
-                        console.log(err)
+                        session.abortTransaction();
+                        session.endSession();
+                        console.log(err);
                         res.status(500).json({
-                            message: err.toString()
-                        })
+                            error: err,
+                        });
                     });
             } else {
                 return res.status(403).json({
