@@ -50,7 +50,7 @@ const postProducts = (req, res, next) => {
                 product
                     .save()
                     .then(async (result) => {
-                        res.status(201).location("/api/products/" + result._id).json({}).end();
+                        res.status(201).location("/api/v2/products/" + result._id).json({}).end();
                     })
                     .catch((err) => {
                         console.log(err)
