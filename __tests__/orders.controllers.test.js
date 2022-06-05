@@ -71,7 +71,7 @@ describe('GET /api/v1/orders/', () => {
     it('NOT OK Anonymous', async () => {
         const res = await request(app)
             .get('/api/v1/orders/')
-        expect(res.status).toBe(400);
+        expect(res.status).toBe(401);
     });
 
     it('OK User', async () => {
