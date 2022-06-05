@@ -49,7 +49,7 @@ router.get('/quantity', checkAuth, cartControllers.getCartTotalQuantity);
 *     requestBody:
 *       required: true
 *       content:
-*         application/json:
+*         application/x-www-form-urlencoded:
 *           schema:
 *             type: object
 *             properties:
@@ -61,9 +61,9 @@ router.get('/quantity', checkAuth, cartControllers.getCartTotalQuantity);
 *                 required: true
 *     responses:
 *       200:
-*         description: Ritorna un messaggio che indica la modifica della quantità
+*         description: Quantità modificata.
 *       201:
-*         description: Ritorna il percorso della risorsa creata.
+*         description: Ritorna il percorso della risorsa creata nell'header 'location'.
 *       400:
 *         description: Parametri errati.
 *       404:
@@ -85,7 +85,7 @@ router.post('/', checkAuth, cartControllers.addElementToCart);
 *     requestBody:
 *       required: true
 *       content:
-*         application/json:
+*         application/x-www-form-urlencoded:
 *           schema:
 *             type: object
 *             properties:
@@ -97,7 +97,7 @@ router.post('/', checkAuth, cartControllers.addElementToCart);
 *                 required: true
 *     responses:
 *       200:
-*         description: Ritorna il carrello dell'utente.
+*         description: Ritorna la nuova quantità dell'elemento modificato.
 *       400:
 *         description: Parametri mancanti.
 *       404:
@@ -119,7 +119,7 @@ router.patch('/', checkAuth, cartControllers.updateElementFromCart);
 *     requestBody:
 *       required: true
 *       content:
-*         application/json:
+*         application/x-www-form-urlencoded:
 *           schema:
 *             type: object
 *             properties:
@@ -128,7 +128,7 @@ router.patch('/', checkAuth, cartControllers.updateElementFromCart);
 *                 required: true
 *     responses:
 *       200:
-*         description: Ritorna il carrello dell'utente.
+*         description: Avvenuta rimozione.
 *       400:
 *         description: Parametri mancanti.
 *       404:
