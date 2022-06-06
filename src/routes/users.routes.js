@@ -5,7 +5,7 @@ const router = express.Router();
 
 /**
  * @openapi
- * /v1/users/signin:
+ * /v2/users/signin:
  *   post:
  *     description: Effettua la registrazione al negozio
  *     produces:
@@ -34,9 +34,9 @@ const router = express.Router();
  *                     type: number
  *     responses:
  *       201:
- *         description: Ritorna l'indirizzo nell'header 'Location' per ottenere le info complete sull'utente appena creato.
+ *         description: Ritorna url nell'header 'Location' per ottenere le info complete sull'utente appena creato.
  *       400:
- *         description: Password mancante o lunga meno di 8 caratteri
+ *         description: Parametri errati o password mancante e/o lunga meno di 8 caratteri
  *       403:
  *         description: Email già presente
  *       500:
@@ -46,7 +46,7 @@ const router = express.Router();
 
 /**
  * @openapi
- * /v1/users/login:
+ * /v2/users/login:
  *   post:
  *     description: Effettua il login
  *     produces:
@@ -74,7 +74,7 @@ const router = express.Router();
 
 /**
  * @openapi
- * /v1/users/checkToken:
+ * /v2/users/checkToken:
  *   get:
  *     description: Controlla validità del token e restituisce lo stesso token, nome utente, se utente è admin e id
  *     produces:
@@ -91,7 +91,7 @@ router.get('/checkToken', checkAuth, userControllers.checkToken);
 
 /**
  * @openapi
- * /v1/users/me:
+ * /v2/users/me:
  *   get:
  *     description: Ottiene tutte le info dell'utente!
  *     produces:

@@ -50,7 +50,7 @@ const postProducts = (req, res, next) => {
                 product
                     .save()
                     .then(async (result) => {
-                        res.status(201).location("/api/products/" + result._id).json({}).end();
+                        res.status(201).location("/api/v2/products/" + result._id).json({}).end();
                     })
                     .catch((err) => {
                         console.log(err)
@@ -76,13 +76,14 @@ const postProducts = (req, res, next) => {
 const editProducts = (req, res, next) => {
 
     if (!req.user.admin) {
-        return res.status(401).json({
+        res.status(401).json({
             message: "Unauthorized"
         });
+        return;
     }
 
     if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-        return res.status(400).json({
+        res.status(400).json({
             message: "Invalid ID"
         });
         return;

@@ -81,7 +81,7 @@ function getPendingOrders(req, res, next) {
     let admin = req.user.admin;
     if (admin) {
         Order.find({
-            accepted:null
+            accepted: null
         })
             .exec()
             .then((orders) => {
@@ -116,7 +116,7 @@ function getCompletedOrders(req, res, next) {
     let admin = req.user.admin;
     if (admin) {
         Order.find({
-            accepted:true
+            accepted: true
         })
             .exec()
             .then((orders) => {
@@ -153,42 +153,46 @@ function approveOrder(req, res, next) {
             message: "Invalid ProductID."
         });
     }
-
-    if (req.user.admin) {
-        Order.findById(req.params.id)
-            .exec()
-            .then((order) => {
-                if (order != null) {
-                    order.accepted = true;
-                    order
-                        .save()
-                        .then((result) => {
-                            res.status(200).json(result);
-                        })
-                        .catch((err) => {
-                            console.log(err)
-                            res.status(500).json({
-                                message: err.toString()
-                            })
-                        });
-                } else {
-                    return res.status(404).json({
-                        message: "Order not found",
-                    });
-                }
-            })
-            .catch((err) => {
-                console.log(err)
-                res.status(500).json({
-                    message: err.toString()
-                })
-            });
-    }else{
+    if (!req.user.admin) {
         return res.status(401).json({
             message: "Unauthorized",
         });
     }
 
+    Order.findById(req.params.id)
+        .exec()
+        .then((order) => {
+            if (order != null) {
+                if (order.accepted != null) {
+                    return res.status(403).json({
+                        message: "Can't change status of already approved order",
+                    });
+                }
+
+                order.accepted = true;
+                order
+                    .save()
+                    .then((result) => {
+                        res.status(200).json(result);
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        res.status(500).json({
+                            message: err.toString()
+                        })
+                    });
+            } else {
+                return res.status(404).json({
+                    message: "Order not found",
+                });
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            res.status(500).json({
+                message: err.toString()
+            })
+        });
 }
 
 function notApproveOrder(req, res, next) {
@@ -198,12 +202,22 @@ function notApproveOrder(req, res, next) {
             message: "Invalid ProductID."
         });
     }
+    if (!req.user.admin) {
+        return res.status(401).json({
+            message: "Unauthorized",
+        });
+    }
 
-    if(req.user.admin){
-        Order.findById(req.params.id)
+    Order.findById(req.params.id)
         .exec()
         .then((order) => {
             if (order != null) {
+                if (order.accepted != null) {
+                    return res.status(403).json({
+                        message: "Can't change status of already approved order",
+                    });
+                }
+
                 order.accepted = false;
                 order
                     .save()
@@ -228,12 +242,6 @@ function notApproveOrder(req, res, next) {
                 message: err.toString()
             })
         });
-    }else{
-        return res.status(401).json({
-            message: "Unauthorized",
-        });
-    }
-
 }
 
 

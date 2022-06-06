@@ -6,9 +6,43 @@ const router_v1 = express.Router();
 
 /**
 * @openapi
-* /v1/orders:
+* /v2/orders/pending/:
+*   get:
+*     description: Ritorna gli ordini in attesa dell'utente, in caso di admin ritorna tutti gli ordini
+*     produces:
+*       - application/json
+*     security:
+*       - token: []
+*     responses:
+*       200:
+*         description: Ritorna la lista degli ordini in attesa.
+*       500:
+*         description: Errore interno.
+*/
+router.get('/pending/', checkAuth, ordersControllers.getPendingOrders);
+
+/**
+* @openapi
+* /v2/orders/completed/:
+*   get:
+*     description: Ritorna gli ordini completate dell'utente, in caso di admin ritorna tutti gli ordini
+*     produces:
+*       - application/json
+*     security:
+*       - token: []
+*     responses:
+*       200:
+*         description: Ritorna la lista degli ordini completati.
+*       500:
+*         description: Errore interno.
+*/
+router.get('/completed/', checkAuth, ordersControllers.getCompletedOrders);
+
+/**
+* @openapi
+* /v2/orders:
 *   post:
-*     description: Crea un ordine associata all'utente
+*     description: Crea un ordine associata all'utente dato l'attuale carrello
 *     produces:
 *       - application/json
 *     security:
@@ -25,7 +59,7 @@ router.post('/', checkAuth, ordersControllers.postOrders);
 
 /**
 * @openapi
-* /v1/orders/approve/:id:
+* /v2/orders/approve/{id}:
 *   put:
 *     description: Approva un ordine in attesa
 *     produces:
@@ -42,10 +76,14 @@ router.post('/', checkAuth, ordersControllers.postOrders);
 *     responses:
 *       200:
 *         description: Ritorna la risorsa aggiornata.
+*       400:
+*         description: Parametri scorretti.
 *       401:
 *         description: Non autorizzato.
+*       403:
+*         description: Operazione non permessa.
 *       404:
-*         description: Ordine non trovata.
+*         description: Ordine non trovato.
 *       500:
 *         description: Errore interno.
 */
@@ -53,7 +91,7 @@ router.put('/approve/:id', checkAuth, ordersControllers.approveOrder);
 
 /**
 * @openapi
-* /v1/orders/not_approve/:id:
+* /v2/orders/not_approve/{id}:
 *   put:
 *     description: Non approva un ordine in attesa
 *     produces:
@@ -70,22 +108,25 @@ router.put('/approve/:id', checkAuth, ordersControllers.approveOrder);
 *     responses:
 *       200:
 *         description: Ritorna la risorsa aggiornata.
+*       400:
+*         description: Parametri scorretti.
 *       401:
 *         description: Non autorizzato.
+*       403:
+*         description: Operazione non permessa.
 *       404:
-*         description: Ordine non trovata.
+*         description: Ordine non trovato.
 *       500:
 *         description: Errore interno.
 */
 router.put('/not_approve/:id', checkAuth, ordersControllers.notApproveOrder);
 
-// TODO: Mantenere v1 per questo prossimo api endpoint
 /**
 * @openapi
 * /v1/orders:
 *   get:
 *     deprecated: true
-*     description: Ritorna le ordinazioni dell'utente, in caso di admin ritorna tutte le ordinazioni
+*     description: Ritorna gli ordini dell'utente, in caso di admin ritorna tutti gli ordini
 *     produces:
 *       - application/json
 *     security:
@@ -93,43 +134,7 @@ router.put('/not_approve/:id', checkAuth, ordersControllers.notApproveOrder);
 *     responses:
 *       300:
 *         description: Ritorna la lista dei nuovi url rest da interrogare.
-*       500:
-*         description: Errore interno.
 */
 router_v1.get('/', checkAuth, ordersControllers.getOrders);
 
-/**
-* @openapi
-* /v1/orders/pending/:
-*   get:
-*     description: Ritorna le ordinazioni in attesa dell'utente, in caso di admin ritorna tutte le ordinazioni
-*     produces:
-*       - application/json
-*     security:
-*       - token: []
-*     responses:
-*       200:
-*         description: Ritorna la lista degli ordini in attesa.
-*       500:
-*         description: Errore interno.
-*/
-router.get('/pending/', checkAuth, ordersControllers.getPendingOrders);
-
-/**
-* @openapi
-* /v1/orders/completed/:
-*   get:
-*     description: Ritorna le ordinazioni completate dell'utente, in caso di admin ritorna tutte le ordinazioni
-*     produces:
-*       - application/json
-*     security:
-*       - token: []
-*     responses:
-*       200:
-*         description: Ritorna la lista degli ordini completati.
-*       500:
-*         description: Errore interno.
-*/
-router.get('/completed/', checkAuth, ordersControllers.getCompletedOrders);
-
-module.exports = { router,router_v1 };
+module.exports = { router, router_v1 };
