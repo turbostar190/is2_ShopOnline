@@ -90,6 +90,54 @@ describe('GET /api/v1/orders/', () => {
 
 });
 
+describe('GET /api/v1/orders/pending', () => {
+
+    it('NOT OK Anonymous', async () => {
+        const res = await request(app)
+            .get('/api/v2/orders/pending')
+        expect(res.status).toBe(401);
+    });
+
+    it('OK User', async () => {
+        const res = await request(app)
+            .get('/api/v2/orders/pending')
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+        expect(res.status).toBe(200);
+    });
+
+    it('OK Admin', async () => {
+        const res = await request(app)
+            .get('/api/v2/orders/pending')
+            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+        expect(res.status).toBe(200);
+    });
+
+});
+
+describe('GET /api/v1/orders/completed', () => {
+
+    it('NOT OK Anonymous', async () => {
+        const res = await request(app)
+            .get('/api/v2/orders/completed')
+        expect(res.status).toBe(401);
+    });
+
+    it('OK User', async () => {
+        const res = await request(app)
+            .get('/api/v2/orders/completed')
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+        expect(res.status).toBe(200);
+    });
+
+    it('OK Admin', async () => {
+        const res = await request(app)
+            .get('/api/v2/orders/completed')
+            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+        expect(res.status).toBe(200);
+    });
+
+});
+
 describe('POST /api/v2/orders/', () => {
 
     it('Empty Cart', async () => {
@@ -156,6 +204,13 @@ describe('PATCH /api/v2/orders/approve/:id', () => {
         expect(res.status).toBe(200);
     });
 
+    it('Already approved', async () => {
+        const res = await request(app)
+            .patch(`/api/v2/orders/approve/${ORDER_1._id}`)
+            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+        expect(res.status).toBe(403);
+    });
+
 });
 
 describe('PATCH /api/v2/orders/not_approve/:id', () => {
@@ -199,6 +254,13 @@ describe('PATCH /api/v2/orders/not_approve/:id', () => {
             .patch(`/api/v2/orders/not_approve/${ORDER_2._id}`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         expect(res.status).toBe(200);
+    });
+
+    it('Already disapproved', async () => {
+        const res = await request(app)
+            .patch(`/api/v2/orders/not_approve/${ORDER_2._id}`)
+            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+        expect(res.status).toBe(403);
     });
 
 });
