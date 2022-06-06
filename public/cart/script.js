@@ -124,13 +124,16 @@ function updateCartItem(productId, quantity, $selector) {
 
 /**
  * Elimina un prodotto dal carrello
- * @param {string} cartId id carrello
  * @param {object} $selector selettore del prodotto per modificarne valore a schermo
  */
-function deleteCartItem(cartId, $selector) {
+function deleteCartItem(productId, $selector) {
+    data = {
+        productId : productId
+    }
     $.ajax({
-        url: "/api/v2/cart/" + cartId,
+        url: "/api/v2/cart/",
         method: "delete",
+        data: data,
         success: function (result) {
             console.log("deleteCart", result);
             $selector.parent().parent().remove();
@@ -201,7 +204,7 @@ $(document).on("click", ".num", function () {
     } else if ($this.hasClass("increment")) {
         updateCartItem(productId, quantity + 1, $input);
     } else if ($this.hasClass("delete")) {
-        deleteCartItem(cartId, $this);
+        deleteCartItem(productId, $this);
     }
 
 });
