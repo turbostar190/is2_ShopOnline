@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const { app, server } = require('../index');
 
 const { connectDB, disconnectDB } = require('../src/database');
-const { NORMAL_USER, TEST_PASSWORD } = require('../src/mock');
+const { NORMAL_USER, NORMAL_USER_2, TEST_PASSWORD } = require('../src/mock');
 
 beforeAll(() => {
     jest.setTimeout(10000);
@@ -47,13 +47,23 @@ describe('POST /api/v2/users/signin', () => {
             });
         expect(response.statusCode).toBe(400);
     });
+
+    it('OK', async () => {
+        expect.assertions(1);
+        const response = await request(app).post('/api/v2/users/signin').send({
+            email: NORMAL_USER_2.email,
+            password: TEST_PASSWORD,
+            nome: NORMAL_USER_2.nome,
+        });
+        expect(response.statusCode).toBe(201);
+    });
 });
 
 describe('POST /api/v2/users/login', () => {
     expect.assertions(1);
     it('No Credentials', async () => {
         const response = await request(app).post('/api/v2/users/login');
-        expect(response.statusCode).toBe(401);
+        expect(response.statusCode).toBe(400);
     });
 
     it('Wrong Password', async () => {
@@ -64,6 +74,15 @@ describe('POST /api/v2/users/login', () => {
                 'password': `wrong-${TEST_PASSWORD}`,
             });
         expect(response.statusCode).toBe(401);
+    });
+
+    it('Missing parameters', async () => {
+        expect.assertions(1);
+        const response = await request(app).post('/api/v2/users/login').expect('Content-Type', /json/)
+            .send({
+                'email': NORMAL_USER.email
+            });
+        expect(response.statusCode).toBe(400);
     });
 
     it('OK', async () => {

@@ -105,10 +105,28 @@ describe('POST /api/v2/orders/', () => {
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
         expect(res.status).toBe(201);
     });
+    it('Not OK Anonymous', async () => {
+        const res = await request(app)
+            .post('/api/v2/orders/')
+        expect(res.status).toBe(401);
+    });
 
 });
 
 describe('PUT /api/v2/orders/approve/:id', () => {
+
+    it('Unauthorized regular user', async () => {
+        const res = await request(app)
+            .put(`/api/v2/orders/approve/${ORDER_1._id}`)
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+        expect(res.status).toBe(401);
+    });
+
+    it('Unauthorized anonymous user', async () => {
+        const res = await request(app)
+            .put(`/api/v2/orders/approve/${ORDER_1._id}`)
+        expect(res.status).toBe(401);
+    });
 
     it('Invalid ID', async () => {
         const res = await request(app)
@@ -124,6 +142,13 @@ describe('PUT /api/v2/orders/approve/:id', () => {
         expect(res.status).toBe(404);
     });
 
+    it('Missing ID', async () => {
+        const res = await request(app)
+            .put(`/api/v2/orders/approve/`)
+            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+        expect(res.status).toBe(404);
+    });
+
     it('OK', async () => {
         const res = await request(app)
             .put(`/api/v2/orders/approve/${ORDER_1._id}`)
@@ -135,6 +160,19 @@ describe('PUT /api/v2/orders/approve/:id', () => {
 
 describe('PUT /api/v2/orders/not_approve/:id', () => {
 
+    it('Unauthorized regular user', async () => {
+        const res = await request(app)
+            .put(`/api/v2/orders/not_approve/${ORDER_2._id}`)
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+        expect(res.status).toBe(401);
+    });
+
+    it('Unauthorized anonymous user', async () => {
+        const res = await request(app)
+            .put(`/api/v2/orders/not_approve/${ORDER_2._id}`)
+        expect(res.status).toBe(401);
+    });
+
     it('Invalid ID', async () => {
         const res = await request(app)
             .put(`/api/v2/orders/not_approve/invalid-id`)
@@ -145,6 +183,13 @@ describe('PUT /api/v2/orders/not_approve/:id', () => {
     it('Unknown ID', async () => {
         const res = await request(app)
             .put(`/api/v2/orders/not_approve/987654321098765432101234`)
+            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+        expect(res.status).toBe(404);
+    });
+
+    it('Missing ID', async () => {
+        const res = await request(app)
+            .put(`/api/v2/orders/not_approve/`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         expect(res.status).toBe(404);
     });

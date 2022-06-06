@@ -4,6 +4,13 @@ const User = require("../models/users");
 const mongoose = require('mongoose');
 
 const userLogin = (req, res, next) => {
+
+    if(!req.body.email || !req.body.password){
+        return res.status(400).json({
+            message: "Missing parameters",
+        });
+    }
+
     User.findOne({
         email: req.body.email
     })

@@ -72,6 +72,31 @@ describe('POST /products', () => {
             .expect(201);
     });
 
+    it('Unauthorized regular user', async () => {
+        const response = await request(app)
+            .post('/api/v2/products')
+            .set('Content-Type', 'form-data')
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+            .field('name', 'product2')
+            .field('description', 'product')
+            .field('cost', 10)
+            .field('category', 'product')
+            .attach('img', './__tests__/test_image.png')
+            .expect(401);
+    });
+
+    it('Unauthorized Anomymous user', async () => {
+        const response = await request(app)
+            .post('/api/v2/products')
+            .set('Content-Type', 'form-data')
+            .field('name', 'product2')
+            .field('description', 'product')
+            .field('cost', 10)
+            .field('category', 'product')
+            .attach('img', './__tests__/test_image.png')
+            .expect(401);
+    });
+
     it('Missing Parameters', async () => {
         const response = await request(app)
             .post('/api/v2/products')
@@ -163,6 +188,19 @@ describe('PUT /products/:id', () => {
             .expect(200);
     });
 
+    it('Unauthorized anomymous user', async () => {
+        const response = await request(app)
+            .put(`/api/v2/products/${TEST_PRODUCT._id}`)
+            .set('Content-Type', 'form-data')
+            .field('name', 'product2')
+            .field('description', 'product')
+            .field('cost', 10)
+            .field('category', 'product')
+            .attach('img', './__tests__/test_image.png')
+            .expect(401);
+    });
+
+
     it('Negative cost', async () => {
         const response = await request(app)
             .put(`/api/v2/products/${TEST_PRODUCT._id}`)
@@ -176,7 +214,7 @@ describe('PUT /products/:id', () => {
             .expect(400);
     });
 
-    it('Unauthorized', async () => {
+    it('Unauthorized regular user', async () => {
         const response = await request(app)
             .put(`/api/v2/products/${TEST_PRODUCT._id}`)
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
@@ -214,6 +252,19 @@ describe('PUT /products/:id', () => {
             .attach('img', './__tests__/test_image.png')
             .expect(404);
     });
+
+    it('Missing ID', async () => {
+        const response = await request(app)
+            .put('/api/v2/products/')
+            .set('Content-Type', 'form-data')
+            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+            .field('name', 'product2')
+            .field('description', 'product')
+            .field('cost', 10)
+            .field('category', 'product')
+            .attach('img', './__tests__/test_image.png')
+            .expect(404);
+    });
 });
 
 describe('DELETE /products/:id', () => {
@@ -232,10 +283,23 @@ describe('DELETE /products/:id', () => {
             .expect(204);
     });
 
-    it('Unauthorized', async () => {
+    it('Missing ID', async () => {
+        const response = await request(app)
+            .delete('/api/v2/products/')
+            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+            .expect(404);
+    });
+
+    it('Unauthorized regular user', async () => {
         const response = await request(app)
             .delete(`/api/v2/products/${TEST_PRODUCT._id}`)
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+            .expect(401);
+    });
+
+    it('Unauthorized anonymous user', async () => {
+        const response = await request(app)
+            .delete(`/api/v2/products/${TEST_PRODUCT._id}`)
             .expect(401);
     });
 
