@@ -60,7 +60,7 @@ router.post('/', checkAuth, ordersControllers.postOrders);
 /**
 * @openapi
 * /v2/orders/approve/{id}:
-*   put:
+*   patch:
 *     description: Approva un ordine in attesa
 *     produces:
 *       - application/json
@@ -87,12 +87,12 @@ router.post('/', checkAuth, ordersControllers.postOrders);
 *       500:
 *         description: Errore interno.
 */
-router.put('/approve/:id', checkAuth, ordersControllers.approveOrder);
+router.patch('/approve/:id', checkAuth, ordersControllers.approveOrder);
 
 /**
 * @openapi
 * /v2/orders/not_approve/{id}:
-*   put:
+*   patch:
 *     description: Non approva un ordine in attesa
 *     produces:
 *       - application/json
@@ -119,7 +119,7 @@ router.put('/approve/:id', checkAuth, ordersControllers.approveOrder);
 *       500:
 *         description: Errore interno.
 */
-router.put('/not_approve/:id', checkAuth, ordersControllers.notApproveOrder);
+router.patch('/not_approve/:id', checkAuth, ordersControllers.notApproveOrder);
 
 /**
 * @openapi

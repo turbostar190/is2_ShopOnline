@@ -202,7 +202,7 @@ function timeStampToDate(timestamp) {
 function approveOrder(orderId) {
     $.ajax({
         url: "/api/v2/orders/approve/" + orderId,
-        type: "put",
+        type: "patch",
         success: function (result) {
             console.log(result);
             getOrders();
@@ -216,7 +216,7 @@ function approveOrder(orderId) {
 function notApproveOrder(orderId) {
     $.ajax({
         url: "/api/v2/orders/not_approve/" + orderId,
-        type: "put",
+        type: "patch",
         success: function (result) {
             console.log(result);
             getOrders();
