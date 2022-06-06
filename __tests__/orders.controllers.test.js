@@ -71,7 +71,7 @@ describe('GET /api/v1/orders/', () => {
     it('NOT OK Anonymous', async () => {
         const res = await request(app)
             .get('/api/v1/orders/')
-        expect(res.status).toBe(400);
+        expect(res.status).toBe(401);
     });
 
     it('OK User', async () => {
@@ -151,7 +151,7 @@ describe('PUT /api/v2/orders/not_approve/:id', () => {
 
     it('OK', async () => {
         const res = await request(app)
-            .put(`/api/v2/orders/approve/${ORDER_2._id}`)
+            .put(`/api/v2/orders/not_approve/${ORDER_2._id}`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         expect(res.status).toBe(200);
     });

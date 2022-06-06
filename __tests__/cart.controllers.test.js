@@ -114,10 +114,10 @@ describe('POST /api/v2/cart', () => {
 
 describe('GET /api/v2/cart', () => {
 
-    it('Anonymous OK', async () => {
+    it('Anonymous Unauthorized', async () => {
         const response = await request(app)
             .get('/api/v2/cart')
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(401);
     });
 
     it('Logged OK', async () => {

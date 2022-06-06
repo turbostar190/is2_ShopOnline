@@ -96,7 +96,7 @@ describe('POST /products', () => {
             .expect(403);
     });
 
-    it('Invalid quantity parameter', async () => {
+    it('Invalid cost parameter', async () => {
         const response = await request(app)
             .post('/api/v2/products')
             .set('Content-Type', 'form-data')
@@ -121,7 +121,7 @@ describe('GET /products', () => {
     it('Logged OK', async () => {
         const response = await request(app)
             .get('/api/v2/products')
-            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .expect(200);
     });
 });
@@ -131,21 +131,18 @@ describe('GET /products/:id', () => {
     it('OK', async () => {
         const response = await request(app)
             .get(`/api/v2/products/${TEST_PRODUCT._id}`)
-            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(200);
     });
 
     it('Invalid ID', async () => {
         const response = await request(app)
             .get('/api/v2/products/invalid-id')
-            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(400);
     });
 
     it('Unknown ID', async () => {
         const response = await request(app)
             .get('/api/v2/products/987654321098765432101234')
-            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .expect(404);
     });
 
