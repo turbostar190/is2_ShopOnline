@@ -47,8 +47,11 @@ function getProducts(e) {
         data: dict,
         success: function (result) {
             console.log(result);
-            let productsDom = createProductsDOM(result);
+            let createProducts = createProductsDOM(result)
+            let productsDom = createProducts['products'];
             $(".lista").html(productsDom);
+            let modals = createProducts['modals'];
+            $(".lista-modals").html(modals);
         },
         error: function (request, status, error) {
             alert(error);
@@ -62,6 +65,7 @@ $("#cerca-prodotto, #categoria, #sort").on("change keyup", function() {
 
 function createProductsDOM(products) {
     let productsDOM = "";
+    let modalsDOM = ""
     let stato = checkToken()
     products.forEach(function (product) {
 
@@ -95,7 +99,7 @@ function createProductsDOM(products) {
                         <i class="bi bi-info-circle"></i>
                         Leggi Descrizione
                     </button>
-                    <button class="btn btn-outline-dark mt-auto my-1 add-carrello-btn" onclick="javascript:addElementToCart(\'${product._id}\');" style="display: ${stato.isLogged ? 'initial' : 'none'};">
+                    <button class="btn btn-outline-dark mt-auto my-1 add-carrello-btn" onclick="javascript:showModal(\'${product._id}\');" style="display: ${stato.isLogged ? 'initial' : 'none'};">
                         <i class="bi bi-cart-plus"></i>
                         Aggiungi al carrello
                     </button>
@@ -115,18 +119,44 @@ function createProductsDOM(products) {
         </div>
     </div>
         `;
+        modalsDOM += `
+        <div>
+        <div class="modal fade" id="modal-${product._id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="javascript:hideModal(\'${product._id}\');">&times;</button>
+                        <h4 class="modal-title">${product.name}</h4>
+                    </div>
+                    <div class="modal-body">
+                    <h6>Descrizione: ${product.description}</h6>
+                    <h6>Costo: ${product.cost}</h6>
+                    <h6> Quantità: <input id="quantity-${product._id}" name="quantity" type="number" placeholder="Quantità" min="1" required> </h6>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="javascript:hideModal(\'${product._id}\');">Close</button>
+                        <button class="btn btn-outline-dark mt-auto my-1 add-carrello-btn" onclick="javascript:addElementToCart(\'${product._id}\');">
+                            <i class="bi bi-cart-plus"></i>
+                            Aggiungi al carrello
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+            `
     });
-    return productsDOM;
+    return {products : productsDOM, modals : modalsDOM};
 }
 
 function addElementToCart(productId) {
+    let quantity = $("#quantity-" + productId).val();
     const user = checkToken();
     const userId = user._id;
     //data
     let data = {
         productId: productId,
         userId: userId,
-        quantity: 1,
+        quantity: quantity,
     };
     console.log(data);
     $.ajax({
@@ -140,6 +170,17 @@ function addElementToCart(productId) {
             alert('Errore');
         }
     });
+    hideModal(productId);
+}
+
+function showModal(productId){
+    console.log("Show modal")
+    $('#modal-'+productId).modal('show');
+}
+
+function hideModal(productId){
+    console.log("Show modal")
+    $('#modal-'+productId).modal('hide');
 }
 
 function deleteProduct(id) {
