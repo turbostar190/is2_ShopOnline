@@ -151,7 +151,7 @@ describe('PUT /api/v1/orders/not_approve/:id', () => {
 
     it('OK', async () => {
         const res = await request(app)
-            .put(`/api/v1/orders/approve/${ORDER_2._id}`)
+            .put(`/api/v1/orders/not_approve/${ORDER_2._id}`)
             .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         expect(res.status).toBe(200);
     });
