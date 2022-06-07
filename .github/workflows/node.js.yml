@@ -38,7 +38,7 @@ jobs:
     needs: test
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Heroku login credentials
       run: |
           cat > ~/.netrc <<EOF
@@ -55,10 +55,6 @@ jobs:
     - name: Login to Heroku
       run: heroku login
     - name: Add Heroku remote
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
     - name: Push to Heroku
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: git push heroku master
