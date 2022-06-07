@@ -59,7 +59,7 @@ const postProducts = (req, res, next) => {
                         })
                     });
             } else {
-                return res.status(403).json({
+                res.status(403).json({
                     message: "Product already exists",
                 });
             }
@@ -131,7 +131,7 @@ const editProducts = (req, res, next) => {
                         })
                     });
             } else {
-                return res.status(404).json({
+                res.status(404).json({
                     message: "Product don't exist",
                 });
             }
