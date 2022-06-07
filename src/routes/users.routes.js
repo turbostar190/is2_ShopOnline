@@ -42,7 +42,7 @@ const router = express.Router();
  *       500:
  *         description: Errore interno del server
  */
- router.post('/signin', userControllers.userSignIn);
+router.post('/signin', userControllers.userSignIn);
 
 /**
  * @openapi
@@ -54,7 +54,7 @@ const router = express.Router();
  *     requestBody:
  *       required: true
  *       content:
- *         application/x-www-form-urlencoded:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
@@ -70,7 +70,7 @@ const router = express.Router();
  *       500:
  *         description: Errore interno del server
  */
- router.post('/login', userControllers.userLogin);
+router.post('/login', userControllers.userLogin);
 
 /**
  * @openapi
