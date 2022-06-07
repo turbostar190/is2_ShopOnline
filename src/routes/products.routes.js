@@ -4,6 +4,13 @@ const checkAuth = require('../middleware/checkAuth.middleware')
 const router = express.Router();
 const multer = require('multer');
 
+const fileSizeLimitErrorHandler = (err, req, res, next) => {
+    if (err) {
+      res.sendStatus(413).end();
+    } else {
+      next();
+    }
+  }
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads')
@@ -12,8 +19,7 @@ var storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + Date.now())
     }
 });
-
-var upload = multer({ storage: storage });
+var upload = multer({ storage: storage, limits: { fileSize: 2000000 } });
 
 /**
 * @openapi
@@ -131,7 +137,7 @@ router.get('/:id', productControllers.getProductById);
 *       500:
 *         description: Errore interno.
 */
-router.post('/', checkAuth, upload.single('img'), productControllers.postProducts);
+router.post('/', checkAuth, upload.single('img'), fileSizeLimitErrorHandler, productControllers.postProducts);
 
 /**
 * @openapi
@@ -178,7 +184,7 @@ router.post('/', checkAuth, upload.single('img'), productControllers.postProduct
 *       500:
 *         description: Errore interno.
 */
-router.put('/:id', checkAuth, upload.single('img'), productControllers.editProducts);
+router.put('/:id', checkAuth, upload.single('img'), fileSizeLimitErrorHandler, productControllers.editProducts);
 
 
 /**
