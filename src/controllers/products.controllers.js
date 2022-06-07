@@ -1,12 +1,21 @@
-const Product = require("../models/products");
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
+
+const Product = require("../models/products");
+const Cart = require("../models/cart");
 
 const postProducts = (req, res, next) => {
     if (!req.user.admin) {
         res.status(401).json({
             message: "Unauthorized"
+        });
+        return;
+    }
+
+    if (!req.body.name || !req.body.description || !req.body.category || !req.body.cost || !req.file) {
+        res.status(400).json({
+            message: "Missing product parameters"
         });
         return;
     }
@@ -41,18 +50,7 @@ const postProducts = (req, res, next) => {
                 product
                     .save()
                     .then(async (result) => {
-                        result
-                            .save()
-                            .then((result1) => {
-                                console.log(`Product created ${result}`)
-                                res.status(201).location("/api/products/" + result._id).json({}).end();
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                                res.status(500).json({
-                                    message: err.toString()
-                                })
-                            });
+                        res.status(201).location("/api/v2/products/" + result._id).json({}).end();
                     })
                     .catch((err) => {
                         console.log(err)
@@ -61,7 +59,7 @@ const postProducts = (req, res, next) => {
                         })
                     });
             } else {
-                return res.status(403).json({
+                res.status(403).json({
                     message: "Product already exists",
                 });
             }
@@ -79,6 +77,13 @@ const editProducts = (req, res, next) => {
     if (!req.user.admin) {
         res.status(401).json({
             message: "Unauthorized"
+        });
+        return;
+    }
+
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        res.status(400).json({
+            message: "Invalid ID"
         });
         return;
     }
@@ -108,26 +113,15 @@ const editProducts = (req, res, next) => {
                 product
                     .save()
                     .then(async (result) => {
-                        await result
-                            .save()
-                            .then((result1) => {
-                                console.log(`Product edited ${result}`)
-                                res.status(200).json({
-                                    productDetails: {
-                                        productId: result._id,
-                                        name: result.name,
-                                        description: result.description,
-                                        category: result.category,
-                                        cost: result.cost,
-                                    },
-                                })
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                                res.status(500).json({
-                                    message: err.toString()
-                                })
-                            });
+                        res.status(200).json({
+                            productDetails: {
+                                productId: result._id,
+                                name: result.name,
+                                description: result.description,
+                                category: result.category,
+                                cost: result.cost,
+                            },
+                        })
                     })
                     .catch((err) => {
                         console.log(err)
@@ -136,7 +130,7 @@ const editProducts = (req, res, next) => {
                         })
                     });
             } else {
-                return res.status(404).json({
+                res.status(404).json({
                     message: "Product don't exist",
                 });
             }
@@ -151,15 +145,33 @@ const editProducts = (req, res, next) => {
 }
 
 const getProducts = async (req, res) => {
-    console.log("find");
-    const products = Product
-        .find({})
+    let dict = {}
+    let dictSort = {updatedAt: -1 }
+    if (req.query.sort == "name") {
+        dictSort = { 'name': 'asc', updatedAt: -1 }
+    } else if (req.query.sort == "cost") {
+        dictSort = { 'cost': 'asc', updatedAt: -1  }
+    }
+
+    if (req.query.category) {
+        dict['category'] = req.query.category
+    }
+    if (req.query.search) {
+        dict['name'] = { '$regex': '^' + req.query.search, '$options': 'i' }
+    }
+
+    Product
+        .find(dict)
+        .collation({'locale': 'it'})
+        .sort(dictSort)
+        .exec()
         .then(function (products) {
             res.status(200).json(
                 products,
             );
         })
         .catch(function (err) {
+            console.log(err);
             res.status(500).json({
                 err: err
             });
@@ -168,7 +180,13 @@ const getProducts = async (req, res) => {
 };
 
 const getProductById = async (req, res) => {
-    const product = Product
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(400).json({
+            message: "Invalid ID"
+        });
+    }
+
+    Product
         .findOne({ _id: req.params.id })
         .then(function (product) {
             if (product) {
@@ -182,11 +200,69 @@ const getProductById = async (req, res) => {
             }
         })
         .catch(function (err) {
+            console.log(err);
             res.status(500).json({
                 err: err
             });
         });
+};
 
+const getCategories = async (req, res) => {
+    Product
+        .find({})
+        .collation({'locale': 'it'})
+        .sort({ category: 'asc' })
+        .exec()
+        .then(function (products) {
+            if (products) {
+                let set = new Set();
+                products.map(product => {
+                    set.add(product.category)
+                })
+                res.status(200).json(
+                    Array.from(set),
+                );
+            }
+        })
+        .catch(function (err) {
+            console.log(err);
+            res.status(500).json({
+                err: err
+            });
+        });
+};
+
+const deleteProductById = async (req, res) => {
+    if (!req.user.admin) {
+        return res.status(401).json({
+            message: "Unauthorized"
+        });
+    }
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(400).json({
+            message: "Invalid ID"
+        });
+    }
+    let session = null;
+    return Product.startSession()
+        .then(_session => {
+            session = _session;
+            session.startTransaction();
+        })
+        .then(() => Cart.deleteMany({ productId: req.params.id }).session(session))
+        .then(() => Product.deleteOne({ _id: req.params.id }).session(session))
+        .then(() => session.commitTransaction())
+        .then(() => session.endSession())
+        .then(() => {
+            // idempotente
+            res.status(204).end()
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({
+                error: err,
+            });
+        });
 };
 
 module.exports = {
@@ -194,4 +270,6 @@ module.exports = {
     getProducts,
     editProducts,
     getProductById,
+    deleteProductById,
+    getCategories
 };

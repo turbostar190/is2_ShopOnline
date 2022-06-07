@@ -23,7 +23,7 @@ function login(e) {
     password: password
   };
   $.ajax({
-    url: "/api/v1/users/login",
+    url: "/api/v2/users/login",
     type: "post",
     dataType: "json",
     data: data,

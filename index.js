@@ -1,9 +1,10 @@
 require('dotenv').config()
-const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
+const mongoSanitize = require('express-mongo-sanitize');
+const { connectDB } = require('./src/database');
 
 const port = process.env.PORT || 3000;
 const app = express()
@@ -18,8 +19,12 @@ const options = {
     servers: [{
       url: "http://localhost:3000/api/",
       description: "Development server"
+    },
+    {
+      url: "https://is2shoponline.herokuapp.com/api/",
+      description: "Production server"
     }],
-    components: {        
+    components: {
       securitySchemes: {
         token: {
           type: "http",
@@ -44,46 +49,50 @@ app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(express.json()); //Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); //Parse URL-encoded bodies
-app.use(cors())
+app.use(mongoSanitize());
+app.use(cors());
 
-/**
- * Configure mongoose
- */
-// mongoose.Promise = global.Promise;
-app.locals.db = mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log("Connected to Database");
+// router
+const usersRouter = require('./src/routes/users.routes');
+const productsRouter = require('./src/routes/products.routes');
+const cartRouter = require('./src/routes/cart.routes.js');
+const ordersRouter = require('./src/routes/orders.routes');
 
-    app.listen(port, () => {
-      console.log(`Server listening on port ${port}`);
-    });
+// files
+app.use('/', express.static('public'));
 
-    // router
-    const usersRouter = require('./src/routes/users.routes');
-    const productsRouter = require('./src/routes/products.routes');
-    const cartRouter = require('./src/routes/cart.routes.js');
-    const ordersRouter = require('./src/routes/orders.routes');
-    
-    // files
-    app.use('/', express.static('public'));
+// api
+app.use('/api/v2/users', usersRouter);
+app.use('/api/v2/products', productsRouter);
+app.use('/api/v2/cart', cartRouter);
+app.use('/api/v2/orders', ordersRouter.router);
+app.use('/api/v1/orders', ordersRouter.router_v1);
 
-    // api
-    app.use('/api/v1/users', usersRouter);
-    app.use('/api/v1/products', productsRouter);
-    app.use('/api/v1/cart', cartRouter);
-    app.use('/api/v1/orders', ordersRouter);
 
-    // catch 404 and forward to error handler
-    app.use(function (req, res, next) {
-      res.status(404).json({
-        message: "No such route exists"
-      })
-    });
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  res.status(404).json({
+    message: "No such route exists"
+  })
+});
 
-    // catch 500 and forward to error handler
-    app.use(function (err, req, res, next) {
-      res.status(500).json({
-        message: err
-      })
-    });
-  });
+// catch 500 and forward to error handler
+app.use(function (err, req, res, next) {
+  res.status(500).json({
+    message: err
+  })
+});
+
+if (process.env.NODE_ENV !== 'test') {
+  try {
+    connectDB()
+  } catch (error) {
+    console.log("database error")
+  }
+}
+
+var server = app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+
+module.exports = { app, server };

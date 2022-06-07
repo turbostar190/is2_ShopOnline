@@ -17,7 +17,7 @@ function checkToken(callback, callbackErr) {
         _id : "",
     }
     $.ajax({
-        url: "/api/v1/users/checkToken",
+        url: "/api/v2/users/checkToken",
         type: "get",
         async: false,
         dataType: "json",

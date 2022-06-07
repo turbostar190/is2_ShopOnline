@@ -1,69 +1,77 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
-const path = require('path');
+
 const Order = require("../models/orders");
 const Cart = require("../models/cart");
 
-// function to post orders
 function postOrders(req, res, next) {
-    console.log("init orders");
-    
+    if (!req.body.spedizioneCasa) {
+        return res.status(400).json({
+            message: "Missing parameters"
+        });
+    }
+
+    if (req.body.spedizioneCasa === "true") {
+        if (!req.body.indirizzo || !req.body.indirizzo.comune || !req.body.indirizzo.cap || !req.body.indirizzo.via) {
+            return res.status(400).json({
+                message: "Missing parameters for home delivery"
+            });
+        } else {
+            order_data.indirizzo = req.body.indirizzo;
+        }
+    }
+
     Cart.find({
         userId: req.user.userId
     })
         .populate('productId')
         .exec()
-        .then((cart) => {
-            console.log(cart);
-            if (cart.length > 0) {
-                let products = [];
-                let set = new Set();
-                cart.forEach(element => {
-                    if (set.has(element.productId._id)) {
-                        let index = products.findIndex(p => p.productId == element.productId._id);
-                        products[index].quantity += element.quantity;
-                    } else {
-                        set.add(element.productId._id);
-                        products.push({
-                            productId: element.productId._id,
-                            productName: element.productId.name,
-                            quantity: element.quantity
-                        });
-                    }
-                });
-                _id = new mongoose.Types.ObjectId();
-                let order_data = {
-                    _id: _id,
-                    products: products,
-                    userId: req.user.userId,
-                    userName: req.user.nome,
-                    timestamp: _id.getTimestamp(),
-                    accepted: null,
-                }
-                console.log(req.user.nome);
-                const order = new Order(order_data);
-
-                order
-                    .save()
-                    .then(async (result) => {
-                        result
-                            .save()
-                            .then((result1) => {
-                                console.log(`Order created ${result}`)
-                                res.status(201).location("/api/orders/" + result._id).json({}).end();
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                                res.status(500).json({
-                                    message: err.toString()
-                                })
-                            });
+        .then((cart_items) => {
+            if (cart_items.length > 0) {
+                let session = null;
+                return Order.startSession()
+                    .then(_session => {
+                        session = _session;
+                        session.startTransaction();
                     })
+                    .then(() => {
+                        let products = [];
+                        cart_items.forEach(element => {
+                            products.push({
+                                productId: element.productId._id,
+                                productName: element.productId.name,
+                                quantity: element.quantity,
+                                cost: element.productId.cost,
+                                totalCost: element.productId.cost * element.quantity
+                            });
+                        });
+
+                        let order_data = {
+                            _id: new mongoose.Types.ObjectId(),
+                            products: products,
+                            userId: req.user.userId,
+                            userName: req.user.nome,
+                            accepted: null,
+                        }
+                        if (req.body.spedizioneCasa == "true") {
+                            order_data.indirizzo = req.body.indirizzo;
+                        }
+
+                        const order = new Order(order_data);
+                        order.save({ session: session });
+                    })
+                    .then(() => Cart.deleteMany({ userId: req.user.userId }).session(session))
+                    .then(() => session.commitTransaction())
+                    .then(() => {
+                        res.status(201).location("/api/v2/orders/pending").json({}).end();
+                    })
+                    .then(() => session.endSession())
                     .catch((err) => {
-                        console.log(err)
+                        session.abortTransaction();
+                        session.endSession();
+                        console.log(err);
                         res.status(500).json({
-                            message: err.toString()
-                        })
+                            error: err,
+                        });
                     });
             } else {
                 return res.status(403).json({
@@ -74,11 +82,55 @@ function postOrders(req, res, next) {
 }
 
 function getOrders(req, res, next) {
-    console.log("init get");
-    console.log(req.user);
+    return res.status(300).json({
+        urls: [
+            "/api/v2/orders/getPendingOrders",
+            "/api/v2/orders/getCompletedOrders",
+        ]
+    }).end();
+}
+
+function getPendingOrders(req, res, next) {
     let admin = req.user.admin;
     if (admin) {
-        Order.find()
+        Order.find({
+            accepted: null
+        })
+            .exec()
+            .then((orders) => {
+                res.status(200).json(orders);
+            })
+            .catch((err) => {
+                console.log(err)
+                res.status(500).json({
+                    message: err.toString()
+                })
+            });
+    } else {
+        Order.find({
+            userId: req.user.userId
+        })
+            .exec()
+            .then((orders) => {
+                res.status(200).json(orders);
+            })
+            .catch((err) => {
+                console.log(err)
+                res.status(500).json({
+                    message: err.toString()
+                })
+            });
+    }
+
+}
+
+function getCompletedOrders(req, res, next) {
+    let admin = req.user.admin;
+    if (admin) {
+        Order.find({
+            accepted: true
+        })
+            .sort({ updatedAt: -1 })
             .exec()
             .then((orders) => {
                 res.status(200).json(orders);
@@ -108,53 +160,75 @@ function getOrders(req, res, next) {
 }
 
 function approveOrder(req, res, next) {
-    console.log("init approve");
-
-    if (req.user.admin) {
-        Order.findById(req.params.id)
-            .exec()
-            .then((order) => {
-                if (order != null) {
-                    order.accepted = true;
-                    order
-                        .save()
-                        .then((result) => {
-                            res.status(200).json(result);
-                        })
-                        .catch((err) => {
-                            console.log(err)
-                            res.status(500).json({
-                                message: err.toString()
-                            })
-                        });
-                } else {
-                    return res.status(404).json({
-                        message: "Order not found",
-                    });
-                }
-            })
-            .catch((err) => {
-                console.log(err)
-                res.status(500).json({
-                    message: err.toString()
-                })
-            });
-    }else{
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(400).json({
+            message: "Invalid ProductID."
+        });
+    }
+    if (!req.user.admin) {
         return res.status(401).json({
             message: "Unauthorized",
         });
     }
 
-}
-
-function notApproveOrder(req, res, next) {
-    console.log("init approve");
-
-    if(req.user.admin){
-        Order.findById(req.params.id)
+    Order.findById(req.params.id)
         .exec()
         .then((order) => {
             if (order != null) {
+                if (order.accepted != null) {
+                    return res.status(403).json({
+                        message: "Can't change status of already approved order",
+                    });
+                }
+
+                order.accepted = true;
+                order
+                    .save()
+                    .then((result) => {
+                        res.status(200).json(result);
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        res.status(500).json({
+                            message: err.toString()
+                        })
+                    });
+            } else {
+                return res.status(404).json({
+                    message: "Order not found",
+                });
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            res.status(500).json({
+                message: err.toString()
+            })
+        });
+}
+
+function notApproveOrder(req, res, next) {
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(400).json({
+            message: "Invalid ProductID."
+        });
+    }
+    if (!req.user.admin) {
+        return res.status(401).json({
+            message: "Unauthorized",
+        });
+    }
+
+    Order.findById(req.params.id)
+        .exec()
+        .then((order) => {
+            if (order != null) {
+                if (order.accepted != null) {
+                    return res.status(403).json({
+                        message: "Can't change status of already approved order",
+                    });
+                }
+
                 order.accepted = false;
                 order
                     .save()
@@ -179,12 +253,6 @@ function notApproveOrder(req, res, next) {
                 message: err.toString()
             })
         });
-    }else{
-        return res.status(401).json({
-            message: "Unauthorized",
-        });
-    }
-
 }
 
 
@@ -192,5 +260,7 @@ module.exports = {
     postOrders,
     getOrders,
     approveOrder,
-    notApproveOrder
+    notApproveOrder,
+    getPendingOrders,
+    getCompletedOrders
 }

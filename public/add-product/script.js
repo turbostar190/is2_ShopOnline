@@ -19,7 +19,7 @@ window.onload = function () {
     console.log(formData);
 
     $.ajax({
-      url: "/api/v1/products/",
+      url: "/api/v2/products/",
       type: "post",
       enctype: 'multipart/form-data',
       data: formData,
@@ -29,6 +29,7 @@ window.onload = function () {
       success: function (result) {
         console.log("Prodotto aggiunto");
         alert("Prodotto aggiunto");
+        window.location.href = "/dashboard";
       },
       error: function (request, status, error) {
         alert(error);

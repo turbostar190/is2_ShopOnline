@@ -3,9 +3,7 @@ checkToken(setLoggedButtons, function () {
 });
 
 window.onload = function () {
-    const loginForm = document.getElementById("spedizione-formaggio");
-    loginForm.addEventListener("submit", formSubmit);
-    document.getElementById("ordina").addEventListener("click", formSubmit);
+    $("#spedizione-formaggio").submit(formSubmit);
     getIndirizzo();
     getCart();
     getCartTotalQuantity();
@@ -16,7 +14,7 @@ window.onload = function () {
  */
 function getIndirizzo() {
     $.ajax({
-        url: "/api/v1/users/me",
+        url: "/api/v2/users/me",
         method: "get",
         success: function (result) {
             if (result.indirizzo) {
@@ -36,7 +34,7 @@ function getIndirizzo() {
  */
 function getCart() {
     $.ajax({
-        url: "/api/v1/cart/",
+        url: "/api/v2/cart/",
         method: "get",
         success: function (result) {
             console.log("RESULT", result);
@@ -56,7 +54,7 @@ function getCart() {
  */
 function getCartTotalQuantity() {
     $.ajax({
-        url: "/api/v1/cart/quantity",
+        url: "/api/v2/cart/quantity",
         method: "get",
         success: function (result) {
             console.log("tot", result);
@@ -80,7 +78,7 @@ function getCartTotalQuantity() {
     };
     console.log(data);
     $.ajax({
-        url: "/api/v1/cart/",
+        url: "/api/v2/cart/",
         type: "post",
         data: data,
         success: function (result) {
@@ -94,19 +92,18 @@ function getCartTotalQuantity() {
 
 /**
  * Modifica la quantità di un prodotto nel carrello
- * @param {string} cartId id del carrello
  * @param {string} productId id del prodotto da modificare
  * @param {number} quantity nuova quantità
  * @param {object} $selector selettore del prodotto per modificarne valore a schermo
  */
-function updateCartItem(cartId, productId, quantity, $selector) {
+function updateCartItem(productId, quantity, $selector) {
     let data = {
         productId: productId,
         quantity: quantity,
     };
     console.log(data);
     $.ajax({
-        url: "/api/v1/cart/" + cartId,
+        url: "/api/v2/cart/",
         method: "patch",
         data: data,
         success: function (result) {
@@ -125,13 +122,16 @@ function updateCartItem(cartId, productId, quantity, $selector) {
 
 /**
  * Elimina un prodotto dal carrello
- * @param {string} cartId id carrello
  * @param {object} $selector selettore del prodotto per modificarne valore a schermo
  */
-function deleteCartItem(cartId, $selector) {
+function deleteCartItem(productId, $selector) {
+    data = {
+        productId : productId
+    }
     $.ajax({
-        url: "/api/v1/cart/" + cartId,
+        url: "/api/v2/cart/",
         method: "delete",
+        data: data,
         success: function (result) {
             console.log("deleteCart", result);
             $selector.parent().parent().remove();
@@ -152,10 +152,23 @@ function deleteCartItem(cartId, $selector) {
  */
 function formSubmit(e) {
     e.preventDefault();
-    console.log("ordina");
+
+    let data = {
+        spedizioneCasa: $("#spedizione-casa").is(":checked"),
+    };
+    if ($("input[name=consegna]:checked").attr('id') === "consegna-casa") {
+        data['indirizzo'] = {
+            via: $("#spedizione-via").val(),
+            comune: $("#spedizione-comune").val(),
+            cap: $("#spedizione-cap").val()
+          }
+    }
+
+    console.log("ordina", data);
     $.ajax({
-        url: "/api/v1/orders/",
+        url: "/api/v2/orders/",
         type: "post",
+        data: data,
         success: function (result) {
             alert("Ordine effettuato con successo!");
             window.location.href = "/order-history";
@@ -180,19 +193,18 @@ $("input[name=consegna]").change(function () {
  */
 $(document).on("click", ".num", function () {
     let $this = $(this);
-    let cartId = $this.parent().data("cart");
     let productId = $this.parent().data("prod");
     let $input = $this.siblings("input");
     let quantity = parseInt($input.val());
 
     if ($this.hasClass("decrement")) {
         if (quantity > 1) {
-            updateCartItem(cartId, productId, quantity - 1, $input);
+            updateCartItem(productId, quantity - 1, $input);
         }
     } else if ($this.hasClass("increment")) {
-        updateCartItem(cartId, productId, quantity + 1, $input);
+        updateCartItem(productId, quantity + 1, $input);
     } else if ($this.hasClass("delete")) {
-        deleteCartItem(cartId, $this);
+        deleteCartItem(productId, $this);
     }
 
 });
