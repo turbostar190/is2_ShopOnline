@@ -4,9 +4,7 @@ const path = require('path');
 const Order = require("../models/orders");
 const Cart = require("../models/cart");
 
-// function to post orders
 function postOrders(req, res, next) {
-
     if(!req.body.spedizioneCasa){
         return res.status(400).json({
             message: "Missing parameters"
@@ -129,13 +127,13 @@ function getPendingOrders(req, res, next) {
 
 }
 
-
 function getCompletedOrders(req, res, next) {
     let admin = req.user.admin;
     if (admin) {
         Order.find({
             accepted: true
         })
+            .sort({ updatedAt: -1 })
             .exec()
             .then((orders) => {
                 res.status(200).json(orders);
@@ -165,7 +163,6 @@ function getCompletedOrders(req, res, next) {
 }
 
 function approveOrder(req, res, next) {
-
     if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
         return res.status(400).json({
             message: "Invalid ProductID."
@@ -214,7 +211,6 @@ function approveOrder(req, res, next) {
 }
 
 function notApproveOrder(req, res, next) {
-
     if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
         return res.status(400).json({
             message: "Invalid ProductID."
