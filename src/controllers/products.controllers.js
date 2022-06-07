@@ -147,11 +147,11 @@ const editProducts = (req, res, next) => {
 
 const getProducts = async (req, res) => {
     let dict = {}
-    let dictSort = {}
+    let dictSort = {updatedAt: -1 }
     if (req.query.sort == "name") {
-        dictSort = { 'name': 'asc' }
+        dictSort = { 'name': 'asc', updatedAt: -1 }
     } else if (req.query.sort == "cost") {
-        dictSort = { 'cost': 'asc' }
+        dictSort = { 'cost': 'asc', updatedAt: -1  }
     }
 
     if (req.query.category) {
