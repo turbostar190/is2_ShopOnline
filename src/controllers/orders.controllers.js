@@ -7,6 +7,24 @@ const Cart = require("../models/cart");
 // function to post orders
 function postOrders(req, res, next) {
 
+    if(!req.body.spedizioneCasa){
+        return res.status(400).json({
+            message: "Missing parameters"
+        });
+    }
+    
+    if (req.body.spedizioneCasa == "true") {
+        if(!req.body.indirizzo.comune || !req.body.indirizzo.cap || !req.body.indirizzo.via){
+            
+            return res.status(400).json({
+                message: "Missing parameters for home delivery"
+            });
+        
+        }else{
+            order_data.indirizzo = req.body.indirizzo;
+        }
+    }
+
     Cart.find({
         userId: req.user.userId
     })
@@ -39,7 +57,7 @@ function postOrders(req, res, next) {
                             userName: req.user.nome,
                             accepted: null,
                         }
-                        if (req.body.indirizzo) {
+                        if (req.body.spedizioneCasa == "true") {
                             order_data.indirizzo = req.body.indirizzo;
                         }
 

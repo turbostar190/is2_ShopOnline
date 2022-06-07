@@ -144,18 +144,46 @@ describe('POST /api/v2/orders/', () => {
         const res = await request(app)
             .post('/api/v2/orders')
             .set('Authorization', `Bearer ${NORMAL_TOKEN_2}`)
+            .send({
+                spedizioneCasa : "false"
+            })
         expect(res.status).toBe(403);
+    });
+
+    it('Missing parameters', async () => {
+        const res = await request(app)
+            .post('/api/v2/orders')
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+        expect(res.status).toBe(400);
+    });
+
+    it('Missing address', async () => {
+        const res = await request(app)
+            .post('/api/v2/orders')
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+            .send({
+                spedizioneCasa : "true",
+                indirizzo : {via : "Via Roma 31"}
+            })
+        expect(res.status).toBe(400);
     });
 
     it('OK', async () => {
         const res = await request(app)
             .post('/api/v2/orders')
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+            .send({
+                spedizioneCasa : "false"
+            })
         expect(res.status).toBe(201);
     });
+
     it('Not OK Anonymous', async () => {
         const res = await request(app)
             .post('/api/v2/orders/')
+            .send({
+                spedizioneCasa : "false"
+            })
         expect(res.status).toBe(401);
     });
 
