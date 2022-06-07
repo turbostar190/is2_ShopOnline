@@ -1,10 +1,7 @@
+const mongoose = require('mongoose');
+
 const Products = require("../models/products");
 const Cart = require("../models/cart");
-const Users = require("../models/users");
-
-const mongoose = require('mongoose');
-const fs = require('fs');
-const path = require('path');
 
 /**
  * Ottiene il carrello dell'utente

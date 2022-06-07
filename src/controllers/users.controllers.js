@@ -1,10 +1,10 @@
+const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
 const User = require("../models/users");
-const mongoose = require('mongoose');
 
 const userLogin = (req, res, next) => {
-
     if(!req.body.email || !req.body.password){
         return res.status(400).json({
             message: "Missing parameters",
@@ -95,7 +95,6 @@ const checkToken = async (req, res) => {
 }
 
 const userSignIn = (req, res, next) => {
-
     if(!req.body.email || !req.body.password || !req.body.nome ){
         return res.status(400).json({
             message: "Missing parameters.",

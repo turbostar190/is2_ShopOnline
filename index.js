@@ -1,5 +1,4 @@
 require('dotenv').config()
-const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
@@ -20,6 +19,10 @@ const options = {
     servers: [{
       url: "http://localhost:3000/api/",
       description: "Development server"
+    },
+    {
+      url: "https://is2shoponline.herokuapp.com/api/",
+      description: "Production server"
     }],
     components: {
       securitySchemes: {

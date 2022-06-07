@@ -1,11 +1,11 @@
-const Product = require("../models/products");
-const Cart = require("../models/cart");
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
-const postProducts = (req, res, next) => {
+const Product = require("../models/products");
+const Cart = require("../models/cart");
 
+const postProducts = (req, res, next) => {
     if (!req.user.admin) {
         res.status(401).json({
             message: "Unauthorized"
@@ -74,7 +74,6 @@ const postProducts = (req, res, next) => {
 }
 
 const editProducts = (req, res, next) => {
-
     if (!req.user.admin) {
         res.status(401).json({
             message: "Unauthorized"
@@ -161,7 +160,7 @@ const getProducts = async (req, res) => {
         dict['name'] = { '$regex': '^' + req.query.search, '$options': 'i' }
     }
 
-    const products = Product
+    Product
         .find(dict)
         .collation({'locale': 'it'})
         .sort(dictSort)
@@ -181,7 +180,6 @@ const getProducts = async (req, res) => {
 };
 
 const getProductById = async (req, res) => {
-
     if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
         return res.status(400).json({
             message: "Invalid ID"

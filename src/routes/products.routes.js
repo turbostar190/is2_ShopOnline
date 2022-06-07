@@ -5,21 +5,26 @@ const router = express.Router();
 const multer = require('multer');
 
 const fileSizeLimitErrorHandler = (err, req, res, next) => {
-    if (err) {
-      res.sendStatus(413).end();
-    } else {
-      next();
-    }
+  if (err) {
+    res.sendStatus(413).end();
+  } else {
+    next();
   }
+}
 var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads')
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now())
-    }
+  destination: (req, file, cb) => {
+    cb(null, 'uploads');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
 });
-var upload = multer({ storage: storage, limits: { fileSize: 2000000 } });
+var upload = multer({ 
+  storage: storage, 
+  limits: { 
+    fileSize: 2000000 
+  } 
+});
 
 /**
 * @openapi

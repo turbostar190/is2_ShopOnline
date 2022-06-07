@@ -1,24 +1,21 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
-const path = require('path');
+
 const Order = require("../models/orders");
 const Cart = require("../models/cart");
 
 function postOrders(req, res, next) {
-    if(!req.body.spedizioneCasa){
+    if (!req.body.spedizioneCasa) {
         return res.status(400).json({
             message: "Missing parameters"
         });
     }
-    
+
     if (req.body.spedizioneCasa == "true") {
-        if(!req.body.indirizzo.comune || !req.body.indirizzo.cap || !req.body.indirizzo.via){
-            
+        if (!req.body.indirizzo.comune || !req.body.indirizzo.cap || !req.body.indirizzo.via) {
             return res.status(400).json({
                 message: "Missing parameters for home delivery"
             });
-        
-        }else{
+        } else {
             order_data.indirizzo = req.body.indirizzo;
         }
     }
@@ -36,7 +33,7 @@ function postOrders(req, res, next) {
                         session = _session;
                         session.startTransaction();
                     })
-                    .then(() => { 
+                    .then(() => {
                         let products = [];
                         cart_items.forEach(element => {
                             products.push({
@@ -47,7 +44,7 @@ function postOrders(req, res, next) {
                                 totalCost: element.productId.cost * element.quantity
                             });
                         });
-                        
+
                         let order_data = {
                             _id: new mongoose.Types.ObjectId(),
                             products: products,
