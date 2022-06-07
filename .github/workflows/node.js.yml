@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      jwtSecret: ${{ secrets.JWTSECRET }}
+      JWT_SECRET: ${{ secrets.JWTSECRET }}
       DB_URL: ${{ secrets.DB_URL }}
 
     strategy:

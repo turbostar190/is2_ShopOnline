@@ -4,6 +4,7 @@
   "description": "Progetto per il corso di \"Ingegneria del Software 2\" di UNITN",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "NODE_ENV=test jest --runInBand"
   },

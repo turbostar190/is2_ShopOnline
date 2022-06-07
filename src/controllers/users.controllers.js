@@ -35,7 +35,7 @@ const userLogin = (req, res, next) => {
                         nome: user.nome,
                         admin: user.admin != undefined && user.admin == true,
                     },
-                        process.env.jwtSecret, {
+                        process.env.JWT_SECRET, {
                         expiresIn: "1d",
                     }
                     );
