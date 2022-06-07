@@ -5,7 +5,7 @@ $.ajaxSetup({
     },
     dataType: 'json',
     beforeSend: function (jqXHR, settings) {
-        settings.url = "http://localhost:3000" + settings.url;
+        // settings.url = "http://localhost:3000" + settings.url;
         settings.url = "https://is2shoponline.herokuapp.com" + settings.url;
     }
 });
