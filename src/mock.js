@@ -41,7 +41,14 @@ const TEST_PRODUCT = new Product({
     description: 'Test Description',
     cost: 10,
     category: 'Test Category',
-    nome: 'Test User',
+});
+
+const TEST_PRODUCT_2 = new Product({
+    _id: new mongoose.Types.ObjectId(),
+    name: 'Test Product 2',
+    description: 'Test Description 2',
+    cost: 10,
+    category: 'Test Category 2',
 });
 
 const NORMAL_CART = new Cart({
@@ -56,7 +63,6 @@ const ORDER_1 = new Order({
     accepted: null,
     userId: NORMAL_USER._id,
     products: [TEST_PRODUCT],
-    timestamp: new Date(),
     userName: NORMAL_USER.nome
 });
 
@@ -65,10 +71,9 @@ const ORDER_2 = new Order({
     accepted: null,
     userId: NORMAL_USER._id,
     products: [TEST_PRODUCT, TEST_PRODUCT],
-    timestamp: new Date(),
     userName: NORMAL_USER.nome
 });
 
+const EXPIRED_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjgyNmQxN2E4ZGVjYTVhYjQxOGRjMDEiLCJlbWFpbCI6ImEuYUBnbWFpbC5jb20iLCJub21lIjoiRnJhbmNlc2NvIiwiYWRtaW4iOnRydWUsImlhdCI6MTY1NDE4MDk0NCwiZXhwIjoxNjU0MjY3MzQ0fQ.CXit3yOGSUl8tg-R0Mecn5VYIGlqubX-qS_vFUghnVs'
 
-
-module.exports = { ADMIN_USER, NORMAL_USER, NORMAL_USER_2, TEST_PRODUCT, TEST_PASSWORD, NORMAL_CART, ORDER_1, ORDER_2 };
+module.exports = { ADMIN_USER, NORMAL_USER, NORMAL_USER_2, TEST_PRODUCT, TEST_PRODUCT_2, TEST_PASSWORD, NORMAL_CART, ORDER_1, ORDER_2, EXPIRED_TOKEN};

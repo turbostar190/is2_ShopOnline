@@ -10,8 +10,8 @@ function postOrders(req, res, next) {
         });
     }
 
-    if (req.body.spedizioneCasa == "true") {
-        if (!req.body.indirizzo.comune || !req.body.indirizzo.cap || !req.body.indirizzo.via) {
+    if (req.body.spedizioneCasa === "true") {
+        if (!req.body.indirizzo || !req.body.indirizzo.comune || !req.body.indirizzo.cap || !req.body.indirizzo.via) {
             return res.status(400).json({
                 message: "Missing parameters for home delivery"
             });

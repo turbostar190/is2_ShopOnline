@@ -120,8 +120,6 @@ function addElementToCart(req, res, next) {
                             });
                             cart.save()
                                 .then(result => {
-                                    // TODO: Per ora non si può ottenere solo uno specifico prodotto dal carrello... 
-                                    // ritorna quindi location per intero carrello
                                     res.status(201).location("/api/v2/cart/").json({}).end();
                                 })
                                 .catch(err => {

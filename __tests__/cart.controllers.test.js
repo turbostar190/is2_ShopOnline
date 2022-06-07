@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const { app, server } = require('../index');
 
 const { connectDB, disconnectDB } = require('../src/database');
-const { NORMAL_USER, ADMIN_USER, TEST_PRODUCT, TEST_PASSWORD } = require('../src/mock');
+const { NORMAL_USER, ADMIN_USER, TEST_PRODUCT, TEST_PRODUCT_2, TEST_PASSWORD } = require('../src/mock');
 
 var NORMAL_TOKEN;
 
@@ -25,6 +25,7 @@ beforeAll(async () => {
     connectDB();
 
     TEST_PRODUCT.save(); // save test product to database
+    TEST_PRODUCT_2.save(); // save test product 2 to database
     NORMAL_USER.save(); // save test user to database
 
     // retrieve token for authentication
@@ -168,6 +169,17 @@ describe('PATCH /api/v2/cart/', () => {
         expect(response.status).toBe(200);
     });
 
+    it('Product exists but is not in cart', async () => {
+        const response = await request(app)
+            .patch(`/api/v2/cart/`)
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+            .send({
+                productId: TEST_PRODUCT_2._id,
+                quantity: 1
+            });
+        expect(response.status).toBe(404);
+    });
+
     it('Modify invalid ID', async () => {
         const response = await request(app)
             .patch('/api/v2/cart/')
@@ -228,6 +240,17 @@ describe('DELETE /api/v2/cart/', () => {
                 productId: TEST_PRODUCT._id,
             });
         expect(response.status).toBe(200);
+    });
+
+    it('Product exists but is not in cart', async () => {
+        const response = await request(app)
+            .delete(`/api/v2/cart/`)
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+            .send({
+                productId: TEST_PRODUCT_2._id,
+                quantity: 1
+            });
+        expect(response.status).toBe(404);
     });
 
     it('Unauthorized', async () => {

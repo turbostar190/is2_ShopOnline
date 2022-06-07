@@ -163,6 +163,16 @@ describe('POST /api/v2/orders/', () => {
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .send({
                 spedizioneCasa : "true",
+            })
+        expect(res.status).toBe(400);
+    });
+
+    it('Missing address field ', async () => {
+        const res = await request(app)
+            .post('/api/v2/orders')
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+            .send({
+                spedizioneCasa : "true",
                 indirizzo : {via : "Via Roma 31"}
             })
         expect(res.status).toBe(400);

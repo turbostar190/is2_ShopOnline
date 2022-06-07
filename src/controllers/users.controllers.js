@@ -24,8 +24,8 @@ const userLogin = (req, res, next) => {
             bcrypt.compare(req.body.password, user.password, (err, result) => {
                 if (err) {
                     console.log(err)
-                    return res.status(401).json({
-                        message: "Auth failed, the password is wrong",
+                    return res.status(500).json({
+                        message: "Error comparing password",
                     });
                 }
                 if (result) {
@@ -39,7 +39,7 @@ const userLogin = (req, res, next) => {
                         expiresIn: "1d",
                     }
                     );
-                    return res.status(200).json({
+                    res.status(200).json({
                         message: "Auth successful",
                         userDetails: {
                             userId: user._id,
@@ -48,10 +48,11 @@ const userLogin = (req, res, next) => {
                         },
                         token: token,
                     });
+                } else {
+                    res.status(401).json({
+                        message: "Auth failed.",
+                    });
                 }
-                res.status(401).json({
-                    message: "Auth failed!",
-                });
             });
         })
         .catch((err) => {

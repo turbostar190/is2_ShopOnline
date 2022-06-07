@@ -135,6 +135,22 @@ describe('POST /products', () => {
     });
 });
 
+describe('GET /categories', () => {
+
+    it('Anonymous OK', async () => {
+        const response = await request(app)
+            .get('/api/v2/products/categories')
+            .expect(200);
+    });
+
+    it('Logged OK', async () => {
+        const response = await request(app)
+            .get('/api/v2/products/categories')
+            .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
+            .expect(200);
+    });
+});
+
 describe('GET /products', () => {
 
     it('Anonymous OK', async () => {
@@ -149,6 +165,37 @@ describe('GET /products', () => {
             .set('Authorization', `Bearer ${NORMAL_TOKEN}`)
             .expect(200);
     });
+
+    it('Sort name', async () => {
+        const response = await request(app)
+            .get('/api/v2/products?sort=name')
+            .expect(200);
+    });
+
+    it('Sort cost', async () => {
+        const response = await request(app)
+            .get('/api/v2/products?sort=cost')
+            .expect(200);
+    });
+
+    it('Sort cost', async () => {
+        const response = await request(app)
+            .get('/api/v2/products?sort=cost')
+            .expect(200);
+    });
+
+    it('Search product name', async () => {
+        const response = await request(app)
+            .get('/api/v2/products?search=product')
+            .expect(200);
+    });
+
+    it('Search category name', async () => {
+        const response = await request(app)
+            .get('/api/v2/products?category=cat')
+            .expect(200);
+    });
+
 });
 
 describe('GET /products/:id', () => {
