@@ -131,10 +131,10 @@ function createProductsDOM(products) {
                     <div class="modal-body">
                     <h6>Descrizione: ${product.description}</h6>
                     <h6>Costo: ${product.cost}</h6>
-                    <h6> Quantità: <input id="quantity-${product._id}" name="quantity" type="number" placeholder="Quantità" min="1" required> </h6>
+                    <h6> Quantità: <input id="quantity-${product._id}" name="quantity" type="number" placeholder="Quantità" value="1" required> </h6>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="javascript:hideModal(\'${product._id}\');">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="javascript:hideModal(\'${product._id}\');">Chiudi</button>
                         <button class="btn btn-outline-dark mt-auto my-1 add-carrello-btn" onclick="javascript:addElementToCart(\'${product._id}\');">
                             <i class="bi bi-cart-plus"></i>
                             Aggiungi al carrello
