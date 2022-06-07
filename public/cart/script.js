@@ -3,9 +3,7 @@ checkToken(setLoggedButtons, function () {
 });
 
 window.onload = function () {
-    const loginForm = document.getElementById("spedizione-formaggio");
-    loginForm.addEventListener("submit", formSubmit);
-    document.getElementById("ordina").addEventListener("click", formSubmit);
+    $("#spedizione-formaggio").submit(formSubmit);
     getIndirizzo();
     getCart();
     getCartTotalQuantity();
@@ -155,7 +153,9 @@ function deleteCartItem(productId, $selector) {
 function formSubmit(e) {
     e.preventDefault();
 
-    let data = {};
+    let data = {
+        spedizioneCasa: $("#spedizione-casa").is(":checked"),
+    };
     if ($("input[name=consegna]:checked").attr('id') === "consegna-casa") {
         data['indirizzo'] = {
             via: $("#spedizione-via").val(),

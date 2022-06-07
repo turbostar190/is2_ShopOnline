@@ -29,6 +29,7 @@ window.onload = function () {
       success: function (result) {
         console.log("Prodotto aggiunto");
         alert("Prodotto aggiunto");
+        window.location.href = "/dashboard";
       },
       error: function (request, status, error) {
         alert(error);
