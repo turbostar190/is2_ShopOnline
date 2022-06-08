@@ -5,9 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches: [ master, hotfix ]
 
 jobs:
   test:
@@ -38,25 +36,9 @@ jobs:
     needs: test
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
+    - uses: akhileshns/heroku-deploy@v3.12.12
       with:
-        fetch-depth: 0
-    - name: Heroku login credentials
-      run: |
-          cat > ~/.netrc <<EOF
-            machine api.heroku.com
-              login $HEROKU_EMAIL
-              password $HEROKU_API_KEY
-            machine git.heroku.com
-              login $HEROKU_EMAIL
-              password $HEROKU_API_KEY
-          EOF
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-    - name: Login to Heroku
-      run: heroku login
-    - name: Add Heroku remote
-      run: heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
-    - name: Push to Heroku
-      run: git push heroku master:master
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+        heroku_email: ${{secrets.HEROKU_EMAIL}} 
